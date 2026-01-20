@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { Alert, AlertDescription, Button, Input, Label } from '@/ui';
+import { Lock } from '@phosphor-icons/react';
 
 export default function Unlock() {
     const navigate = useNavigate();
@@ -36,7 +37,9 @@ export default function Unlock() {
         <div className="h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-background via-muted/40 to-background">
             {/* Logo */}
             <div className="text-center mb-12">
-                <div className="text-6xl mb-4">🔒</div>
+                <div className="text-6xl mb-4 flex items-center justify-center">
+                    <Lock size={48} />
+                </div>
                 <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
                 <p className="text-muted-foreground text-sm">Unlock your wallet to continue</p>
             </div>

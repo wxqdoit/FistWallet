@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { Button, Card, CardContent } from '@/ui';
+import { ArrowLeft, CaretRight, Lock } from '@phosphor-icons/react';
 
 export default function Settings() {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function Settings() {
                     onClick={() => navigate(-1)}
                     className="px-0 text-muted-foreground hover:text-foreground"
                 >
-                    ←
+                    <ArrowLeft size={16} />
                 </Button>
                 <h1 className="text-lg font-semibold">Settings</h1>
             </div>
@@ -53,11 +54,11 @@ export default function Settings() {
                         </Button>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Reveal Recovery Phrase</span>
-                            <span className="text-sm text-muted-foreground">→</span>
+                            <CaretRight size={16} className="text-muted-foreground" />
                         </Button>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Change Password</span>
-                            <span className="text-sm text-muted-foreground">→</span>
+                            <CaretRight size={16} className="text-muted-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -68,7 +69,7 @@ export default function Settings() {
                     <div className="space-y-2">
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Custom RPC</span>
-                            <span className="text-sm text-muted-foreground">→</span>
+                            <CaretRight size={16} className="text-muted-foreground" />
                         </Button>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Developer Mode</span>
@@ -89,11 +90,11 @@ export default function Settings() {
                         </Card>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Terms of Service</span>
-                            <span className="text-sm text-muted-foreground">→</span>
+                            <CaretRight size={16} className="text-muted-foreground" />
                         </Button>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Privacy Policy</span>
-                            <span className="text-sm text-muted-foreground">→</span>
+                            <CaretRight size={16} className="text-muted-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -105,7 +106,8 @@ export default function Settings() {
                         onClick={handleLock}
                         className="w-full"
                     >
-                        🔒 Lock Wallet
+                        <Lock size={16} />
+                        Lock Wallet
                     </Button>
                 </div>
             </div>

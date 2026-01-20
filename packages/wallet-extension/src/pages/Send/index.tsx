@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { Button, Card, CardContent, Input, Label } from '@/ui';
+import { ArrowLeft } from '@phosphor-icons/react';
 
 export default function Send() {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function Send() {
                     onClick={() => navigate(-1)}
                     className="px-0 text-muted-foreground hover:text-foreground"
                 >
-                    ←
+                    <ArrowLeft size={16} />
                 </Button>
                 <h1 className="text-lg font-semibold">Send {currentNetwork.nativeCurrency.symbol}</h1>
             </div>

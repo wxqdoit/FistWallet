@@ -27,16 +27,19 @@ function App() {
     // Show loading state while initializing
     if (isInitialized === null) {
         return (
-            <div className="w-[375px] h-[600px] flex items-center justify-center bg-background">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            <div className="min-h-screen w-full flex items-center justify-center bg-background">
+                <div className="w-[375px] h-[680px] flex items-center justify-center bg-background">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                </div>
             </div>
         );
     }
 
     return (
         <BrowserRouter>
-            <div className="w-[375px] h-[600px] bg-background overflow-x-hidden overflow-y-auto scrollbar-thin">
-                <Routes>
+            <div className="min-h-screen w-full flex items-center justify-center bg-background">
+                <div className="w-[375px] h-[680px] bg-background overflow-x-hidden overflow-y-auto scrollbar-thin border border-border rounded-[var(--radius)]">
+                    <Routes>
                     {/* Onboarding routes */}
                     {!isInitialized && (
                         <>
@@ -68,7 +71,8 @@ function App() {
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </>
                     )}
-                </Routes>
+                    </Routes>
+                </div>
             </div>
         </BrowserRouter>
     );

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { Alert, AlertDescription, Button, Input, Label } from '@/ui';
+import { ArrowLeft } from '@phosphor-icons/react';
 
 export default function VerifyMnemonic() {
     const navigate = useNavigate();
@@ -94,10 +95,11 @@ export default function VerifyMnemonic() {
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate(-1)}
-                    className="mb-4 px-0 text-muted-foreground hover:text-foreground"
+                    className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                     disabled={isCreating}
                 >
-                    ← Back
+                    <ArrowLeft size={16} />
+                    Back
                 </Button>
                 <h1 className="text-2xl font-bold">Verify Recovery Phrase</h1>
                 <p className="text-muted-foreground text-sm mt-2">

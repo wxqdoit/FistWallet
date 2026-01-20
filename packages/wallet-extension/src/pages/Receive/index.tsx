@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import QRCode from 'react-qr-code';
 import { Alert, AlertDescription, Badge, Button, Card, CardContent } from '@/ui';
+import { ArrowLeft, Check, Copy, WarningCircle } from '@phosphor-icons/react';
+import { NetworkIcon } from '@/components/NetworkIcon';
 
 export default function Receive() {
     const navigate = useNavigate();
@@ -29,7 +31,7 @@ export default function Receive() {
                     onClick={() => navigate(-1)}
                     className="px-0 text-muted-foreground hover:text-foreground"
                 >
-                    ←
+                    <ArrowLeft size={16} />
                 </Button>
                 <h1 className="text-lg font-semibold">Receive {currentNetwork.nativeCurrency.symbol}</h1>
             </div>
@@ -39,7 +41,7 @@ export default function Receive() {
                 {/* Network badge */}
                 <Badge variant="secondary" className="mb-6 px-4 py-2 text-sm">
                     <span className="flex items-center gap-2">
-                        <span className="text-lg">{currentNetwork.icon}</span>
+                        <NetworkIcon chainType={currentNetwork.chainType} className="text-foreground" size={18} />
                         <span className="text-sm font-medium">{currentNetwork.name}</span>
                     </span>
                 </Badge>
@@ -63,7 +65,7 @@ export default function Receive() {
                                 onClick={handleCopy}
                                 className="text-primary hover:text-primary/80 shrink-0"
                             >
-                                {copied ? '✓' : '📋'}
+                                {copied ? <Check size={18} /> : <Copy size={18} />}
                             </Button>
                         </CardContent>
                     </Card>
@@ -72,7 +74,10 @@ export default function Receive() {
                 {/* Warning */}
                 <Alert variant="warning" className="mt-6">
                     <AlertDescription>
-                        <p className="text-sm text-warning font-medium mb-1">⚠️ Important</p>
+                        <p className="text-sm text-warning font-medium mb-1 flex items-center gap-2">
+                            <WarningCircle size={16} />
+                            Important
+                        </p>
                         <p className="text-xs text-muted-foreground">
                             Only send <strong>{currentNetwork.nativeCurrency.symbol}</strong> and tokens on{' '}
                             <strong>{currentNetwork.name}</strong> to this address. Sending other assets may result in permanent loss.

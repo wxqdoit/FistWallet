@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { generateMnemonic } from '@core/wallet';
 import { Alert, AlertDescription, Button, Checkbox, Input, Label, Progress } from '@/ui';
+import { ArrowLeft } from '@phosphor-icons/react';
 
 export default function CreatePassword() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const mode = searchParams.get('mode');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -38,6 +41,12 @@ export default function CreatePassword() {
             return;
         }
 
+        if (mode === 'import') {
+            sessionStorage.setItem('tempPassword', password);
+            navigate('/import-wallet');
+            return;
+        }
+
         try {
             // Generate mnemonic and store password temporarily
             const mnemonic = generateMnemonic(12);
@@ -63,9 +72,10 @@ export default function CreatePassword() {
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate(-1)}
-                    className="mb-4 px-0 text-muted-foreground hover:text-foreground"
+                    className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
-                    ← Back
+                    <ArrowLeft size={16} />
+                    Back
                 </Button>
                 <h1 className="text-2xl font-bold">Create Password</h1>
                 <p className="text-muted-foreground text-sm mt-2">
@@ -101,12 +111,11 @@ export default function CreatePassword() {
                     />
                 </div>
 
-                <div className="flex items-start gap-3 pt-4">
+                <div className="flex items-center gap-3 pt-4">
                     <Checkbox
                         id="terms"
                         checked={agreedToTerms}
                         onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
-                        className="mt-1"
                     />
                     <Label htmlFor="terms" className="text-sm text-muted-foreground">
                         I agree to the{' '}

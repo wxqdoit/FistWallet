@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { Button, Card, CardContent, Input, Label, ToggleGroup, ToggleGroupItem } from '@/ui';
+import { ArrowLeft, ArrowsDownUp, CaretDown, Diamond } from '@phosphor-icons/react';
+import { NetworkIcon } from '@/components/NetworkIcon';
 
 export default function Swap() {
     const navigate = useNavigate();
@@ -20,7 +22,7 @@ export default function Swap() {
                     onClick={() => navigate(-1)}
                     className="px-0 text-muted-foreground hover:text-foreground"
                 >
-                    ←
+                    <ArrowLeft size={16} />
                 </Button>
                 <h1 className="text-lg font-semibold">Swap</h1>
             </div>
@@ -34,9 +36,9 @@ export default function Swap() {
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-3">
                                 <Button variant="secondary" className="h-9 gap-2">
-                                    <span className="text-lg">{currentNetwork.icon}</span>
+                                    <NetworkIcon chainType={currentNetwork.chainType} className="text-foreground" size={18} />
                                     <span className="font-medium">{currentNetwork.nativeCurrency.symbol}</span>
-                                    <span className="text-muted-foreground">▼</span>
+                                    <CaretDown className="text-muted-foreground" size={14} />
                                 </Button>
                                 <p className="text-xs text-muted-foreground">Balance: 0</p>
                             </div>
@@ -66,7 +68,7 @@ export default function Swap() {
                 {/* Swap direction button */}
                 <div className="flex justify-center -my-2 relative z-10">
                     <Button variant="secondary" size="icon" className="h-10 w-10 rounded-full border-2 border-border/60">
-                        ⇅
+                        <ArrowsDownUp size={18} />
                     </Button>
                 </div>
 
@@ -77,9 +79,9 @@ export default function Swap() {
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-3">
                                 <Button variant="secondary" className="h-9 gap-2">
-                                    <span className="text-lg">💎</span>
+                                    <Diamond size={18} />
                                     <span className="font-medium">Select token</span>
-                                    <span className="text-muted-foreground">▼</span>
+                                    <CaretDown className="text-muted-foreground" size={14} />
                                 </Button>
                                 <p className="text-xs text-muted-foreground">Balance: 0</p>
                             </div>

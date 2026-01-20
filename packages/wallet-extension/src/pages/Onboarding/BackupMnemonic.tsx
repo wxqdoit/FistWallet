@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, Button, Card, CardContent } from '@/ui';
+import { ArrowLeft, CheckCircle, Eye, WarningCircle, XCircle } from '@phosphor-icons/react';
 
 export default function BackupMnemonic() {
     const navigate = useNavigate();
     const [mnemonic, setMnemonic] = useState<string[]>([]);
     const [isRevealed, setIsRevealed] = useState(false);
-    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         const tempMnemonic = sessionStorage.getItem('tempMnemonic');
@@ -17,14 +17,7 @@ export default function BackupMnemonic() {
         setMnemonic(tempMnemonic.split(' '));
     }, [navigate]);
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(mnemonic.join(' '));
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
 
-        // Show warning about clipboard
-        alert('⚠️ Warning: Copying to clipboard may not be secure. We recommend writing it down on paper.');
-    };
 
     const handleContinue = () => {
         if (!isRevealed) {
@@ -42,9 +35,10 @@ export default function BackupMnemonic() {
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate(-1)}
-                    className="mb-4 px-0 text-muted-foreground hover:text-foreground"
+                    className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
-                    ← Back
+                    <ArrowLeft size={16} />
+                    Back
                 </Button>
                 <h1 className="text-2xl font-bold">Backup Recovery Phrase</h1>
                 <p className="text-muted-foreground text-sm mt-2">
@@ -53,15 +47,12 @@ export default function BackupMnemonic() {
             </div>
 
             {/* Warning */}
-            <Alert variant="warning" className="mb-6">
-                <AlertDescription>
-                    <div className="flex items-start gap-3">
-                        <span className="text-warning text-xl">⚠️</span>
+            <Alert variant="warning" className="mb-4">
+                <AlertDescription >
+                    <div className="flex align-middle items-center gap-3">
+                        <WarningCircle className="text-warning" size={20} />
                         <div className="text-sm">
-                            <p className="font-semibold text-warning mb-1">Never share your recovery phrase</p>
-                            <p className="text-muted-foreground">
-                                Anyone with this phrase can access your funds. FistWallet will never ask for it.
-                            </p>
+                            <p className="font-semibold text-warning ">Never share your recovery phrase</p>
                         </div>
                     </div>
                 </AlertDescription>
@@ -73,13 +64,14 @@ export default function BackupMnemonic() {
                     {!isRevealed && (
                         <div className="absolute inset-0 backdrop-blur-xl bg-black/50 rounded-xl flex items-center justify-center z-10">
                             <Button onClick={() => setIsRevealed(true)}>
-                                👁️ Reveal Recovery Phrase
+                                <Eye size={16} />
+                                Reveal Recovery Phrase
                             </Button>
                         </div>
                     )}
 
-                    <CardContent className="p-6">
-                        <div className={`grid grid-cols-3 gap-3 ${!isRevealed ? 'blur-lg' : ''}`}>
+                    <CardContent className="p-4">
+                        <div className={`grid grid-cols-2 gap-3 ${!isRevealed ? 'blur-lg' : ''}`}>
                             {mnemonic.map((word, index) => (
                                 <div
                                     key={index}
@@ -90,32 +82,36 @@ export default function BackupMnemonic() {
                                 </div>
                             ))}
                         </div>
-
-                        {isRevealed && (
-                            <Button
-                                variant="ghost"
-                                onClick={handleCopy}
-                                className="mt-4 w-full text-sm text-primary hover:text-primary/80"
-                            >
-                                {copied ? '✓ Copied!' : '📋 Copy to Clipboard (Not Recommended)'}
-                            </Button>
-                        )}
                     </CardContent>
                 </Card>
             </div>
 
             {/* Tips */}
             <div className="mb-6 space-y-2 text-sm text-muted-foreground">
-                <p>✓ Write it down on paper</p>
-                <p>✓ Store in a secure location</p>
-                <p>✗ Never share with anyone</p>
-                <p>✗ Never store digitally</p>
+                <p className="flex items-center gap-2">
+                    <CheckCircle size={16} className="text-success" />
+                    Write it down on paper
+                </p>
+                <p className="flex items-center gap-2">
+                    <CheckCircle size={16} className="text-success" />
+                    Store in a secure location
+                </p>
+                <p className="flex items-center gap-2">
+                    <XCircle size={16} className="text-error" />
+                    Never share with anyone
+                </p>
+                <p className="flex items-center gap-2">
+                    <XCircle size={16} className="text-error" />
+                    Never store digitally
+                </p>
             </div>
 
             {/* Continue button */}
-            <Button onClick={handleContinue} disabled={!isRevealed} className="w-full">
-                I've Written It Down
-            </Button>
+            <div className="mt-auto pt-2 pb-2 sticky bottom-0 bg-background">
+                <Button onClick={handleContinue} disabled={!isRevealed} className="w-full">
+                    I've Written It Down
+                </Button>
+            </div>
         </div>
     );
 }

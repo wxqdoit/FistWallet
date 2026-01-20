@@ -2,6 +2,8 @@ import { useWalletStore } from '@store/wallet';
 import { useNavigate } from 'react-router-dom';
 import { NETWORKS } from '@core/networks';
 import { Button, Card, CardContent, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui';
+import { ArrowsClockwise, DownloadSimple, GearSix, Lock, PaperPlaneTilt } from '@phosphor-icons/react';
+import { NetworkIcon } from '@/components/NetworkIcon';
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -36,7 +38,7 @@ export default function Dashboard() {
                         title="Lock Wallet"
                         className="text-muted-foreground hover:text-foreground"
                     >
-                        🔒
+                        <Lock size={18} />
                     </Button>
                 </div>
 
@@ -44,7 +46,7 @@ export default function Dashboard() {
                 <Select value={currentNetwork.id} onValueChange={switchNetwork}>
                     <SelectTrigger>
                         <div className="flex items-center gap-2">
-                            <span className="text-lg">{currentNetwork.icon}</span>
+                            <NetworkIcon chainType={currentNetwork.chainType} className="text-foreground" size={18} />
                             <SelectValue />
                         </div>
                     </SelectTrigger>
@@ -72,7 +74,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <span className="text-2xl">📤</span>
+                    <PaperPlaneTilt size={20} />
                     <span className="text-xs">Send</span>
                 </Button>
                 <Button
@@ -80,7 +82,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <span className="text-2xl">📥</span>
+                    <DownloadSimple size={20} />
                     <span className="text-xs">Receive</span>
                 </Button>
                 <Button
@@ -88,7 +90,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <span className="text-2xl">🔄</span>
+                    <ArrowsClockwise size={20} />
                     <span className="text-xs">Swap</span>
                 </Button>
                 <Button
@@ -96,7 +98,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <span className="text-2xl">⚙️</span>
+                    <GearSix size={20} />
                     <span className="text-xs">Settings</span>
                 </Button>
             </div>
@@ -116,7 +118,7 @@ export default function Dashboard() {
                         <CardContent className="flex items-center justify-between p-4">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-lg">
-                                    {currentNetwork.icon}
+                                    <NetworkIcon chainType={currentNetwork.chainType} className="text-foreground" size={20} />
                                 </div>
                                 <div>
                                     <p className="font-medium">{currentNetwork.nativeCurrency.symbol}</p>

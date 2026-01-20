@@ -17,7 +17,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'ETH',
             decimals: 18,
         },
-        icon: '⟠',
+        icon: 'evm',
     },
     sepolia: {
         id: 'sepolia',
@@ -31,7 +31,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'ETH',
             decimals: 18,
         },
-        icon: '⟠',
+        icon: 'evm',
         isTestnet: true,
     },
     bsc: {
@@ -46,7 +46,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'BNB',
             decimals: 18,
         },
-        icon: '🔶',
+        icon: 'bnb',
     },
     polygon: {
         id: 'polygon',
@@ -60,7 +60,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'MATIC',
             decimals: 18,
         },
-        icon: '🟣',
+        icon: 'polygon',
     },
     arbitrum: {
         id: 'arbitrum',
@@ -74,7 +74,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'ETH',
             decimals: 18,
         },
-        icon: '🔵',
+        icon: 'arbitrum',
     },
     optimism: {
         id: 'optimism',
@@ -88,7 +88,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'ETH',
             decimals: 18,
         },
-        icon: '🔴',
+        icon: 'optimism',
     },
     base: {
         id: 'base',
@@ -102,7 +102,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'ETH',
             decimals: 18,
         },
-        icon: '🔵',
+        icon: 'base',
     },
 
     // Bitcoin
@@ -117,7 +117,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'BTC',
             decimals: 8,
         },
-        icon: '₿',
+        icon: 'bitcoin',
     },
     bitcoinTestnet: {
         id: 'bitcoinTestnet',
@@ -130,7 +130,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'tBTC',
             decimals: 8,
         },
-        icon: '₿',
+        icon: 'bitcoin',
         isTestnet: true,
     },
 
@@ -146,7 +146,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'SOL',
             decimals: 9,
         },
-        icon: '◎',
+        icon: 'solana',
     },
     solanaDevnet: {
         id: 'solanaDevnet',
@@ -159,7 +159,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'SOL',
             decimals: 9,
         },
-        icon: '◎',
+        icon: 'solana',
         isTestnet: true,
     },
 
@@ -175,7 +175,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'APT',
             decimals: 8,
         },
-        icon: '🅰️',
+        icon: 'aptos',
     },
 
     // Sui
@@ -190,7 +190,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'SUI',
             decimals: 9,
         },
-        icon: '💧',
+        icon: 'sui',
     },
 
     // TRON
@@ -205,7 +205,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'TRX',
             decimals: 6,
         },
-        icon: '🔺',
+        icon: 'tron',
     },
 
     // TON
@@ -220,7 +220,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'TON',
             decimals: 9,
         },
-        icon: '💎',
+        icon: 'ton',
     },
 
     // NEAR
@@ -235,7 +235,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'NEAR',
             decimals: 24,
         },
-        icon: 'Ⓝ',
+        icon: 'near',
     },
 
     // Filecoin
@@ -250,7 +250,7 @@ export const NETWORKS: Record<string, Network> = {
             symbol: 'FIL',
             decimals: 18,
         },
-        icon: '⨎',
+        icon: 'filecoin',
     },
 };
 

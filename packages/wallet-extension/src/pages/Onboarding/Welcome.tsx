@@ -8,7 +8,6 @@ export default function Welcome() {
         <div className="h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-background via-muted/40 to-background">
             {/* Logo and branding */}
             <div className="text-center mb-12">
-                <div className="text-6xl mb-4">👊</div>
                 <h1 className="text-4xl font-bold text-gradient mb-2">FistWallet</h1>
                 <p className="text-muted-foreground text-sm">Gateway to Web3</p>
             </div>
@@ -19,7 +18,11 @@ export default function Welcome() {
                     Create New Wallet
                 </Button>
 
-                <Button variant="secondary" onClick={() => navigate('/import-wallet')} className="w-full">
+                <Button
+                    variant="secondary"
+                    onClick={() => navigate('/create-password?mode=import')}
+                    className="w-full"
+                >
                     Import Existing Wallet
                 </Button>
             </div>

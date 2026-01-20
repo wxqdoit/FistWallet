@@ -6,7 +6,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { Slot } from '@radix-ui/react-slot';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { CaretDown, CaretUp, Check } from '@phosphor-icons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils';
 
@@ -296,7 +296,7 @@ const SelectTrigger = React.forwardRef<
     >
         {children}
         <SelectPrimitive.Icon asChild>
-            <ChevronDown className="h-4 w-4 opacity-60" />
+            <CaretDown className="h-4 w-4 opacity-60" />
         </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
 ));
@@ -318,13 +318,13 @@ const SelectContent = React.forwardRef<
             {...props}
         >
             <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1">
-                <ChevronUp className="h-4 w-4" />
+                <CaretUp className="h-4 w-4" />
             </SelectPrimitive.ScrollUpButton>
             <SelectPrimitive.Viewport className="p-1">
                 {children}
             </SelectPrimitive.Viewport>
             <SelectPrimitive.ScrollDownButton className="flex items-center justify-center py-1">
-                <ChevronDown className="h-4 w-4" />
+                <CaretDown className="h-4 w-4" />
             </SelectPrimitive.ScrollDownButton>
         </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
