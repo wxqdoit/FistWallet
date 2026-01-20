@@ -1,0 +1,58 @@
+{
+    "manifest_version": 3,
+    "name": "FistWallet",
+    "version": "1.0.0",
+    "description": "Multi-chain Web3 Wallet - Your Universal Gateway to Blockchain",
+    "icons": {
+        "16": "icons/icon16.svg",
+        "48": "icons/icon48.svg",
+        "128": "icons/icon128.svg"
+    },
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": {
+            "16": "icons/icon16.svg",
+            "48": "icons/icon48.svg",
+            "128": "icons/icon128.svg"
+        }
+    },
+    "background": {
+        "service_worker": "src/background/index.ts",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "src/content/index.ts"
+            ],
+            "run_at": "document_start",
+            "all_frames": true
+        }
+    ],
+    "permissions": [
+        "storage",
+        "unlimitedStorage",
+        "activeTab",
+        "scripting",
+        "notifications"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "src/content/injected.ts"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    }
+}

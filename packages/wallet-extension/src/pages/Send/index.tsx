@@ -1,0 +1,145 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useWalletStore } from '@store/wallet';
+import { Button, Card, CardContent, Input, Label } from '@/ui';
+
+export default function Send() {
+    const navigate = useNavigate();
+    const { currentAccount, currentNetwork } = useWalletStore();
+    const [recipient, setRecipient] = useState('');
+    const [amount, setAmount] = useState('');
+    const [memo, setMemo] = useState('');
+
+    const handleSend = () => {
+        // TODO: Implement send transaction
+        alert('Send transaction not yet implemented');
+    };
+
+    if (!currentAccount) return null;
+
+    const currentAddress = currentAccount.addresses[currentNetwork.chainType];
+    const needsMemo = ['ton', 'near'].includes(currentNetwork.chainType);
+
+    return (
+        <div className="h-full flex flex-col bg-background">
+            {/* Header */}
+            <div className="p-4 border-b border-border/60 flex items-center gap-3">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate(-1)}
+                    className="px-0 text-muted-foreground hover:text-foreground"
+                >
+                    ←
+                </Button>
+                <h1 className="text-lg font-semibold">Send {currentNetwork.nativeCurrency.symbol}</h1>
+            </div>
+
+            {/* Form */}
+            <div className="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-thin">
+                {/* From */}
+                <div>
+                    <Label className="mb-2 block text-sm font-medium">From</Label>
+                    <Card>
+                        <CardContent className="flex items-center justify-between p-4">
+                            <div>
+                                <p className="text-sm font-medium">{currentAccount.name}</p>
+                                <p className="text-xs text-muted-foreground">
+                                    {currentAddress.slice(0, 10)}...{currentAddress.slice(-8)}
+                                </p>
+                            </div>
+                            <p className="text-sm text-muted-foreground">Balance: 0</p>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* To */}
+                <div>
+                    <Label className="mb-2 block text-sm font-medium">To</Label>
+                    <Input
+                        type="text"
+                        value={recipient}
+                        onChange={(e) => setRecipient(e.target.value)}
+                        placeholder={`Enter ${currentNetwork.chainType.toUpperCase()} address`}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                        Supports ENS, .sol, and other domain names
+                    </p>
+                </div>
+
+                {/* Amount */}
+                <div>
+                    <Label className="mb-2 block text-sm font-medium">Amount</Label>
+                    <div className="relative">
+                        <Input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            className="pr-16"
+                            placeholder="0.0"
+                            step="any"
+                        />
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setAmount('0')} // TODO: Calculate max amount
+                            className="absolute right-2 top-1/2 h-7 -translate-y-1/2 px-2 text-primary hover:text-primary/80"
+                        >
+                            MAX
+                        </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">≈ $0.00</p>
+                </div>
+
+                {/* Memo (for specific chains) */}
+                {needsMemo && (
+                    <div>
+                        <Label className="mb-2 block text-sm font-medium">
+                            Memo {currentNetwork.chainType === 'ton' && '(Required for exchanges)'}
+                        </Label>
+                        <Input
+                            type="text"
+                            value={memo}
+                            onChange={(e) => setMemo(e.target.value)}
+                            placeholder="Enter memo/tag"
+                        />
+                    </div>
+                )}
+
+                {/* Gas fee */}
+                <Card>
+                    <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm text-muted-foreground">Network Fee</span>
+                            <Button variant="link" className="h-auto px-0 text-sm text-primary hover:text-primary/80">
+                                Edit
+                            </Button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm">Estimated</span>
+                            <span className="text-sm font-medium">~$0.00</span>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Total */}
+                <Card className="border-primary/30 bg-primary/10">
+                    <CardContent className="flex items-center justify-between p-4">
+                        <span className="text-sm font-medium">Total Amount</span>
+                        <div className="text-right">
+                            <p className="font-semibold">{amount || '0'} {currentNetwork.nativeCurrency.symbol}</p>
+                            <p className="text-xs text-muted-foreground">≈ $0.00</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Send button */}
+            <div className="p-4 border-t border-border/60">
+                <Button onClick={handleSend} disabled={!recipient || !amount} className="w-full">
+                    Review Transaction
+                </Button>
+            </div>
+        </div>
+    );
+}
