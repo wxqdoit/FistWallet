@@ -2,8 +2,8 @@ import browser from 'webextension-polyfill';
 import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
-import type { EncryptedVault, VaultData } from '../types';
-import { STORAGE_KEYS } from '../types';
+import type { AppSettings, EncryptedVault, VaultData } from '../types';
+import { DEFAULT_SETTINGS, STORAGE_KEYS } from '../types';
 
 const PBKDF2_ITERATIONS = 100000;
 const KEY_LENGTH = 32; // 256 bits for AES-256
@@ -148,7 +148,8 @@ export async function verifyPassword(password: string): Promise<boolean> {
  * Auto-lock timer management
  */
 let autoLockTimer: NodeJS.Timeout | null = null;
-export const AUTO_LOCK_DURATION = 10 * 60 * 1000; // 10 minutes
+export const DEFAULT_AUTO_LOCK_DURATION = DEFAULT_SETTINGS.autoLockMinutes * 60 * 1000;
+export const AUTO_LOCK_DURATION = DEFAULT_AUTO_LOCK_DURATION;
 
 export function resetAutoLockTimer(onLock: () => void, durationMs: number = AUTO_LOCK_DURATION): void {
     if (autoLockTimer) {
@@ -211,4 +212,13 @@ export async function removeStorage(key: string): Promise<void> {
 
 export async function clearStorage(): Promise<void> {
     await browser.storage.local.clear();
+}
+
+export async function getAutoLockDurationMs(): Promise<number> {
+    const settings = await getStorage<AppSettings>(STORAGE_KEYS.SETTINGS);
+    const minutes = settings?.autoLockMinutes;
+    if (!Number.isFinite(minutes) || (minutes as number) <= 0) {
+        return DEFAULT_AUTO_LOCK_DURATION;
+    }
+    return Math.round((minutes as number) * 60 * 1000);
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,10 +15,12 @@ import {
     Label,
 } from '@/ui';
 import { LockIcon } from '@phosphor-icons/react';
+import { t } from '@utils/i18n';
 
 export default function Unlock() {
     const navigate = useNavigate();
     const { unlock } = useWalletStore();
+    const { language } = useSettingsStore();
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isUnlocking, setIsUnlocking] = useState(false);
@@ -38,11 +41,11 @@ export default function Unlock() {
             if (success) {
                 navigate('/');
             } else {
-                setError('Incorrect password');
+                setError(t(language, 'unlockIncorrectPassword'));
                 setPassword('');
             }
         } catch (err) {
-            setError('Failed to unlock wallet');
+            setError(t(language, 'unlockFailed'));
             console.error(err);
         } finally {
             setIsUnlocking(false);
@@ -56,19 +59,19 @@ export default function Unlock() {
                 <div className="text-6xl mb-4 flex items-center justify-center">
                     <LockIcon size={48} />
                 </div>
-                <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-                <p className="text-muted-foreground text-sm">Unlock your wallet to continue</p>
+                <h1 className="text-3xl font-bold mb-2">{t(language, 'unlockTitle')}</h1>
+                <p className="text-muted-foreground text-sm">{t(language, 'unlockSubtitle')}</p>
             </div>
 
             {/* Unlock form */}
             <form onSubmit={handleUnlock} className="w-full max-w-sm space-y-4">
                 <div>
-                    <Label className="mb-2 block text-sm font-medium">Password</Label>
+                    <Label className="mb-2 block text-sm font-medium">{t(language, 'passwordLabel')}</Label>
                     <Input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
+                        placeholder={t(language, 'enterYourPassword')}
                         autoFocus
                         disabled={isUnlocking}
                     />
@@ -79,23 +82,23 @@ export default function Unlock() {
                     disabled={!password || isUnlocking}
                     className="w-full"
                 >
-                    {isUnlocking ? 'Unlocking...' : 'Unlock'}
+                    {isUnlocking ? t(language, 'unlocking') : t(language, 'unlock')}
                 </Button>
             </form>
 
             {/* Footer */}
             <div className="mt-8 text-center text-xs text-muted-foreground">
-                <p>Forgot password? You'll need to restore from recovery phrase</p>
+                <p>{t(language, 'forgotPasswordHint')}</p>
             </div>
 
             <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Unable to unlock</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'unableToUnlock')}</AlertDialogTitle>
                         <AlertDialogDescription>{error}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>OK</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

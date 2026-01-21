@@ -1,13 +1,22 @@
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, CardContent } from '@/ui';
-import { ArrowsClockwiseIcon, CopyIcon, DownloadSimpleIcon, GearSixIcon, PaperPlaneTiltIcon } from '@phosphor-icons/react';
+import {
+    ArrowsClockwiseIcon,
+    CopyIcon,
+    DownloadSimpleIcon,
+    GearSixIcon,
+    PaperPlaneTiltIcon
+} from '@phosphor-icons/react';
 import { NetworkIcon } from '@/components/NetworkIcon';
 import { toast } from 'sonner';
+import { t } from '@utils/i18n';
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const { wallet, currentAccount, currentNetwork } = useWalletStore();
+    const { language } = useSettingsStore();
 
     if (!wallet || !currentAccount) {
         return null;
@@ -15,13 +24,13 @@ export default function Dashboard() {
 
     const currentAddress = currentAccount.addresses[currentNetwork.chainType];
     const handleCopyAddress = async () => {
-        const toastId = toast.loading('Copying address...');
+        const toastId = toast.loading(t(language, 'copyingAddress'));
         try {
             await navigator.clipboard.writeText(currentAddress);
-            toast.success('Address copied', { id: toastId });
+            toast.success(t(language, 'addressCopied'), { id: toastId });
         } catch (err) {
             console.error(err);
-            toast.error('Failed to copy address', { id: toastId });
+            toast.error(t(language, 'addressCopyFailed'), { id: toastId });
         }
     };
 
@@ -35,7 +44,8 @@ export default function Dashboard() {
                         onClick={() => navigate('/wallets')}
                         className="flex items-center gap-2 text-left hover:opacity-90"
                     >
-                        <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-sm font-bold">
+                        <div
+                            className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-sm font-bold">
                             {currentAccount.name[0]}
                         </div>
                         <div>
@@ -47,93 +57,79 @@ export default function Dashboard() {
                     </button>
                     <div className="flex items-center gap-0.5">
                         <div
-                            role="button"
-                            tabIndex={0}
                             onClick={() => navigate('/chains')}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter' || event.key === ' ') {
-                                    event.preventDefault();
-                                    navigate('/chains');
-                                }
-                            }}
-                            title="Select Chain"
+                            title={t(language, 'selectChain')}
                             className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
                         >
                             <NetworkIcon
                                 chainType={currentNetwork.chainType}
                                 iconKey={currentNetwork.icon}
                                 className="text-foreground"
-                                size={18}
+                                size={20}
                             />
                         </div>
                         <div
-                            role="button"
-                            tabIndex={0}
                             onClick={handleCopyAddress}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter' || event.key === ' ') {
-                                    event.preventDefault();
-                                    handleCopyAddress();
-                                }
-                            }}
-                            title="Copy Address"
+                            title={t(language, 'copyAddress')}
                             className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
                         >
-                            <CopyIcon size={18} />
+                            <CopyIcon size={20}/>
                         </div>
+
+                        <div
+                            onClick={() => navigate('/settings')}
+                            title={t(language, 'settingsTitle')}
+                            className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+                        >
+                            <GearSixIcon size={20}/>
+                        </div>
+
                     </div>
                 </div>
             </div>
 
             {/* Balance */}
             <div className="px-6 pb-6 ">
-                <p className="text-muted-foreground text-sm mb-2">Total Balance</p>
+                <p className="text-muted-foreground text-sm mb-2">{t(language, 'totalBalance')}</p>
                 <h2 className="text-4xl font-bold mb-1">$0.00</h2>
             </div>
 
             {/* Action buttons */}
-            <div className="px-4 pb-4 grid grid-cols-4 gap-3">
+            <div className="px-4 pb-4 grid grid-cols-3 gap-3">
                 <Button
                     onClick={() => navigate('/send')}
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <PaperPlaneTiltIcon size={20} />
-                    <span className="text-xs">Send</span>
+                    <PaperPlaneTiltIcon size={20}/>
+                    <span className="text-xs">{t(language, 'send')}</span>
                 </Button>
                 <Button
                     onClick={() => navigate('/receive')}
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <DownloadSimpleIcon size={20} />
-                    <span className="text-xs">Receive</span>
+                    <DownloadSimpleIcon size={20}/>
+                    <span className="text-xs">{t(language, 'receive')}</span>
                 </Button>
                 <Button
                     onClick={() => navigate('/swap')}
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <ArrowsClockwiseIcon size={20} />
-                    <span className="text-xs">Swap</span>
+                    <ArrowsClockwiseIcon size={20}/>
+                    <span className="text-xs">{t(language, 'swap')}</span>
                 </Button>
-                <Button
-                    onClick={() => navigate('/settings')}
-                    variant="secondary"
-                    className="h-auto flex-col gap-2 py-3"
-                >
-                    <GearSixIcon size={20} />
-                    <span className="text-xs">Settings</span>
-                </Button>
+
             </div>
 
             {/* Assets */}
             <div className="flex-1 overflow-y-auto scrollbar-thin">
                 <div className="p-4">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold">Assets</h3>
+                        <h3 className="font-semibold">{t(language, 'assets')}</h3>
                         <Button variant="link" className="h-auto px-0 text-sm text-primary hover:text-primary/80">
-                            + Add Token
+                            {t(language, 'addToken')}
                         </Button>
                     </div>
 
@@ -141,7 +137,8 @@ export default function Dashboard() {
                     <Card className="mb-3">
                         <CardContent className="flex items-center justify-between p-4">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-lg">
+                                <div
+                                    className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-lg">
                                     <NetworkIcon
                                         chainType={currentNetwork.chainType}
                                         iconKey={currentNetwork.icon}
@@ -163,8 +160,8 @@ export default function Dashboard() {
 
                     {/* Empty state */}
                     <div className="text-center py-8 text-muted-foreground">
-                        <p className="text-sm">No tokens found</p>
-                        <p className="text-xs mt-1">Tokens will appear here automatically</p>
+                        <p className="text-sm">{t(language, 'noTokens')}</p>
+                        <p className="text-xs mt-1">{t(language, 'tokensAutoAppear')}</p>
                     </div>
                 </div>
             </div>

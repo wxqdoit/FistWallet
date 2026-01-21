@@ -42,6 +42,7 @@ interface WalletState {
     deleteWallet: (walletId?: string) => Promise<void>;
     unlock: (password: string) => Promise<boolean>;
     lock: () => void;
+    changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
     switchAccount: (accountId: string) => void;
     switchNetwork: (networkId: string) => void;
     addAccount: () => Promise<void>;
@@ -567,6 +568,26 @@ export const useWalletStore = create<WalletState>((set, get) => {
             set({
                 isLocked: true,
             });
+        },
+
+        /**
+         * Change wallet password
+         */
+        changePassword: async (currentPassword: string, newPassword: string) => {
+            try {
+                const vault = await loadVault(currentPassword);
+                if (!vault) {
+                    throw new Error('Vault not found');
+                }
+
+                await saveVault(vault, newPassword);
+                await startUnlockSession(newPassword);
+
+                set({ isLocked: false });
+            } catch (error) {
+                console.error('Failed to change password:', error);
+                throw error;
+            }
         },
 
         /**

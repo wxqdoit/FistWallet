@@ -1,13 +1,14 @@
 import browser from 'webextension-polyfill';
 import type { Message, Response } from '../types';
-import { MessageType } from '../types';
-import { AUTO_LOCK_DURATION, clearAutoLockTimer, resetAutoLockTimer } from '../core/storage';
+import { MessageType, STORAGE_KEYS } from '../types';
+import { DEFAULT_AUTO_LOCK_DURATION, clearAutoLockTimer, getAutoLockDurationMs, resetAutoLockTimer } from '../core/storage';
 import { setSidePanelMode } from '../core/sidePanel';
 
 console.log('FistWallet background service worker initialized');
 
 let unlockedPassword: string | null = null;
 let unlockExpiresAt: number | null = null;
+let autoLockDurationMs = DEFAULT_AUTO_LOCK_DURATION;
 const SIDE_PANEL_MENU_ID = 'open_side_panel';
 
 
@@ -25,9 +26,9 @@ function clearUnlockState(): void {
 }
 
 function startUnlockSession(password: string): number {
-    unlockExpiresAt = Date.now() + AUTO_LOCK_DURATION;
+    unlockExpiresAt = Date.now() + autoLockDurationMs;
     unlockedPassword = password;
-    resetAutoLockTimer(() => clearUnlockState(), AUTO_LOCK_DURATION);
+    resetAutoLockTimer(() => clearUnlockState(), autoLockDurationMs);
     return unlockExpiresAt;
 }
 
@@ -60,6 +61,25 @@ browser.runtime.onMessage.addListener((message: Message, sender) => {
     console.log('Background received message:', message.type, 'from:', sender);
 
     return handleMessage(message, sender);
+});
+
+async function syncAutoLockDuration(): Promise<void> {
+    autoLockDurationMs = await getAutoLockDurationMs();
+    if (unlockedPassword) {
+        unlockExpiresAt = Date.now() + autoLockDurationMs;
+        resetAutoLockTimer(() => clearUnlockState(), autoLockDurationMs);
+    }
+}
+
+void syncAutoLockDuration();
+
+browser.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== 'local') {
+        return;
+    }
+    if (changes[STORAGE_KEYS.SETTINGS]) {
+        void syncAutoLockDuration();
+    }
 });
 
 function isExtensionSender(sender: browser.runtime.MessageSender): boolean {

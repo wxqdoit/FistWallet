@@ -27,6 +27,30 @@
     --success: 160 100% 42%;
     --warning: 40 96% 53%;
     --error: 0 100% 65%;
+    color-scheme: dark;
+  }
+
+  :root[data-theme='light'] {
+    --background: 0 0% 100%;
+    --foreground: 224 25% 15%;
+    --card: 210 40% 98%;
+    --card-foreground: 224 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 25% 15%;
+    --primary: 248 57% 52%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 32% 92%;
+    --secondary-foreground: 224 25% 15%;
+    --muted: 210 32% 92%;
+    --muted-foreground: 215 16% 45%;
+    --accent: 210 32% 92%;
+    --accent-foreground: 224 25% 15%;
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 88%;
+    --input: 214 32% 88%;
+    --ring: 248 57% 52%;
+    color-scheme: light;
   }
 
   * {

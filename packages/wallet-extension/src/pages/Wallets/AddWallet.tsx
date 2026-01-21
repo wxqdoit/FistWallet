@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { generateMnemonic } from '@core/wallet';
+import { useSettingsStore } from '@store/settings';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,9 +15,11 @@ import {
 } from '@/ui';
 import { ArrowLeftIcon, DownloadSimpleIcon, PlusCircleIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { t } from '@utils/i18n';
 
 export default function AddWallet() {
     const navigate = useNavigate();
+    const { language } = useSettingsStore();
     const [error, setError] = useState('');
     const handleErrorDialogChange = (open: boolean) => {
         if (!open) {
@@ -32,7 +35,7 @@ export default function AddWallet() {
             navigate('/backup-mnemonic?mode=add');
         } catch (err) {
             console.error(err);
-            setError('Failed to generate recovery phrase.');
+            setError(t(language, 'generateRecoveryFailedShort'));
         }
     };
 
@@ -47,29 +50,29 @@ export default function AddWallet() {
                     className=" px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Add Wallet
+                    {t(language, 'addWalletTitle')}
                 </Button>
             </div>
 
             <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-4">
                 <Card>
                     <CardContent className="p-4 space-y-3">
-                        <p className="text-sm font-medium">Create New Wallet</p>
+                        <p className="text-sm font-medium">{t(language, 'createWalletTitle')}</p>
                         <p className="text-xs text-muted-foreground">
-                            Generate a brand new recovery phrase.
+                            {t(language, 'createWalletHint')}
                         </p>
                         <Button className="w-full justify-center" onClick={handleCreate}>
                             <PlusCircleIcon size={16} />
-                            Create Wallet
+                            {t(language, 'createWalletAction')}
                         </Button>
                     </CardContent>
                 </Card>
 
                 <Card>
                     <CardContent className="p-4 space-y-3">
-                        <p className="text-sm font-medium">Import Existing Wallet</p>
+                        <p className="text-sm font-medium">{t(language, 'importExistingWallet')}</p>
                         <p className="text-xs text-muted-foreground">
-                            Restore from a recovery phrase or private key.
+                            {t(language, 'importWalletHint')}
                         </p>
                         <Button
                             variant="secondary"
@@ -77,7 +80,7 @@ export default function AddWallet() {
                             onClick={() => navigate('/import-wallet?mode=add')}
                         >
                             <DownloadSimpleIcon size={16} />
-                            Import Wallet
+                            {t(language, 'importWallet')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -87,11 +90,11 @@ export default function AddWallet() {
             <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Unable to create wallet</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'unableToCreateWallet')}</AlertDialogTitle>
                         <AlertDialogDescription>{error}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>OK</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import { Button, Card, CardContent, Input, Label, ToggleGroup, ToggleGroupItem } from '@/ui';
 import { ArrowLeftIcon, ArrowsDownUpIcon, CaretDownIcon, DiamondIcon } from '@phosphor-icons/react';
 import { NetworkIcon } from '@/components/NetworkIcon';
+import { t } from '@utils/i18n';
 
 export default function Swap() {
     const navigate = useNavigate();
     const { currentNetwork } = useWalletStore();
+    const { language } = useSettingsStore();
     const [fromAmount, setFromAmount] = useState('');
     const [toAmount] = useState('');
     const [slippage, setSlippage] = useState('0.5');
@@ -23,7 +26,7 @@ export default function Swap() {
                     className=" px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Swap
+                    {t(language, 'swapTitle')}
                 </Button>
             </div>
 
@@ -31,7 +34,7 @@ export default function Swap() {
             <div className="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-thin">
                 {/* From */}
                 <div>
-                    <Label className="mb-2 block text-sm font-medium">From</Label>
+                    <Label className="mb-2 block text-sm font-medium">{t(language, 'from')}</Label>
                     <Card>
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-3">
@@ -45,7 +48,7 @@ export default function Swap() {
                                     <span className="font-medium">{currentNetwork.nativeCurrency.symbol}</span>
                                     <CaretDownIcon className="text-muted-foreground" size={14} />
                                 </Button>
-                                <p className="text-xs text-muted-foreground">Balance: 0</p>
+                                <p className="text-xs text-muted-foreground">{t(language, 'balanceZero')}</p>
                             </div>
                             <div className="relative">
                                 <Input
@@ -62,7 +65,7 @@ export default function Swap() {
                                     onClick={() => setFromAmount('0')}
                                     className="absolute right-2 top-1/2 h-7 -translate-y-1/2 px-2 text-primary hover:text-primary/80"
                                 >
-                                    MAX
+                                    {t(language, 'max')}
                                 </Button>
                             </div>
                             <p className="text-xs text-muted-foreground mt-2">≈ $0.00</p>
@@ -79,16 +82,16 @@ export default function Swap() {
 
                 {/* To */}
                 <div>
-                    <Label className="mb-2 block text-sm font-medium">To</Label>
+                    <Label className="mb-2 block text-sm font-medium">{t(language, 'to')}</Label>
                     <Card>
                         <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-3">
                                 <Button variant="secondary" className="h-9 gap-2">
                                     <DiamondIcon size={18} />
-                                    <span className="font-medium">Select token</span>
+                                    <span className="font-medium">{t(language, 'selectToken')}</span>
                                     <CaretDownIcon className="text-muted-foreground" size={14} />
                                 </Button>
-                                <p className="text-xs text-muted-foreground">Balance: 0</p>
+                                <p className="text-xs text-muted-foreground">{t(language, 'balanceZero')}</p>
                             </div>
                             <Input
                                 type="number"
@@ -106,7 +109,7 @@ export default function Swap() {
                 <Card>
                     <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-medium">Slippage Tolerance</span>
+                            <span className="text-sm font-medium">{t(language, 'slippageTolerance')}</span>
                             <span className="text-sm text-primary">{slippage}%</span>
                         </div>
                         <div className="flex gap-2">
@@ -123,7 +126,7 @@ export default function Swap() {
                                 ))}
                             </ToggleGroup>
                             <Button variant="secondary" className="h-9 px-3 text-sm">
-                                Custom
+                                {t(language, 'custom')}
                             </Button>
                         </div>
                     </CardContent>
@@ -132,7 +135,7 @@ export default function Swap() {
                 {/* Quote info (placeholder) */}
                 <Card className="bg-muted/40">
                     <CardContent className="flex items-center justify-center py-8 text-muted-foreground">
-                        <p className="text-sm">Enter amount to see quote</p>
+                        <p className="text-sm">{t(language, 'enterAmountForQuote')}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -140,7 +143,7 @@ export default function Swap() {
             {/* Swap button */}
             <div className="p-4 border-t border-border/60">
                 <Button disabled={!fromAmount} className="w-full">
-                    Select Token to Swap
+                    {t(language, 'selectTokenToSwap')}
                 </Button>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import QRCode from 'react-qr-code';
 import {
     AlertDialog,
@@ -19,10 +20,12 @@ import {
 import { ArrowLeftIcon, CheckIcon, CopyIcon, WarningCircleIcon } from '@phosphor-icons/react';
 import { NetworkIcon } from '@/components/NetworkIcon';
 import { toast } from 'sonner';
+import { t } from '@utils/i18n';
 
 export default function Receive() {
     const navigate = useNavigate();
     const { currentAccount, currentNetwork } = useWalletStore();
+    const { language } = useSettingsStore();
     const [copied, setCopied] = useState(false);
     const [isWarningOpen, setIsWarningOpen] = useState(true);
 
@@ -31,15 +34,15 @@ export default function Receive() {
     const currentAddress = currentAccount.addresses[currentNetwork.chainType];
 
     const handleCopy = async () => {
-        const toastId = toast.loading('Copying address...');
+        const toastId = toast.loading(t(language, 'copyingAddress'));
         try {
             await navigator.clipboard.writeText(currentAddress);
             setCopied(true);
-            toast.success('Address copied', { id: toastId });
+            toast.success(t(language, 'addressCopied'), { id: toastId });
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
             console.error(err);
-            toast.error('Failed to copy address', { id: toastId });
+            toast.error(t(language, 'addressCopyFailed'), { id: toastId });
         }
     };
 
@@ -54,7 +57,7 @@ export default function Receive() {
                     className=" px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Receive {currentNetwork.nativeCurrency.symbol}
+                    {t(language, 'receiveTitle', { symbol: currentNetwork.nativeCurrency.symbol })}
                 </Button>
             </div>
 
@@ -82,7 +85,7 @@ export default function Receive() {
 
                 {/* Address */}
                 <div className="w-full">
-                    <p className="text-sm text-muted-foreground text-center mb-2">Your Address</p>
+                    <p className="text-sm text-muted-foreground text-center mb-2">{t(language, 'yourAddress')}</p>
                     <Card>
                         <CardContent className="flex items-center justify-between gap-3 p-4">
                             <p className="text-sm font-mono flex-1 break-all">{currentAddress}</p>
@@ -106,20 +109,21 @@ export default function Receive() {
                             className="mt-6 w-full justify-start gap-2 border border-warning/40 bg-warning/10 text-warning hover:bg-warning/20"
                         >
                             <WarningCircleIcon size={16} />
-                            Important: Check network before sending
+                            {t(language, 'importantNetworkCheck')}
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>Important</AlertDialogTitle>
+                            <AlertDialogTitle>{t(language, 'important')}</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Only send <strong>{currentNetwork.nativeCurrency.symbol}</strong> and tokens on{' '}
-                                <strong>{currentNetwork.name}</strong> to this address. Sending other assets may result in
-                                permanent loss.
+                                {t(language, 'receiveWarning', {
+                                    symbol: currentNetwork.nativeCurrency.symbol,
+                                    network: currentNetwork.name,
+                                })}
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogAction>Got it</AlertDialogAction>
+                            <AlertDialogAction>{t(language, 'gotIt')}</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>

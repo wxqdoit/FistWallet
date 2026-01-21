@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { generateMnemonic } from '@core/wallet';
+import { useSettingsStore } from '@store/settings';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,10 +17,12 @@ import {
     Progress,
 } from '@/ui';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
+import { t } from '@utils/i18n';
 
 export default function CreatePassword() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { language } = useSettingsStore();
     const mode = searchParams.get('mode');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -45,17 +48,17 @@ export default function CreatePassword() {
         setError('');
 
         if (password.length < 8) {
-            setError('Password must be at least 8 characters');
+            setError(t(language, 'passwordTooShort'));
             return;
         }
 
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            setError(t(language, 'passwordsDoNotMatch'));
             return;
         }
 
         if (!agreedToTerms) {
-            setError('Please agree to the terms of service');
+            setError(t(language, 'agreeToTermsRequired'));
             return;
         }
 
@@ -77,7 +80,7 @@ export default function CreatePassword() {
             setError(
                 error instanceof Error
                     ? error.message
-                    : 'Failed to generate recovery phrase. Please try again.'
+                    : t(language, 'generateRecoveryFailed')
             );
         }
     };
@@ -93,39 +96,45 @@ export default function CreatePassword() {
                     className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Back
+                    {t(language, 'back')}
                 </Button>
-                <h1 className="text-2xl font-bold">Create Password</h1>
+                <h1 className="text-2xl font-bold">{t(language, 'createPasswordTitle')}</h1>
                 <p className="text-muted-foreground text-sm mt-2">
-                    This password encrypts your wallet on this device
+                    {t(language, 'createPasswordSubtitle')}
                 </p>
             </div>
 
             {/* Form */}
             <div className="flex-1 space-y-4">
                 <div>
-                    <Label className="mb-2 block text-sm font-medium">New Password</Label>
+                    <Label className="mb-2 block text-sm font-medium">{t(language, 'newPasswordLabel')}</Label>
                     <Input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter password"
+                        placeholder={t(language, 'enterPassword')}
                     />
                     {strength && (
                         <div className="mt-2 flex items-center gap-2">
                             <Progress value={strengthValue} className="h-1 flex-1" />
-                            <span className="text-xs text-muted-foreground capitalize">{strength}</span>
+                            <span className="text-xs text-muted-foreground capitalize">
+                                {strength === 'weak'
+                                    ? t(language, 'strengthWeak')
+                                    : strength === 'medium'
+                                        ? t(language, 'strengthMedium')
+                                        : t(language, 'strengthStrong')}
+                            </span>
                         </div>
                     )}
                 </div>
 
                 <div>
-                    <Label className="mb-2 block text-sm font-medium">Confirm Password</Label>
+                    <Label className="mb-2 block text-sm font-medium">{t(language, 'confirmPasswordLabel')}</Label>
                     <Input
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Confirm password"
+                        placeholder={t(language, 'confirmPasswordPlaceholder')}
                     />
                 </div>
 
@@ -136,9 +145,9 @@ export default function CreatePassword() {
                         onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
                     />
                     <Label htmlFor="terms" className="text-sm text-muted-foreground">
-                        I agree to the{' '}
+                        {t(language, 'agreeToTermsPrefix')}{' '}
                         <a href="#" className="text-primary hover:underline">
-                            Terms of Service
+                            {t(language, 'termsOfService')}
                         </a>
                     </Label>
                 </div>
@@ -147,17 +156,17 @@ export default function CreatePassword() {
 
             {/* Continue button */}
             <Button onClick={handleContinue} disabled={!password || !confirmPassword || !agreedToTerms} className="w-full">
-                Continue
+                {t(language, 'continue')}
             </Button>
 
             <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Unable to continue</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'unableToContinue')}</AlertDialogTitle>
                         <AlertDialogDescription>{error}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>OK</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

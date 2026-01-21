@@ -7,7 +7,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { Slot } from '@radix-ui/react-slot';
-import { CaretDownIcon, CaretUpIcon, CheckIcon } from '@phosphor-icons/react';
+import { CaretDownIcon, CaretRightIcon, CaretUpIcon, CheckIcon } from '@phosphor-icons/react';
 import { Toaster as SonnerToaster } from 'sonner';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils';
@@ -81,6 +81,45 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttribu
     )
 );
 Textarea.displayName = 'Textarea';
+
+const Switch = React.forwardRef<
+    HTMLButtonElement,
+    React.ButtonHTMLAttributes<HTMLButtonElement> & {
+        checked: boolean;
+        onCheckedChange?: (checked: boolean) => void;
+    }
+>(({ className, checked, onCheckedChange, disabled, ...props }, ref) => (
+    <button
+        ref={ref}
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        disabled={disabled}
+        onClick={(event) => {
+            props.onClick?.(event);
+            if (event.defaultPrevented || disabled) {
+                return;
+            }
+            onCheckedChange?.(!checked);
+        }}
+        className={cn(
+            'relative inline-flex h-6 w-11 items-center rounded-full border border-transparent transition-colors',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            'disabled:cursor-not-allowed disabled:opacity-50',
+            checked ? 'bg-primary' : 'bg-muted',
+            className
+        )}
+        {...props}
+    >
+        <span
+            className={cn(
+                'inline-block h-5 w-5 transform rounded-full bg-background shadow-sm transition-transform',
+                checked ? 'translate-x-5' : 'translate-x-0.5'
+            )}
+        />
+    </button>
+));
+Switch.displayName = 'Switch';
 
 const Label = React.forwardRef<
     React.ElementRef<typeof LabelPrimitive.Root>,
@@ -354,7 +393,7 @@ const SelectTrigger = React.forwardRef<
     >
         {children}
         <SelectPrimitive.Icon asChild>
-            <CaretDownIcon className="h-4 w-4 opacity-60" />
+            <CaretRightIcon className="h-4 w-4 opacity-60" />
         </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
 ));
@@ -373,6 +412,7 @@ const SelectContent = React.forwardRef<
                 className
             )}
             position={position}
+            align="end"
             {...props}
         >
             <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1">
@@ -408,17 +448,17 @@ const SelectItem = React.forwardRef<
     <SelectPrimitive.Item
         ref={ref}
         className={cn(
-            'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+            'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
             className
         )}
         {...props}
     >
-        <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+        <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
             <SelectPrimitive.ItemIndicator>
                 <CheckIcon className="h-4 w-4" />
             </SelectPrimitive.ItemIndicator>
         </span>
-        <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
@@ -521,6 +561,7 @@ export {
     SelectSeparator,
     SelectTrigger,
     SelectValue,
+    Switch,
     Tabs,
     TabsContent,
     TabsList,

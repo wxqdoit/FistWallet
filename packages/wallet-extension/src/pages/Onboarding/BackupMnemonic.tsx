@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSettingsStore } from '@store/settings';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,10 +15,12 @@ import {
     CardContent,
 } from '@/ui';
 import { ArrowLeftIcon, CheckCircleIcon, EyeIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react';
+import { t } from '@utils/i18n';
 
 export default function BackupMnemonic() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { language } = useSettingsStore();
     const mode = searchParams.get('mode');
     const isAddMode = mode === 'add';
     const [mnemonic, setMnemonic] = useState<string[]>([]);
@@ -55,11 +58,11 @@ export default function BackupMnemonic() {
                     className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Back
+                    {t(language, 'back')}
                 </Button>
-                <h1 className="text-2xl font-bold">Backup Recovery Phrase</h1>
+                <h1 className="text-2xl font-bold">{t(language, 'backupRecoveryTitle')}</h1>
                 <p className="text-muted-foreground text-sm mt-2">
-                    Write down these 12 words in order and keep them safe
+                    {t(language, 'backupRecoverySubtitle')}
                 </p>
             </div>
 
@@ -71,18 +74,18 @@ export default function BackupMnemonic() {
                         className="mb-4 w-full justify-start gap-3 border border-warning/40 bg-warning/10 text-warning hover:bg-warning/20"
                     >
                         <WarningCircleIcon className="text-warning" size={20} />
-                        Never share your recovery phrase
+                        {t(language, 'neverShareRecovery')}
                     </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Keep your recovery phrase safe</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'keepRecoverySafe')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Never share your recovery phrase with anyone. Anyone with this phrase can control your funds.
+                            {t(language, 'recoveryWarningBody')}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>Got it</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'gotIt')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -94,7 +97,7 @@ export default function BackupMnemonic() {
                         <div className="absolute inset-0 backdrop-blur-xl bg-black/50 rounded-xl flex items-center justify-center z-10">
                             <Button onClick={() => setIsRevealed(true)}>
                                 <EyeIcon size={16} />
-                                Reveal Recovery Phrase
+                                {t(language, 'revealRecovery')}
                             </Button>
                         </div>
                     )}
@@ -119,39 +122,39 @@ export default function BackupMnemonic() {
             <div className="mb-6 space-y-2 text-sm text-muted-foreground">
                 <p className="flex items-center gap-2">
                     <CheckCircleIcon size={16} className="text-success" />
-                    Write it down on paper
+                    {t(language, 'tipWriteDown')}
                 </p>
                 <p className="flex items-center gap-2">
                     <CheckCircleIcon size={16} className="text-success" />
-                    Store in a secure location
+                    {t(language, 'tipStoreSecure')}
                 </p>
                 <p className="flex items-center gap-2">
                     <XCircleIcon size={16} className="text-error" />
-                    Never share with anyone
+                    {t(language, 'tipNeverShare')}
                 </p>
                 <p className="flex items-center gap-2">
                     <XCircleIcon size={16} className="text-error" />
-                    Never store digitally
+                    {t(language, 'tipNeverStoreDigital')}
                 </p>
             </div>
 
             {/* Continue button */}
             <div className="mt-auto pt-2 pb-2 sticky bottom-0 bg-background">
                 <Button onClick={handleContinue} disabled={!isRevealed} className="w-full">
-                    I've Written It Down
+                    {t(language, 'writtenDown')}
                 </Button>
             </div>
 
             <AlertDialog open={isRevealAlertOpen} onOpenChange={setIsRevealAlertOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Reveal required</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'revealRequiredTitle')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Please reveal and back up your recovery phrase before continuing.
+                            {t(language, 'revealRequiredBody')}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>OK</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

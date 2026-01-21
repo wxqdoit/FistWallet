@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import { ChainType } from '@/types';
 import { validateMnemonic } from '@core/wallet';
 import {
@@ -26,10 +27,12 @@ import {
     Textarea,
 } from '@/ui';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
+import { t } from '@utils/i18n';
 
 export default function ImportWallet() {
     const navigate = useNavigate();
     const { importWallet, importFromPrivateKey, addWalletFromMnemonic, addWalletFromPrivateKey } = useWalletStore();
+    const { language } = useSettingsStore();
     const [searchParams] = useSearchParams();
     const mode = searchParams.get('mode');
     const isAddMode = mode === 'add';
@@ -75,7 +78,7 @@ export default function ImportWallet() {
         setError('');
 
         if (!tempPassword && !isAddMode) {
-            setError('Please create a password first.');
+            setError(t(language, 'createPasswordFirst'));
             return;
         }
 
@@ -83,7 +86,7 @@ export default function ImportWallet() {
             const trimmedMnemonic = mnemonic.trim().toLowerCase();
 
             if (!validateMnemonic(trimmedMnemonic)) {
-                setError('Invalid recovery phrase');
+                setError(t(language, 'invalidRecoveryPhrase'));
                 return;
             }
 
@@ -98,7 +101,7 @@ export default function ImportWallet() {
                     navigate('/');
                 }
             } catch (err) {
-                setError('Failed to import wallet. Please check your recovery phrase.');
+                setError(t(language, 'importRecoveryFailed'));
                 console.error(err);
             } finally {
                 setIsImporting(false);
@@ -108,7 +111,7 @@ export default function ImportWallet() {
 
         const trimmedPrivateKey = privateKey.trim();
         if (!trimmedPrivateKey) {
-            setError('Private key is required');
+            setError(t(language, 'privateKeyRequired'));
             return;
         }
 
@@ -123,7 +126,11 @@ export default function ImportWallet() {
                 navigate('/');
             }
         } catch (err) {
-            setError('Failed to import wallet. Please check your private key.');
+            if (err instanceof Error && err.message === 'Private key already imported') {
+                setError(t(language, 'duplicatePrivateKey'));
+            } else {
+                setError(t(language, 'importPrivateKeyFailed'));
+            }
             console.error(err);
         } finally {
             setIsImporting(false);
@@ -141,11 +148,11 @@ export default function ImportWallet() {
                     className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Back
+                    {t(language, 'back')}
                 </Button>
-                <h1 className="text-2xl font-bold">Import Wallet</h1>
+                <h1 className="text-2xl font-bold">{t(language, 'importWalletTitle')}</h1>
                 <p className="text-muted-foreground text-sm mt-2">
-                    Restore your wallet using your recovery phrase
+                    {t(language, 'importWalletSubtitle')}
                 </p>
             </div>
 
@@ -159,8 +166,8 @@ export default function ImportWallet() {
                 className="mb-6"
             >
                 <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="mnemonic">Recovery Phrase</TabsTrigger>
-                    <TabsTrigger value="privateKey">Private Key</TabsTrigger>
+                    <TabsTrigger value="mnemonic">{t(language, 'recoveryPhrase')}</TabsTrigger>
+                    <TabsTrigger value="privateKey">{t(language, 'privateKey')}</TabsTrigger>
                 </TabsList>
                 <TabsContent value="mnemonic" />
                 <TabsContent value="privateKey" />
@@ -171,26 +178,26 @@ export default function ImportWallet() {
                 {importType === 'mnemonic' && (
                     <div>
                         <Label className="mb-2 block text-sm font-medium">
-                            Recovery Phrase (12 or 24 words)
+                            {t(language, 'recoveryPhraseHint')}
                         </Label>
                         <Textarea
                             value={mnemonic}
                             onChange={(e) => setMnemonic(e.target.value)}
                             className="min-h-[120px] resize-none font-mono text-sm"
-                            placeholder="Enter your recovery phrase separated by spaces"
+                            placeholder={t(language, 'enterRecoveryPhrase')}
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                            Separate each word with a space
+                            {t(language, 'separateWordsHint')}
                         </p>
                     </div>
                 )}
                 {importType === 'privateKey' && (
                     <div className="space-y-4">
                         <div>
-                            <Label className="mb-2 block text-sm font-medium">Network</Label>
+                            <Label className="mb-2 block text-sm font-medium">{t(language, 'network')}</Label>
                             <Select value={chainType} onValueChange={(value) => setChainType(value as ChainType)}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select network" />
+                                    <SelectValue placeholder={t(language, 'selectNetwork')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {chainOptions.map((option) => (
@@ -202,12 +209,12 @@ export default function ImportWallet() {
                             </Select>
                         </div>
                         <div>
-                            <Label className="mb-2 block text-sm font-medium">Private Key</Label>
+                            <Label className="mb-2 block text-sm font-medium">{t(language, 'privateKey')}</Label>
                             <Input
                                 value={privateKey}
                                 onChange={(e) => setPrivateKey(e.target.value)}
                                 className="font-mono text-sm"
-                                placeholder="Enter your private key"
+                                placeholder={t(language, 'enterPrivateKey')}
                             />
                         </div>
                     </div>
@@ -224,17 +231,17 @@ export default function ImportWallet() {
                 }
                 className="w-full"
             >
-                {isImporting ? 'Importing...' : 'Import Wallet'}
+                {isImporting ? t(language, 'importing') : t(language, 'importWallet')}
             </Button>
 
             <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Import failed</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'importFailed')}</AlertDialogTitle>
                         <AlertDialogDescription>{error}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>OK</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

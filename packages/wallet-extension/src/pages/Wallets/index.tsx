@@ -1,12 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import { Button, Card, CardContent } from '@/ui';
 import { ArrowLeftIcon, CheckIcon, PlusIcon, WrenchIcon } from '@phosphor-icons/react';
 import { cn } from '@/utils';
+import { t } from '@utils/i18n';
 
 export default function Wallets() {
     const navigate = useNavigate();
     const { wallets, currentWalletId, switchWallet } = useWalletStore();
+    const { language } = useSettingsStore();
     const handleSelectWallet = (walletId: string) => {
         switchWallet(walletId);
         navigate('/');
@@ -23,7 +26,7 @@ export default function Wallets() {
                     className=" px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Back
+                    {t(language, 'back')}
                 </Button>
             </div>
 
@@ -31,7 +34,7 @@ export default function Wallets() {
             <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-3">
                 {wallets.length === 0 ? (
                     <div className="text-center text-sm text-muted-foreground py-10">
-                        No wallets found.
+                        {t(language, 'noWalletsFound')}
                     </div>
                 ) : (
                     wallets.map((wallet, index) => {
@@ -57,9 +60,11 @@ export default function Wallets() {
                                     <div className="flex-1">
                                         <p className="text-sm font-medium font-mono">{addressLabel}</p>
                                         <div className="flex items-center gap-2">
-                                           <p className="uppercase text-xs text-muted-foreground">
-                                                {wallet.type === 'mnemonic' ? 'Recovery phrase' : 'Private key'}
-                                                </p>
+                                            <p className="uppercase text-xs text-muted-foreground">
+                                                {wallet.type === 'mnemonic'
+                                                    ? t(language, 'recoveryPhraseLabel')
+                                                    : t(language, 'privateKeyLabel')}
+                                            </p>
                                             {primaryAccount && (
                                                 <p className="text-xs text-muted-foreground">
                                                     {primaryAccount.name}
@@ -76,24 +81,26 @@ export default function Wallets() {
             </div>
 
             {/* Actions */}
-            <div className="p-4 border-t border-border/60 space-y-2">
+            <div className="p-4">
+                <div className="flex gap-2">
                 <Button
                     variant="secondary"
-                    className="w-full justify-center"
+                    className="flex-1 justify-center"
                     onClick={() => navigate('/wallets/manage')}
                     disabled={wallets.length === 0}
                 >
                     <WrenchIcon size={16} />
-                    Manage
+                    {t(language, 'manage')}
                 </Button>
                 <Button
                     variant="default"
-                    className="w-full justify-center"
+                    className="flex-1 justify-center"
                     onClick={() => navigate('/add-wallet')}
                 >
                     <PlusIcon size={16} />
-                    Add Wallet
+                    {t(language, 'addWallet')}
                 </Button>
+                </div>
             </div>
         </div>
     );

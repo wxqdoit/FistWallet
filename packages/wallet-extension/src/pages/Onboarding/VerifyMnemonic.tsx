@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,10 +15,12 @@ import {
     Label,
 } from '@/ui';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
+import { t } from '@utils/i18n';
 
 export default function VerifyMnemonic() {
     const navigate = useNavigate();
     const { createNewWallet, addWalletFromMnemonic } = useWalletStore();
+    const { language } = useSettingsStore();
     const [searchParams] = useSearchParams();
     const mode = searchParams.get('mode');
     const isAddMode = mode === 'add';
@@ -65,7 +68,7 @@ export default function VerifyMnemonic() {
     const handleVerify = async () => {
         // Check if all words are selected
         if (selectedWords.some((word) => word === null)) {
-            setError('Please select all words');
+            setError(t(language, 'selectAllWords'));
             return;
         }
 
@@ -75,7 +78,7 @@ export default function VerifyMnemonic() {
         );
 
         if (!isCorrect) {
-            setError('Incorrect words. Please try again.');
+            setError(t(language, 'incorrectWords'));
             setSelectedWords([null, null, null]);
             return;
         }
@@ -85,7 +88,7 @@ export default function VerifyMnemonic() {
         try {
             const mnemonicPhrase = sessionStorage.getItem('tempMnemonic');
             if (!mnemonicPhrase) {
-                throw new Error('Session data not found');
+                throw new Error(t(language, 'sessionDataMissing'));
             }
 
             if (isAddMode) {
@@ -93,7 +96,7 @@ export default function VerifyMnemonic() {
             } else {
                 const password = sessionStorage.getItem('tempPassword');
                 if (!password) {
-                    throw new Error('Session data not found');
+                    throw new Error(t(language, 'sessionDataMissing'));
                 }
                 await createNewWallet(password, mnemonicPhrase);
             }
@@ -109,7 +112,7 @@ export default function VerifyMnemonic() {
                 navigate('/');
             }
         } catch (err) {
-            setError('Failed to create wallet. Please try again.');
+            setError(t(language, 'failedCreateWallet'));
             console.error(err);
         } finally {
             setIsCreating(false);
@@ -128,11 +131,11 @@ export default function VerifyMnemonic() {
                     disabled={isCreating}
                 >
                     <ArrowLeftIcon size={16} />
-                    Back
+                    {t(language, 'back')}
                 </Button>
-                <h1 className="text-2xl font-bold">Verify Recovery Phrase</h1>
+                <h1 className="text-2xl font-bold">{t(language, 'verifyRecoveryTitle')}</h1>
                 <p className="text-muted-foreground text-sm mt-2">
-                    Select the correct words to verify your backup
+                    {t(language, 'verifyRecoverySubtitle')}
                 </p>
             </div>
 
@@ -141,12 +144,12 @@ export default function VerifyMnemonic() {
                 {verifyPositions.map((pos, idx) => (
                     <div key={pos}>
                         <Label className="mb-2 block text-sm font-medium">
-                            Word #{pos + 1}
+                            {t(language, 'wordNumber', { number: pos + 1 })}
                         </Label>
                         <Input
                             readOnly
                             value={selectedWords[idx] || ''}
-                            placeholder="Select word..."
+                            placeholder={t(language, 'selectWordPlaceholder')}
                             className={selectedWords[idx] ? 'border-primary/60 bg-primary/10 text-primary' : ''}
                         />
                     </div>
@@ -155,7 +158,7 @@ export default function VerifyMnemonic() {
 
             {/* Word selection */}
             <div className="flex-1 mb-6">
-                <p className="text-sm font-medium mb-3">Select from your recovery phrase:</p>
+                <p className="text-sm font-medium mb-3">{t(language, 'selectFromRecovery')}</p>
                 <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto scrollbar-thin">
                     {shuffledWords.map((word, index) => {
                         const isSelected = selectedWords.includes(word);
@@ -187,21 +190,21 @@ export default function VerifyMnemonic() {
             >
                 {isCreating
                     ? isAddMode
-                        ? 'Adding Wallet...'
-                        : 'Creating Wallet...'
+                        ? t(language, 'addingWallet')
+                        : t(language, 'creatingWallet')
                     : isAddMode
-                        ? 'Verify & Add Wallet'
-                        : 'Verify & Create Wallet'}
+                        ? t(language, 'verifyAddWallet')
+                        : t(language, 'verifyCreateWallet')}
             </Button>
 
             <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Verification failed</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'verificationFailed')}</AlertDialogTitle>
                         <AlertDialogDescription>{error}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>OK</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

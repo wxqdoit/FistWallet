@@ -1,14 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import { getSupportedNetworksForAccount } from '@core/networks';
 import { Button } from '@/ui';
 import { ArrowLeftIcon, CheckIcon } from '@phosphor-icons/react';
 import { NetworkIcon } from '@/components/NetworkIcon';
 import { cn } from '@/utils';
+import { t } from '@utils/i18n';
 
 export default function ChainSelect() {
     const navigate = useNavigate();
     const { currentAccount, currentNetwork, switchNetwork } = useWalletStore();
+    const { language } = useSettingsStore();
 
     if (!currentAccount) return null;
 
@@ -30,7 +33,7 @@ export default function ChainSelect() {
                     className=" px-2 text-muted-foreground hover:text-foreground"
                 >
                     <ArrowLeftIcon size={16} />
-                    Select Chain
+                    {t(language, 'selectChain')}
                 </Button>
             </div>
 
@@ -38,7 +41,7 @@ export default function ChainSelect() {
             <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-3">
                 {supportedNetworks.length === 0 ? (
                     <div className="text-center text-sm text-muted-foreground py-10">
-                        No supported chains found.
+                        {t(language, 'noSupportedChains')}
                     </div>
                 ) : (
                     supportedNetworks.map((network) => {

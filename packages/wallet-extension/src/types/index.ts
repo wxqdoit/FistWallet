@@ -77,6 +77,24 @@ export interface VaultData {
 }
 
 /**
+ * App settings
+ */
+export type ThemeMode = 'dark' | 'light';
+export type LanguageCode = 'en' | 'ko' | 'ja' | 'zh';
+
+export interface AppSettings {
+    theme: ThemeMode;
+    language: LanguageCode;
+    autoLockMinutes: number;
+}
+
+export const DEFAULT_SETTINGS: AppSettings = {
+    theme: 'dark',
+    language: 'en',
+    autoLockMinutes: 10,
+};
+
+/**
  * Token information
  */
 export interface Token {

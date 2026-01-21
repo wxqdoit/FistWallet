@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,10 +20,12 @@ import {
 } from '@/ui';
 import { ArrowLeftIcon, CopyIcon, KeyIcon, WarningCircleIcon } from '@phosphor-icons/react';
 import { toast } from 'sonner';
+import { t } from '@utils/i18n';
 
 export default function WalletManage() {
     const navigate = useNavigate();
     const { wallet, currentNetwork, exportMnemonic, exportPrivateKey, deleteWallet, unlock } = useWalletStore();
+    const { language } = useSettingsStore();
     const [mnemonic, setMnemonic] = useState<string | null>(null);
     const [privateKey, setPrivateKey] = useState<string | null>(null);
     const [error, setError] = useState('');
@@ -58,13 +61,13 @@ export default function WalletManage() {
         try {
             const phrase = await exportMnemonic();
             if (!phrase) {
-                setError('Mnemonic not available for this wallet.');
+                setError(t(language, 'mnemonicNotAvailable'));
                 return;
             }
             setMnemonic(phrase);
         } catch (err) {
             console.error(err);
-            setError('Failed to export mnemonic.');
+            setError(t(language, 'exportMnemonicFailed'));
         } finally {
             setIsLoading(false);
         }
@@ -78,7 +81,7 @@ export default function WalletManage() {
             setPrivateKey(key);
         } catch (err) {
             console.error(err);
-            setError('Failed to export private key.');
+            setError(t(language, 'exportPrivateKeyFailed'));
         } finally {
             setIsLoading(false);
         }
@@ -95,7 +98,7 @@ export default function WalletManage() {
         }
 
         if (!confirmPassword) {
-            setConfirmError('Please enter your password.');
+            setConfirmError(t(language, 'confirmPasswordRequired'));
             return;
         }
 
@@ -104,7 +107,7 @@ export default function WalletManage() {
         try {
             const isValid = await unlock(confirmPassword);
             if (!isValid) {
-                setConfirmError('Incorrect password.');
+                setConfirmError(t(language, 'unlockIncorrectPassword'));
                 return;
             }
 
@@ -128,14 +131,14 @@ export default function WalletManage() {
                     navigate('/wallets');
                 } catch (err) {
                     console.error(err);
-                    setError('Failed to delete wallet.');
+                    setError(t(language, 'deleteWalletFailed'));
                 } finally {
                     setIsLoading(false);
                 }
             }
         } catch (err) {
             console.error(err);
-            setConfirmError('Failed to confirm password.');
+            setConfirmError(t(language, 'confirmPasswordFailed'));
         } finally {
             setIsConfirming(false);
         }
@@ -154,36 +157,36 @@ export default function WalletManage() {
     };
 
     const getConfirmTitle = () => {
-        if (pendingAction === 'delete') return 'Confirm deletion';
-        if (pendingAction === 'privateKey') return 'Confirm export';
-        return 'Confirm export';
+        if (pendingAction === 'delete') return t(language, 'confirmDeletion');
+        if (pendingAction === 'privateKey') return t(language, 'confirmExport');
+        return t(language, 'confirmExport');
     };
 
     const getConfirmDescription = () => {
         if (pendingAction === 'delete') {
-            return 'Enter your password to delete this wallet. This action cannot be undone.';
+            return t(language, 'confirmDeleteDescription');
         }
         if (pendingAction === 'privateKey') {
-            return `Enter your password to reveal the private key for ${currentNetwork.name}.`;
+            return t(language, 'confirmPrivateKeyDescription', { network: currentNetwork.name });
         }
-        return 'Enter your password to reveal your recovery phrase.';
+        return t(language, 'confirmRecoveryDescription');
     };
 
     const getConfirmActionLabel = () => {
-        if (pendingAction === 'delete') return 'Delete';
-        return 'Confirm';
+        if (pendingAction === 'delete') return t(language, 'delete');
+        return t(language, 'confirm');
     };
 
     const isDeleteAction = pendingAction === 'delete';
 
     const handleCopy = async (value: string, label: string) => {
-        const toastId = toast.loading(`Copying ${label.toLowerCase()}...`);
+        const toastId = toast.loading(t(language, 'copyingItem', { label: label.toLowerCase() }));
         try {
             await navigator.clipboard.writeText(value);
-            toast.success(`${label} copied`, { id: toastId });
+            toast.success(t(language, 'copiedItem', { label }), { id: toastId });
         } catch (err) {
             console.error(err);
-            toast.error(`Failed to copy ${label.toLowerCase()}`, { id: toastId });
+            toast.error(t(language, 'copyFailed', { label: label.toLowerCase() }), { id: toastId });
         }
     };
 
@@ -199,7 +202,7 @@ export default function WalletManage() {
                     disabled={isLoading}
                 >
                     <ArrowLeftIcon size={16} />
-                    Manage
+                    {t(language, 'manage')}
                 </Button>
             </div>
 
@@ -207,9 +210,9 @@ export default function WalletManage() {
                 {canExportMnemonic && (
                     <Card>
                         <CardContent className="p-4 space-y-3">
-                            <Label className="text-sm font-medium">Export Mnemonic</Label>
+                            <Label className="text-sm font-medium">{t(language, 'exportMnemonic')}</Label>
                             <p className="text-xs text-muted-foreground">
-                                Available for wallets created from or imported with a recovery phrase.
+                                {t(language, 'exportMnemonicHint')}
                             </p>
                             <Button
                                 variant="secondary"
@@ -218,7 +221,7 @@ export default function WalletManage() {
                                 className="w-full justify-center"
                             >
                                 <KeyIcon size={16} />
-                                Reveal Recovery Phrase
+                                {t(language, 'revealRecoveryPhrase')}
                             </Button>
                             {mnemonic && (
                                 <div className="space-y-2">
@@ -227,10 +230,10 @@ export default function WalletManage() {
                                         variant="ghost"
                                         size="sm"
                                         className="w-full justify-center"
-                                    onClick={() => handleCopy(mnemonic, 'Recovery phrase')}
+                                    onClick={() => handleCopy(mnemonic, t(language, 'recoveryPhraseLabel'))}
                                     >
                                         <CopyIcon size={14} />
-                                        Copy
+                                        {t(language, 'copy')}
                                     </Button>
                                 </div>
                             )}
@@ -240,9 +243,9 @@ export default function WalletManage() {
 
                 <Card>
                     <CardContent className="p-4 space-y-3">
-                        <Label className="text-sm font-medium">Export Private Key</Label>
+                        <Label className="text-sm font-medium">{t(language, 'exportPrivateKey')}</Label>
                         <p className="text-xs text-muted-foreground">
-                            Export private key for {currentNetwork.name}.
+                            {t(language, 'exportPrivateKeyHint', { network: currentNetwork.name })}
                         </p>
                         <Button
                             variant="secondary"
@@ -251,7 +254,7 @@ export default function WalletManage() {
                             className="w-full justify-center"
                         >
                             <KeyIcon size={16} />
-                            Reveal Private Key
+                            {t(language, 'revealPrivateKey')}
                         </Button>
                         {privateKey && (
                             <div className="space-y-2">
@@ -260,10 +263,10 @@ export default function WalletManage() {
                                     variant="ghost"
                                     size="sm"
                                     className="w-full justify-center"
-                                    onClick={() => handleCopy(privateKey, 'Private key')}
+                                    onClick={() => handleCopy(privateKey, t(language, 'privateKeyLabel'))}
                                 >
                                     <CopyIcon size={14} />
-                                    Copy
+                                    {t(language, 'copy')}
                                 </Button>
                             </div>
                         )}
@@ -278,7 +281,7 @@ export default function WalletManage() {
                         className="w-full justify-center"
                     >
                         <WarningCircleIcon size={16} />
-                        Delete Wallet
+                        {t(language, 'deleteWallet')}
                     </Button>
                 </div>
             </div>
@@ -291,7 +294,7 @@ export default function WalletManage() {
                     </AlertDialogHeader>
                     <div className="space-y-2">
                         <Label htmlFor="confirm-password" className="text-sm font-medium">
-                            Password
+                            {t(language, 'passwordLabel')}
                         </Label>
                         <Input
                             id="confirm-password"
@@ -303,20 +306,20 @@ export default function WalletManage() {
                                     setConfirmError('');
                                 }
                             }}
-                            placeholder="Enter your password"
+                            placeholder={t(language, 'enterYourPassword')}
                             autoFocus
                             disabled={isConfirming}
                         />
                         {confirmError && <p className="text-xs text-destructive">{confirmError}</p>}
                     </div>
                     <AlertDialogFooter>
-                        <AlertDialogCancel disabled={isConfirming}>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel disabled={isConfirming}>{t(language, 'cancel')}</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleConfirmClick}
                             disabled={isConfirming}
                             className={isDeleteAction ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : undefined}
                         >
-                            {isConfirming ? 'Confirming...' : getConfirmActionLabel()}
+                            {isConfirming ? t(language, 'confirming') : getConfirmActionLabel()}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
@@ -325,11 +328,11 @@ export default function WalletManage() {
             <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Wallet action failed</AlertDialogTitle>
+                        <AlertDialogTitle>{t(language, 'walletActionFailed')}</AlertDialogTitle>
                         <AlertDialogDescription>{error}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogAction>OK</AlertDialogAction>
+                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

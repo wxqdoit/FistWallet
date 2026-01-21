@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
+import { useSettingsStore } from '@store/settings';
 import { useEffect, useMemo } from 'react';
 import { Toaster } from '@/ui';
 import { cn } from '@/utils';
@@ -18,6 +19,7 @@ import Send from '@pages/Send';
 import Receive from '@pages/Receive';
 import Swap from '@pages/Swap';
 import Settings from '@pages/Settings';
+import ChangePassword from '@pages/Settings/ChangePassword';
 import ChainSelect from '@pages/Chains';
 import Wallets from '@pages/Wallets';
 import WalletManage from '@pages/Wallets/Manage';
@@ -25,6 +27,7 @@ import AddWallet from '@pages/Wallets/AddWallet';
 
 function App() {
     const { isInitialized, isLocked, initialize } = useWalletStore();
+    const { theme, language, initialize: initializeSettings } = useSettingsStore();
     const isSidePanel = useMemo(
         () => new URLSearchParams(window.location.search).get('view') === 'sidepanel',
         []
@@ -32,6 +35,13 @@ function App() {
     useEffect(() => {
         initialize();
     }, [initialize]);
+    useEffect(() => {
+        initializeSettings();
+    }, [initializeSettings]);
+    useEffect(() => {
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = language;
+    }, [theme, language]);
 
     // Show loading state while initializing
     if (isInitialized === null) {
@@ -96,6 +106,7 @@ function App() {
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/swap" element={<Swap />} />
                             <Route path="/settings" element={<Settings />} />
+                            <Route path="/settings/change-password" element={<ChangePassword />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </>
                     )}

@@ -89,6 +89,24 @@ function normalizeVaultData(vault: VaultData | null): VaultData {
     };
 }
 
+function hasPrivateKey(vault: VaultData | null, privateKey: string): boolean {
+    if (!vault) {
+        return false;
+    }
+
+    if (vault.privateKeys && Object.values(vault.privateKeys).includes(privateKey)) {
+        return true;
+    }
+
+    const walletEntries = vault.wallets ? Object.values(vault.wallets) : [];
+    return walletEntries.some((entry) => {
+        if (!entry?.privateKeys) {
+            return false;
+        }
+        return Object.values(entry.privateKeys).includes(privateKey);
+    });
+}
+
 function attachWalletToVault(
     vault: VaultData | null,
     wallet: Wallet,
@@ -333,6 +351,11 @@ export async function importWalletFromPrivateKey(
     privateKey: string,
     chainType: ChainType
 ): Promise<Wallet> {
+    const existingVault = await loadVault(password);
+    if (hasPrivateKey(existingVault, privateKey)) {
+        throw new Error('Private key already imported');
+    }
+
     // Validate private key against the selected chain type
     const address = getAddressFromPrivateKey(chainType, privateKey);
     const addresses = await deriveAddressesFromPrivateKey(privateKey);
@@ -353,7 +376,6 @@ export async function importWalletFromPrivateKey(
         createdAt: Date.now(),
     };
 
-    const existingVault = await loadVault(password);
     const nextVault = attachWalletToVault(existingVault, wallet, { privateKey });
     nextVault.version = 2;
 
