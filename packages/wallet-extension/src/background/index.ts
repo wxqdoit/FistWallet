@@ -1,7 +1,57 @@
 import browser from 'webextension-polyfill';
-import type { Message, Response, MessageType } from '../types';
+import type { Message, Response } from '../types';
+import { MessageType } from '../types';
+import { AUTO_LOCK_DURATION, clearAutoLockTimer, resetAutoLockTimer } from '../core/storage';
+import { setSidePanelMode } from '../core/sidePanel';
 
 console.log('FistWallet background service worker initialized');
+
+let unlockedPassword: string | null = null;
+let unlockExpiresAt: number | null = null;
+const SIDE_PANEL_MENU_ID = 'open_side_panel';
+
+
+
+browser.contextMenus.onClicked.addListener((info) => {
+    if (info.menuItemId === SIDE_PANEL_MENU_ID) {
+        void setSidePanelMode(true, true);
+    }
+});
+
+function clearUnlockState(): void {
+    unlockedPassword = null;
+    unlockExpiresAt = null;
+    clearAutoLockTimer();
+}
+
+function startUnlockSession(password: string): number {
+    unlockExpiresAt = Date.now() + AUTO_LOCK_DURATION;
+    unlockedPassword = password;
+    resetAutoLockTimer(() => clearUnlockState(), AUTO_LOCK_DURATION);
+    return unlockExpiresAt;
+}
+
+function getUnlockStatus(): { isUnlocked: boolean; expiresAt: number | null } {
+    if (!unlockedPassword || !unlockExpiresAt) {
+        return { isUnlocked: false, expiresAt: null };
+    }
+
+    if (unlockExpiresAt <= Date.now()) {
+        clearUnlockState();
+        return { isUnlocked: false, expiresAt: null };
+    }
+
+    return { isUnlocked: true, expiresAt: unlockExpiresAt };
+}
+
+function getUnlockPassword(): { password: string; expiresAt: number } | null {
+    const status = getUnlockStatus();
+    if (!status.isUnlocked || !unlockedPassword || !status.expiresAt) {
+        return null;
+    }
+
+    return { password: unlockedPassword, expiresAt: status.expiresAt };
+}
 
 /**
  * Handle messages from popup and content scripts
@@ -9,32 +59,74 @@ console.log('FistWallet background service worker initialized');
 browser.runtime.onMessage.addListener((message: Message, sender) => {
     console.log('Background received message:', message.type, 'from:', sender);
 
-    return handleMessage(message);
+    return handleMessage(message, sender);
 });
+
+function isExtensionSender(sender: browser.runtime.MessageSender): boolean {
+    const senderUrl = sender.url ?? '';
+    return senderUrl.startsWith(browser.runtime.getURL(''));
+}
 
 /**
  * Message handler
  */
-async function handleMessage(message: Message): Promise<Response> {
+async function handleMessage(message: Message, sender: browser.runtime.MessageSender): Promise<Response> {
     try {
         switch (message.type) {
-            case 'CREATE_WALLET' as MessageType:
+            case MessageType.CREATE_WALLET:
                 // Handled by popup directly
                 return { success: true };
 
-            case 'UNLOCK_WALLET' as MessageType:
-                // Handled by popup directly
+            case MessageType.UNLOCK_WALLET: {
+                if (!isExtensionSender(sender)) {
+                    return { success: false, error: 'Unauthorized' };
+                }
+
+                const password = (message.payload as { password?: string } | null)?.password;
+                if (!password) {
+                    return { success: false, error: 'Password required' };
+                }
+
+                const expiresAt = startUnlockSession(password);
+                return { success: true, data: { expiresAt } };
+            }
+
+            case MessageType.LOCK_WALLET:
+                if (!isExtensionSender(sender)) {
+                    return { success: false, error: 'Unauthorized' };
+                }
+
+                clearUnlockState();
                 return { success: true };
 
-            case 'SEND_TRANSACTION' as MessageType:
+            case MessageType.GET_UNLOCK_STATUS:
+                if (!isExtensionSender(sender)) {
+                    return { success: false, error: 'Unauthorized' };
+                }
+
+                return { success: true, data: getUnlockStatus() };
+
+            case MessageType.GET_UNLOCK_PASSWORD: {
+                if (!isExtensionSender(sender)) {
+                    return { success: false, error: 'Unauthorized' };
+                }
+
+                const data = getUnlockPassword();
+                if (!data) {
+                    return { success: false, error: 'Wallet locked' };
+                }
+                return { success: true, data };
+            }
+
+            case MessageType.SEND_TRANSACTION:
                 // TODO: Implement transaction sending
                 return { success: false, error: 'Not implemented' };
 
-            case 'SIGN_MESSAGE' as MessageType:
+            case MessageType.SIGN_MESSAGE:
                 // TODO: Implement message signing
                 return { success: false, error: 'Not implemented' };
 
-            case 'CONNECT_DAPP' as MessageType:
+            case MessageType.CONNECT_DAPP:
                 // TODO: Implement DApp connection
                 return { success: false, error: 'Not implemented' };
 
@@ -53,6 +145,7 @@ async function handleMessage(message: Message): Promise<Response> {
 browser.runtime.onInstalled.addListener((details) => {
     console.log('FistWallet installed:', details.reason);
 
+
     if (details.reason === 'install') {
         // Open welcome page on first install
         browser.tabs.create({
@@ -60,6 +153,8 @@ browser.runtime.onInstalled.addListener((details) => {
         });
     }
 });
+
+
 
 /**
  * Keep service worker alive

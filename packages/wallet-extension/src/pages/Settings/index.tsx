@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { Button, Card, CardContent } from '@/ui';
-import { ArrowLeft, CaretRight, Lock } from '@phosphor-icons/react';
+import { ArrowLeftIcon, CaretRightIcon, LockIcon } from '@phosphor-icons/react';
 
 export default function Settings() {
     const navigate = useNavigate();
@@ -15,14 +15,15 @@ export default function Settings() {
     return (
         <div className="h-full flex flex-col bg-background">
             {/* Header */}
-            <div className="p-4 border-b border-border/60 flex items-center gap-3">
+            <div className="p-4 flex items-center gap-3">
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate(-1)}
-                    className="px-0 text-muted-foreground hover:text-foreground"
+                    className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeftIcon size={16} />
+                    Back
                 </Button>
                 <h1 className="text-lg font-semibold">Settings</h1>
             </div>
@@ -34,8 +35,8 @@ export default function Settings() {
                     <h2 className="text-sm font-semibold text-muted-foreground mb-3">GENERAL</h2>
                     <div className="space-y-2">
                         <Button variant="secondary" className="w-full justify-between">
-                            <span className="text-sm">Currency</span>
-                            <span className="text-sm text-muted-foreground">USD</span>
+                            <span className="text-sm">Theme</span>
+                            <span className="text-sm text-muted-foreground">Dark</span>
                         </Button>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Language</span>
@@ -53,27 +54,8 @@ export default function Settings() {
                             <span className="text-sm text-muted-foreground">15 min</span>
                         </Button>
                         <Button variant="secondary" className="w-full justify-between">
-                            <span className="text-sm">Reveal Recovery Phrase</span>
-                            <CaretRight size={16} className="text-muted-foreground" />
-                        </Button>
-                        <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Change Password</span>
-                            <CaretRight size={16} className="text-muted-foreground" />
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Advanced */}
-                <div className="p-4">
-                    <h2 className="text-sm font-semibold text-muted-foreground mb-3">ADVANCED</h2>
-                    <div className="space-y-2">
-                        <Button variant="secondary" className="w-full justify-between">
-                            <span className="text-sm">Custom RPC</span>
-                            <CaretRight size={16} className="text-muted-foreground" />
-                        </Button>
-                        <Button variant="secondary" className="w-full justify-between">
-                            <span className="text-sm">Developer Mode</span>
-                            <span className="text-sm text-muted-foreground">Off</span>
+                            <CaretRightIcon size={16} className="text-muted-foreground" />
                         </Button>
                     </div>
                 </div>
@@ -90,26 +72,26 @@ export default function Settings() {
                         </Card>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Terms of Service</span>
-                            <CaretRight size={16} className="text-muted-foreground" />
+                            <CaretRightIcon size={16} className="text-muted-foreground" />
                         </Button>
                         <Button variant="secondary" className="w-full justify-between">
                             <span className="text-sm">Privacy Policy</span>
-                            <CaretRight size={16} className="text-muted-foreground" />
+                            <CaretRightIcon size={16} className="text-muted-foreground" />
                         </Button>
                     </div>
                 </div>
+            </div>
 
-                {/* Lock wallet */}
-                <div className="p-4">
-                    <Button
-                        variant="destructive"
-                        onClick={handleLock}
-                        className="w-full"
-                    >
-                        <Lock size={16} />
-                        Lock Wallet
-                    </Button>
-                </div>
+            {/* Lock wallet */}
+            <div className="p-4 border-t border-border/60">
+                <Button
+                    variant="destructive"
+                    onClick={handleLock}
+                    className="w-full"
+                >
+                    <LockIcon size={16} />
+                    Lock Wallet
+                </Button>
             </div>
         </div>
     );

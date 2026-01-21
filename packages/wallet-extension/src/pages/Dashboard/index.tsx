@@ -1,26 +1,40 @@
 import { useWalletStore } from '@store/wallet';
 import { useNavigate } from 'react-router-dom';
-import { NETWORKS } from '@core/networks';
-import { Button, Card, CardContent, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui';
-import { ArrowsClockwise, DownloadSimple, GearSix, Lock, PaperPlaneTilt } from '@phosphor-icons/react';
+import { Button, Card, CardContent } from '@/ui';
+import { ArrowsClockwiseIcon, CopyIcon, DownloadSimpleIcon, GearSixIcon, PaperPlaneTiltIcon } from '@phosphor-icons/react';
 import { NetworkIcon } from '@/components/NetworkIcon';
+import { toast } from 'sonner';
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const { wallet, currentAccount, currentNetwork, lock, switchNetwork } = useWalletStore();
+    const { wallet, currentAccount, currentNetwork } = useWalletStore();
 
     if (!wallet || !currentAccount) {
         return null;
     }
 
     const currentAddress = currentAccount.addresses[currentNetwork.chainType];
+    const handleCopyAddress = async () => {
+        const toastId = toast.loading('Copying address...');
+        try {
+            await navigator.clipboard.writeText(currentAddress);
+            toast.success('Address copied', { id: toastId });
+        } catch (err) {
+            console.error(err);
+            toast.error('Failed to copy address', { id: toastId });
+        }
+    };
 
     return (
         <div className="h-full flex flex-col bg-background">
             {/* Header */}
-            <div className="p-4 border-b border-border/60">
+            <div className="p-4 ">
                 <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={() => navigate('/wallets')}
+                        className="flex items-center gap-2 text-left hover:opacity-90"
+                    >
                         <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-sm font-bold">
                             {currentAccount.name[0]}
                         </div>
@@ -30,41 +44,51 @@ export default function Dashboard() {
                                 {currentAddress.slice(0, 6)}...{currentAddress.slice(-4)}
                             </p>
                         </div>
-                    </div>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => lock()}
-                        title="Lock Wallet"
-                        className="text-muted-foreground hover:text-foreground"
-                    >
-                        <Lock size={18} />
-                    </Button>
-                </div>
-
-                {/* Network selector */}
-                <Select value={currentNetwork.id} onValueChange={switchNetwork}>
-                    <SelectTrigger>
-                        <div className="flex items-center gap-2">
-                            <NetworkIcon chainType={currentNetwork.chainType} className="text-foreground" size={18} />
-                            <SelectValue />
+                    </button>
+                    <div className="flex items-center gap-0.5">
+                        <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => navigate('/chains')}
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter' || event.key === ' ') {
+                                    event.preventDefault();
+                                    navigate('/chains');
+                                }
+                            }}
+                            title="Select Chain"
+                            className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+                        >
+                            <NetworkIcon
+                                chainType={currentNetwork.chainType}
+                                iconKey={currentNetwork.icon}
+                                className="text-foreground"
+                                size={18}
+                            />
                         </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                        {Object.values(NETWORKS).map((network) => (
-                            <SelectItem key={network.id} value={network.id}>
-                                {network.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                        <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={handleCopyAddress}
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter' || event.key === ' ') {
+                                    event.preventDefault();
+                                    handleCopyAddress();
+                                }
+                            }}
+                            title="Copy Address"
+                            className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+                        >
+                            <CopyIcon size={18} />
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Balance */}
-            <div className="p-6 text-center">
+            <div className="px-6 pb-6 ">
                 <p className="text-muted-foreground text-sm mb-2">Total Balance</p>
                 <h2 className="text-4xl font-bold mb-1">$0.00</h2>
-                <p className="text-sm text-muted-foreground">0 {currentNetwork.nativeCurrency.symbol}</p>
             </div>
 
             {/* Action buttons */}
@@ -74,7 +98,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <PaperPlaneTilt size={20} />
+                    <PaperPlaneTiltIcon size={20} />
                     <span className="text-xs">Send</span>
                 </Button>
                 <Button
@@ -82,7 +106,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <DownloadSimple size={20} />
+                    <DownloadSimpleIcon size={20} />
                     <span className="text-xs">Receive</span>
                 </Button>
                 <Button
@@ -90,7 +114,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <ArrowsClockwise size={20} />
+                    <ArrowsClockwiseIcon size={20} />
                     <span className="text-xs">Swap</span>
                 </Button>
                 <Button
@@ -98,7 +122,7 @@ export default function Dashboard() {
                     variant="secondary"
                     className="h-auto flex-col gap-2 py-3"
                 >
-                    <GearSix size={20} />
+                    <GearSixIcon size={20} />
                     <span className="text-xs">Settings</span>
                 </Button>
             </div>
@@ -118,7 +142,12 @@ export default function Dashboard() {
                         <CardContent className="flex items-center justify-between p-4">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-lg">
-                                    <NetworkIcon chainType={currentNetwork.chainType} className="text-foreground" size={20} />
+                                    <NetworkIcon
+                                        chainType={currentNetwork.chainType}
+                                        iconKey={currentNetwork.icon}
+                                        className="text-foreground"
+                                        size={20}
+                                    />
                                 </div>
                                 <div>
                                     <p className="font-medium">{currentNetwork.nativeCurrency.symbol}</p>

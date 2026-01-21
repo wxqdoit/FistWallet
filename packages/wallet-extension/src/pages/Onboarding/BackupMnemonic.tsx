@@ -1,30 +1,47 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, AlertDescription, Button, Card, CardContent } from '@/ui';
-import { ArrowLeft, CheckCircle, Eye, WarningCircle, XCircle } from '@phosphor-icons/react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+    Button,
+    Card,
+    CardContent,
+} from '@/ui';
+import { ArrowLeftIcon, CheckCircleIcon, EyeIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react';
 
 export default function BackupMnemonic() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const mode = searchParams.get('mode');
+    const isAddMode = mode === 'add';
     const [mnemonic, setMnemonic] = useState<string[]>([]);
     const [isRevealed, setIsRevealed] = useState(false);
+    const [isWarningOpen, setIsWarningOpen] = useState(true);
+    const [isRevealAlertOpen, setIsRevealAlertOpen] = useState(false);
 
     useEffect(() => {
         const tempMnemonic = sessionStorage.getItem('tempMnemonic');
         if (!tempMnemonic) {
-            navigate('/welcome');
+            navigate(isAddMode ? '/add-wallet' : '/welcome');
             return;
         }
         setMnemonic(tempMnemonic.split(' '));
-    }, [navigate]);
+    }, [isAddMode, navigate]);
 
 
 
     const handleContinue = () => {
         if (!isRevealed) {
-            alert('Please reveal and backup your recovery phrase first');
+            setIsRevealAlertOpen(true);
             return;
         }
-        navigate('/verify-mnemonic');
+        navigate(isAddMode ? '/verify-mnemonic?mode=add' : '/verify-mnemonic');
     };
 
     return (
@@ -37,7 +54,7 @@ export default function BackupMnemonic() {
                     onClick={() => navigate(-1)}
                     className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeftIcon size={16} />
                     Back
                 </Button>
                 <h1 className="text-2xl font-bold">Backup Recovery Phrase</h1>
@@ -47,16 +64,28 @@ export default function BackupMnemonic() {
             </div>
 
             {/* Warning */}
-            <Alert variant="warning" className="mb-4">
-                <AlertDescription >
-                    <div className="flex align-middle items-center gap-3">
-                        <WarningCircle className="text-warning" size={20} />
-                        <div className="text-sm">
-                            <p className="font-semibold text-warning ">Never share your recovery phrase</p>
-                        </div>
-                    </div>
-                </AlertDescription>
-            </Alert>
+            <AlertDialog open={isWarningOpen} onOpenChange={setIsWarningOpen}>
+                <AlertDialogTrigger asChild>
+                    <Button
+                        variant="secondary"
+                        className="mb-4 w-full justify-start gap-3 border border-warning/40 bg-warning/10 text-warning hover:bg-warning/20"
+                    >
+                        <WarningCircleIcon className="text-warning" size={20} />
+                        Never share your recovery phrase
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Keep your recovery phrase safe</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Never share your recovery phrase with anyone. Anyone with this phrase can control your funds.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>Got it</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
             {/* Mnemonic display */}
             <div className="flex-1 mb-6">
@@ -64,7 +93,7 @@ export default function BackupMnemonic() {
                     {!isRevealed && (
                         <div className="absolute inset-0 backdrop-blur-xl bg-black/50 rounded-xl flex items-center justify-center z-10">
                             <Button onClick={() => setIsRevealed(true)}>
-                                <Eye size={16} />
+                                <EyeIcon size={16} />
                                 Reveal Recovery Phrase
                             </Button>
                         </div>
@@ -89,19 +118,19 @@ export default function BackupMnemonic() {
             {/* Tips */}
             <div className="mb-6 space-y-2 text-sm text-muted-foreground">
                 <p className="flex items-center gap-2">
-                    <CheckCircle size={16} className="text-success" />
+                    <CheckCircleIcon size={16} className="text-success" />
                     Write it down on paper
                 </p>
                 <p className="flex items-center gap-2">
-                    <CheckCircle size={16} className="text-success" />
+                    <CheckCircleIcon size={16} className="text-success" />
                     Store in a secure location
                 </p>
                 <p className="flex items-center gap-2">
-                    <XCircle size={16} className="text-error" />
+                    <XCircleIcon size={16} className="text-error" />
                     Never share with anyone
                 </p>
                 <p className="flex items-center gap-2">
-                    <XCircle size={16} className="text-error" />
+                    <XCircleIcon size={16} className="text-error" />
                     Never store digitally
                 </p>
             </div>
@@ -112,6 +141,20 @@ export default function BackupMnemonic() {
                     I've Written It Down
                 </Button>
             </div>
+
+            <AlertDialog open={isRevealAlertOpen} onOpenChange={setIsRevealAlertOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Reveal required</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Please reveal and back up your recovery phrase before continuing.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

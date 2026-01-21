@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import * as LabelPrimitive from '@radix-ui/react-label';
 import * as ProgressPrimitive from '@radix-ui/react-progress';
@@ -6,7 +7,8 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { Slot } from '@radix-ui/react-slot';
-import { CaretDown, CaretUp, Check } from '@phosphor-icons/react';
+import { CaretDownIcon, CaretUpIcon, CheckIcon } from '@phosphor-icons/react';
+import { Toaster as SonnerToaster } from 'sonner';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils';
 
@@ -162,44 +164,100 @@ const Badge = React.forwardRef<
 ));
 Badge.displayName = 'Badge';
 
-const alertVariants = cva(
-    'relative w-full rounded-lg border border-border/60 p-4 text-sm [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg+div]:translate-y-[-3px] [&>svg+div]:pl-7',
-    {
-        variants: {
-            variant: {
-                default: 'bg-background text-foreground',
-                destructive: 'border-destructive/50 text-destructive [&>svg]:text-destructive',
-                warning: 'border-warning/40 text-warning [&>svg]:text-warning',
-                success: 'border-success/40 text-success [&>svg]:text-success',
-            },
-        },
-        defaultVariants: {
-            variant: 'default',
-        },
-    }
-);
+const AlertDialog = AlertDialogPrimitive.Root;
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
+const AlertDialogPortal = AlertDialogPrimitive.Portal;
 
-const Alert = React.forwardRef<
-    HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
-    <div ref={ref} role="alert" className={cn(alertVariants({ variant }), className)} {...props} />
+const AlertDialogOverlay = React.forwardRef<
+    React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+    <AlertDialogPrimitive.Overlay
+        ref={ref}
+        className={cn(
+            'fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+            className
+        )}
+        {...props}
+    />
 ));
-Alert.displayName = 'Alert';
+AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 
-const AlertTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
-    ({ className, ...props }, ref) => (
-        <h5 ref={ref} className={cn('mb-1 font-medium leading-none tracking-tight', className)} {...props} />
-    )
-);
-AlertTitle.displayName = 'AlertTitle';
+const AlertDialogContent = React.forwardRef<
+    React.ElementRef<typeof AlertDialogPrimitive.Content>,
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
+>(({ className, ...props }, ref) => (
+    <AlertDialogPortal>
+        <AlertDialogOverlay />
+        <AlertDialogPrimitive.Content
+            ref={ref}
+            className={cn(
+                'fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-2rem)] max-w-[335px] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border border-border/60 bg-background p-6 shadow-lg',
+                className
+            )}
+            {...props}
+        />
+    </AlertDialogPortal>
+));
+AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
-const AlertDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-    ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn('text-sm [&_p]:leading-relaxed', className)} {...props} />
-    )
+const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
 );
-AlertDescription.displayName = 'AlertDescription';
+AlertDialogHeader.displayName = 'AlertDialogHeader';
+
+const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    <div className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)} {...props} />
+);
+AlertDialogFooter.displayName = 'AlertDialogFooter';
+
+const AlertDialogTitle = React.forwardRef<
+    React.ElementRef<typeof AlertDialogPrimitive.Title>,
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+    <AlertDialogPrimitive.Title
+        ref={ref}
+        className={cn('text-lg font-semibold', className)}
+        {...props}
+    />
+));
+AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
+
+const AlertDialogDescription = React.forwardRef<
+    React.ElementRef<typeof AlertDialogPrimitive.Description>,
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+    <AlertDialogPrimitive.Description
+        ref={ref}
+        className={cn('text-sm text-muted-foreground', className)}
+        {...props}
+    />
+));
+AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayName;
+
+const AlertDialogAction = React.forwardRef<
+    React.ElementRef<typeof AlertDialogPrimitive.Action>,
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
+>(({ className, ...props }, ref) => (
+    <AlertDialogPrimitive.Action
+        ref={ref}
+        className={cn(buttonVariants({ variant: 'default' }), className)}
+        {...props}
+    />
+));
+AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
+
+const AlertDialogCancel = React.forwardRef<
+    React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
+    React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
+>(({ className, ...props }, ref) => (
+    <AlertDialogPrimitive.Cancel
+        ref={ref}
+        className={cn(buttonVariants({ variant: 'outline' }), className)}
+        {...props}
+    />
+));
+AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
 
 const Progress = React.forwardRef<
     React.ElementRef<typeof ProgressPrimitive.Root>,
@@ -231,7 +289,7 @@ const Checkbox = React.forwardRef<
         {...props}
     >
         <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
-            <Check className="h-3 w-3" />
+            <CheckIcon className="h-3 w-3" />
         </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
 ));
@@ -296,7 +354,7 @@ const SelectTrigger = React.forwardRef<
     >
         {children}
         <SelectPrimitive.Icon asChild>
-            <CaretDown className="h-4 w-4 opacity-60" />
+            <CaretDownIcon className="h-4 w-4 opacity-60" />
         </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
 ));
@@ -318,13 +376,13 @@ const SelectContent = React.forwardRef<
             {...props}
         >
             <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1">
-                <CaretUp className="h-4 w-4" />
+                <CaretUpIcon className="h-4 w-4" />
             </SelectPrimitive.ScrollUpButton>
             <SelectPrimitive.Viewport className="p-1">
                 {children}
             </SelectPrimitive.Viewport>
             <SelectPrimitive.ScrollDownButton className="flex items-center justify-center py-1">
-                <CaretDown className="h-4 w-4" />
+                <CaretDownIcon className="h-4 w-4" />
             </SelectPrimitive.ScrollDownButton>
         </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
@@ -357,7 +415,7 @@ const SelectItem = React.forwardRef<
     >
         <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
             <SelectPrimitive.ItemIndicator>
-                <Check className="h-4 w-4" />
+                <CheckIcon className="h-4 w-4" />
             </SelectPrimitive.ItemIndicator>
         </span>
         <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -412,10 +470,37 @@ const ToggleGroupItem = React.forwardRef<
 ));
 ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName;
 
+const Toaster = ({ ...props }: React.ComponentProps<typeof SonnerToaster>) => (
+    <SonnerToaster
+        className="toaster group"
+        position="top-center"
+        toastOptions={{
+            classNames: {
+                toast:
+                    'group toast border border-border group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg',
+                description: 'group-[.toast]:text-muted-foreground',
+                actionButton:
+                    'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground',
+                cancelButton:
+                    'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
+            },
+        }}
+        {...props}
+    />
+);
+
 export {
-    Alert,
-    AlertDescription,
-    AlertTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogOverlay,
+    AlertDialogPortal,
+    AlertDialogTitle,
+    AlertDialogTrigger,
     Badge,
     Button,
     Card,
@@ -441,6 +526,7 @@ export {
     TabsList,
     TabsTrigger,
     Textarea,
+    Toaster,
     ToggleGroup,
     ToggleGroupItem,
     buttonVariants,

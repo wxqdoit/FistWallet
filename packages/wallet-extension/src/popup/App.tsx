@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { Toaster } from '@/ui';
+import { cn } from '@/utils';
 
 // Onboarding pages
 import Welcome from '@pages/Onboarding/Welcome';
@@ -16,10 +18,17 @@ import Send from '@pages/Send';
 import Receive from '@pages/Receive';
 import Swap from '@pages/Swap';
 import Settings from '@pages/Settings';
+import ChainSelect from '@pages/Chains';
+import Wallets from '@pages/Wallets';
+import WalletManage from '@pages/Wallets/Manage';
+import AddWallet from '@pages/Wallets/AddWallet';
 
 function App() {
     const { isInitialized, isLocked, initialize } = useWalletStore();
-
+    const isSidePanel = useMemo(
+        () => new URLSearchParams(window.location.search).get('view') === 'sidepanel',
+        []
+    );
     useEffect(() => {
         initialize();
     }, [initialize]);
@@ -28,7 +37,7 @@ function App() {
     if (isInitialized === null) {
         return (
             <div className="min-h-screen w-full flex items-center justify-center bg-background">
-                <div className="w-[375px] h-[680px] flex items-center justify-center bg-background">
+                <div className="w-[375px] h-[600px] flex items-center justify-center bg-background">
                     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
                 </div>
             </div>
@@ -37,8 +46,20 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="min-h-screen w-full flex items-center justify-center bg-background">
-                <div className="w-[375px] h-[680px] bg-background overflow-x-hidden overflow-y-auto scrollbar-thin border border-border rounded-[var(--radius)]">
+            <div
+                className={cn(
+                    'w-full bg-background flex',
+                    isSidePanel ? 'h-full items-start justify-start' : 'min-h-screen items-center justify-center'
+                )}
+            >
+                <div
+                    className={cn(
+                        'bg-background overflow-x-hidden overflow-y-auto scrollbar-thin border border-border',
+                        isSidePanel
+                            ? 'w-full h-full rounded-none'
+                            : 'w-[375px] h-[600px] rounded-[var(--radius)]'
+                    )}
+                >
                     <Routes>
                     {/* Onboarding routes */}
                     {!isInitialized && (
@@ -64,6 +85,13 @@ function App() {
                     {isInitialized && !isLocked && (
                         <>
                             <Route path="/" element={<Dashboard />} />
+                            <Route path="/chains" element={<ChainSelect />} />
+                            <Route path="/wallets" element={<Wallets />} />
+                            <Route path="/wallets/manage" element={<WalletManage />} />
+                            <Route path="/add-wallet" element={<AddWallet />} />
+                            <Route path="/backup-mnemonic" element={<BackupMnemonic />} />
+                            <Route path="/verify-mnemonic" element={<VerifyMnemonic />} />
+                            <Route path="/import-wallet" element={<ImportWallet />} />
                             <Route path="/send" element={<Send />} />
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/swap" element={<Swap />} />
@@ -73,6 +101,7 @@ function App() {
                     )}
                     </Routes>
                 </div>
+                <Toaster />
             </div>
         </BrowserRouter>
     );

@@ -1,23 +1,42 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
-import { Alert, AlertDescription, Button, Input, Label } from '@/ui';
-import { ArrowLeft } from '@phosphor-icons/react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    Button,
+    Input,
+    Label,
+} from '@/ui';
+import { ArrowLeftIcon } from '@phosphor-icons/react';
 
 export default function VerifyMnemonic() {
     const navigate = useNavigate();
-    const { createNewWallet } = useWalletStore();
+    const { createNewWallet, addWalletFromMnemonic } = useWalletStore();
+    const [searchParams] = useSearchParams();
+    const mode = searchParams.get('mode');
+    const isAddMode = mode === 'add';
     const [mnemonic, setMnemonic] = useState<string[]>([]);
     const [shuffledWords, setShuffledWords] = useState<string[]>([]);
     const [selectedWords, setSelectedWords] = useState<(string | null)[]>([null, null, null]);
     const [verifyPositions] = useState([2, 6, 11]); // Positions 3, 7, 12 (0-indexed)
     const [error, setError] = useState('');
     const [isCreating, setIsCreating] = useState(false);
+    const handleErrorDialogChange = (open: boolean) => {
+        if (!open) {
+            setError('');
+        }
+    };
 
     useEffect(() => {
         const tempMnemonic = sessionStorage.getItem('tempMnemonic');
         if (!tempMnemonic) {
-            navigate('/welcome');
+            navigate(isAddMode ? '/add-wallet' : '/welcome');
             return;
         }
 
@@ -27,7 +46,7 @@ export default function VerifyMnemonic() {
         // Shuffle words for selection
         const shuffled = [...words].sort(() => Math.random() - 0.5);
         setShuffledWords(shuffled);
-    }, [navigate]);
+    }, [isAddMode, navigate]);
 
     const handleWordSelect = (word: string, slotIndex: number) => {
         const newSelected = [...selectedWords];
@@ -64,21 +83,31 @@ export default function VerifyMnemonic() {
         // Create wallet
         setIsCreating(true);
         try {
-            const password = sessionStorage.getItem('tempPassword');
             const mnemonicPhrase = sessionStorage.getItem('tempMnemonic');
-
-            if (!password || !mnemonicPhrase) {
+            if (!mnemonicPhrase) {
                 throw new Error('Session data not found');
             }
 
-            await createNewWallet(password, mnemonicPhrase);
+            if (isAddMode) {
+                await addWalletFromMnemonic(mnemonicPhrase);
+            } else {
+                const password = sessionStorage.getItem('tempPassword');
+                if (!password) {
+                    throw new Error('Session data not found');
+                }
+                await createNewWallet(password, mnemonicPhrase);
+            }
 
             // Clear temporary data
-            sessionStorage.removeItem('tempPassword');
             sessionStorage.removeItem('tempMnemonic');
 
             // Navigate to dashboard
-            navigate('/');
+            if (isAddMode) {
+                navigate('/');
+            } else {
+                sessionStorage.removeItem('tempPassword');
+                navigate('/');
+            }
         } catch (err) {
             setError('Failed to create wallet. Please try again.');
             console.error(err);
@@ -98,7 +127,7 @@ export default function VerifyMnemonic() {
                     className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                     disabled={isCreating}
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeftIcon size={16} />
                     Back
                 </Button>
                 <h1 className="text-2xl font-bold">Verify Recovery Phrase</h1>
@@ -150,20 +179,32 @@ export default function VerifyMnemonic() {
                 </div>
             </div>
 
-            {error && (
-                <Alert variant="destructive" className="mb-4">
-                    <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
-
             {/* Verify button */}
             <Button
                 onClick={handleVerify}
                 disabled={selectedWords.some((w) => w === null) || isCreating}
                 className="w-full"
             >
-                {isCreating ? 'Creating Wallet...' : 'Verify & Create Wallet'}
+                {isCreating
+                    ? isAddMode
+                        ? 'Adding Wallet...'
+                        : 'Creating Wallet...'
+                    : isAddMode
+                        ? 'Verify & Add Wallet'
+                        : 'Verify & Create Wallet'}
             </Button>
+
+            <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Verification failed</AlertDialogTitle>
+                        <AlertDialogDescription>{error}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

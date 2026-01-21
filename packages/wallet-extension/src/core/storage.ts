@@ -148,16 +148,16 @@ export async function verifyPassword(password: string): Promise<boolean> {
  * Auto-lock timer management
  */
 let autoLockTimer: NodeJS.Timeout | null = null;
-const AUTO_LOCK_DURATION = 15 * 60 * 1000; // 15 minutes
+export const AUTO_LOCK_DURATION = 10 * 60 * 1000; // 10 minutes
 
-export function resetAutoLockTimer(onLock: () => void): void {
+export function resetAutoLockTimer(onLock: () => void, durationMs: number = AUTO_LOCK_DURATION): void {
     if (autoLockTimer) {
         clearTimeout(autoLockTimer);
     }
 
     autoLockTimer = setTimeout(() => {
         onLock();
-    }, AUTO_LOCK_DURATION);
+    }, durationMs);
 }
 
 export function clearAutoLockTimer(): void {
@@ -165,6 +165,32 @@ export function clearAutoLockTimer(): void {
         clearTimeout(autoLockTimer);
         autoLockTimer = null;
     }
+}
+
+/**
+ * Session storage helpers
+ */
+function getSessionStorageArea(): typeof browser.storage.local {
+    const storage = browser.storage as typeof browser.storage & {
+        session?: typeof browser.storage.local;
+    };
+    return storage.session ?? browser.storage.local;
+}
+
+export async function setSessionStorage<T>(key: string, value: T): Promise<void> {
+    const session = getSessionStorageArea();
+    await session.set({ [key]: value });
+}
+
+export async function getSessionStorage<T>(key: string): Promise<T | null> {
+    const session = getSessionStorageArea();
+    const result = await session.get(key);
+    return (result[key] as T) || null;
+}
+
+export async function removeSessionStorage(key: string): Promise<void> {
+    const session = getSessionStorageArea();
+    await session.remove(key);
 }
 
 /**

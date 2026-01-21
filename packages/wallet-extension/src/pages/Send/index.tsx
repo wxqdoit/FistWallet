@@ -1,8 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
-import { Button, Card, CardContent, Input, Label } from '@/ui';
-import { ArrowLeft } from '@phosphor-icons/react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    Button,
+    Card,
+    CardContent,
+    Input,
+    Label,
+} from '@/ui';
+import { ArrowLeftIcon } from '@phosphor-icons/react';
 
 export default function Send() {
     const navigate = useNavigate();
@@ -10,10 +23,11 @@ export default function Send() {
     const [recipient, setRecipient] = useState('');
     const [amount, setAmount] = useState('');
     const [memo, setMemo] = useState('');
+    const [isNotReadyOpen, setIsNotReadyOpen] = useState(false);
 
     const handleSend = () => {
         // TODO: Implement send transaction
-        alert('Send transaction not yet implemented');
+        setIsNotReadyOpen(true);
     };
 
     if (!currentAccount) return null;
@@ -24,16 +38,16 @@ export default function Send() {
     return (
         <div className="h-full flex flex-col bg-background">
             {/* Header */}
-            <div className="p-4 border-b border-border/60 flex items-center gap-3">
+            <div className="p-4  flex items-center gap-3">
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate(-1)}
-                    className="px-0 text-muted-foreground hover:text-foreground"
+                    className=" px-2 text-muted-foreground hover:text-foreground"
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeftIcon size={16} />
+                    Send {currentNetwork.nativeCurrency.symbol}
                 </Button>
-                <h1 className="text-lg font-semibold">Send {currentNetwork.nativeCurrency.symbol}</h1>
             </div>
 
             {/* Form */}
@@ -141,6 +155,20 @@ export default function Send() {
                     Review Transaction
                 </Button>
             </div>
+
+            <AlertDialog open={isNotReadyOpen} onOpenChange={setIsNotReadyOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Send is not available yet</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Sending transactions is still under development. Please try again later.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

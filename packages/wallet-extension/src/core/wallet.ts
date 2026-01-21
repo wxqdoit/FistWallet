@@ -60,6 +60,83 @@ function getChainModule(chainType: ChainType) {
     return module;
 }
 
+function buildEd25519DerivationPath(chainType: ChainType, accountIndex: number): string {
+    const basePath = DERIVATION_PATHS[chainType.toLowerCase() as keyof typeof DERIVATION_PATHS];
+    const segments = basePath.split('/');
+
+    if (segments.length < 4) {
+        return basePath;
+    }
+
+    segments[3] = `${accountIndex}'`;
+    return segments.join('/');
+}
+
+function normalizeVaultData(vault: VaultData | null): VaultData {
+    if (!vault) {
+        return {
+            version: 2,
+            wallets: {},
+            accountWalletIds: {},
+        };
+    }
+
+    return {
+        ...vault,
+        version: vault.version || 2,
+        wallets: vault.wallets ?? {},
+        accountWalletIds: vault.accountWalletIds ?? {},
+    };
+}
+
+function attachWalletToVault(
+    vault: VaultData | null,
+    wallet: Wallet,
+    data: { mnemonic?: string; privateKey?: string }
+): VaultData {
+    const nextVault = normalizeVaultData(vault);
+    const existingWalletEntry = nextVault.wallets?.[wallet.id];
+    const walletEntry = existingWalletEntry ?? {};
+
+    if (data.mnemonic) {
+        walletEntry.mnemonic = data.mnemonic;
+    }
+
+    if (data.privateKey) {
+        walletEntry.privateKeys = {
+            ...(walletEntry.privateKeys ?? {}),
+            [wallet.accounts[0].id]: data.privateKey,
+        };
+    }
+
+    nextVault.wallets = {
+        ...(nextVault.wallets ?? {}),
+        [wallet.id]: walletEntry,
+    };
+
+    const accountWalletIds = { ...(nextVault.accountWalletIds ?? {}) };
+    wallet.accounts.forEach((account) => {
+        accountWalletIds[account.id] = wallet.id;
+    });
+    nextVault.accountWalletIds = accountWalletIds;
+
+    return nextVault;
+}
+
+function getAddressFromPrivateKey(chainType: ChainType, privateKey: string): string {
+    const module = getChainModule(chainType);
+
+    if (chainType === ChainType.BITCOIN) {
+        return BTC.getAddressByPrivateKey(privateKey, 'p2wpkh');
+    }
+
+    if (chainType === ChainType.FILECOIN) {
+        return Filecoin.getAddressByPrivateKey(privateKey, 'secp256k1');
+    }
+
+    return module.getAddressByPrivateKey(privateKey as any);
+}
+
 /**
  * Derive address for a specific chain from mnemonic
  * Uses wallet-core's getPrivateKeyByMnemonic + getAddressByPrivateKey
@@ -83,11 +160,9 @@ export async function deriveAddress(
         case ChainType.APTOS:
         case ChainType.SUI:
         case ChainType.TON:
-            derivationPath = `${DERIVATION_PATHS[chainType.toLowerCase() as keyof typeof DERIVATION_PATHS]}${accountIndex}'`;
-            break;
         case ChainType.NEAR:
         case ChainType.FILECOIN:
-            derivationPath = `${DERIVATION_PATHS[chainType.toLowerCase() as keyof typeof DERIVATION_PATHS]}/${accountIndex}'`;
+            derivationPath = buildEd25519DerivationPath(chainType, accountIndex);
             break;
         default:
             throw new Error(`Unsupported chain type: ${chainType}`);
@@ -114,6 +189,38 @@ export async function deriveAddress(
     } else {
         return module.getAddressByPrivateKey(privateKey as any);
     }
+}
+
+/**
+ * Derive all supported addresses from a private key
+ */
+export async function deriveAddressesFromPrivateKey(
+    privateKey: string
+): Promise<Record<ChainType, string>> {
+    const chainTypes: ChainType[] = [
+        ChainType.EVM,
+        ChainType.BITCOIN,
+        ChainType.SOLANA,
+        ChainType.APTOS,
+        ChainType.SUI,
+        ChainType.TRON,
+        ChainType.TON,
+        ChainType.NEAR,
+        ChainType.FILECOIN,
+    ];
+
+    const addresses = {} as Record<ChainType, string>;
+
+    for (const chainType of chainTypes) {
+        try {
+            addresses[chainType] = getAddressFromPrivateKey(chainType, privateKey);
+        } catch (error) {
+            console.error(`Failed to derive ${chainType} address from private key:`, error);
+            addresses[chainType] = '';
+        }
+    }
+
+    return addresses;
 }
 
 /**
@@ -180,13 +287,11 @@ export async function createWallet(password: string, mnemonic?: string): Promise
         createdAt: Date.now(),
     };
 
-    // Save encrypted vault
-    const vaultData: VaultData = {
-        mnemonic: mnemonicPhrase,
-        version: 1,
-    };
+    const existingVault = await loadVault(password);
+    const nextVault = attachWalletToVault(existingVault, wallet, { mnemonic: mnemonicPhrase });
+    nextVault.version = 2;
 
-    await saveVault(vaultData, password);
+    await saveVault(nextVault, password);
 
     return wallet;
 }
@@ -228,24 +333,15 @@ export async function importWalletFromPrivateKey(
     privateKey: string,
     chainType: ChainType
 ): Promise<Wallet> {
-    const module = getChainModule(chainType);
-
-    // Use wallet-core to derive address from private key
-    let address: string;
-    if (chainType === ChainType.BITCOIN) {
-        address = BTC.getAddressByPrivateKey(privateKey, 'p2wpkh');
-    } else if (chainType === ChainType.FILECOIN) {
-        address = Filecoin.getAddressByPrivateKey(privateKey, 'secp256k1');
-    } else {
-        address = module.getAddressByPrivateKey(privateKey);
-    }
+    // Validate private key against the selected chain type
+    const address = getAddressFromPrivateKey(chainType, privateKey);
+    const addresses = await deriveAddressesFromPrivateKey(privateKey);
+    addresses[chainType] = address;
 
     const account: Account = {
         id: uuidv4(),
         name: 'Imported Account',
-        addresses: {
-            [chainType]: address,
-        } as Record<ChainType, string>,
+        addresses,
         derivationPath: 'imported',
         index: 0,
     };
@@ -257,15 +353,11 @@ export async function importWalletFromPrivateKey(
         createdAt: Date.now(),
     };
 
-    // Save encrypted vault with private key
-    const vaultData: VaultData = {
-        privateKeys: {
-            [account.id]: privateKey,
-        },
-        version: 1,
-    };
+    const existingVault = await loadVault(password);
+    const nextVault = attachWalletToVault(existingVault, wallet, { privateKey });
+    nextVault.version = 2;
 
-    await saveVault(vaultData, password);
+    await saveVault(nextVault, password);
 
     return wallet;
 }
@@ -284,6 +376,41 @@ export async function getPrivateKey(
 
     if (!vault) {
         throw new Error('Vault not found');
+    }
+
+    const mappedWalletId = vault.accountWalletIds?.[accountId];
+    if (mappedWalletId && vault.wallets?.[mappedWalletId]) {
+        const walletEntry = vault.wallets[mappedWalletId];
+        if (walletEntry.privateKeys && walletEntry.privateKeys[accountId]) {
+            return walletEntry.privateKeys[accountId];
+        }
+
+        if (walletEntry.mnemonic) {
+            const module = getChainModule(chainType);
+            const derivationPath = ((): string => {
+                switch (chainType) {
+                    case ChainType.EVM:
+                    case ChainType.BITCOIN:
+                    case ChainType.TRON:
+                        return `${DERIVATION_PATHS[chainType.toLowerCase() as keyof typeof DERIVATION_PATHS]}/${accountIndex}`;
+                    case ChainType.SOLANA:
+                    case ChainType.APTOS:
+                    case ChainType.SUI:
+                    case ChainType.TON:
+                    case ChainType.NEAR:
+                    case ChainType.FILECOIN:
+                        return buildEd25519DerivationPath(chainType, accountIndex);
+                    default:
+                        throw new Error(`Unsupported chain type: ${chainType}`);
+                }
+            })();
+
+            const keys = module.getPrivateKeyByMnemonic(walletEntry.mnemonic, derivationPath);
+            if (typeof keys === 'object' && 'privateKey' in keys) {
+                return keys.privateKey;
+            }
+            return keys as string;
+        }
     }
 
     // If wallet was imported with private key
@@ -307,11 +434,9 @@ export async function getPrivateKey(
             case ChainType.APTOS:
             case ChainType.SUI:
             case ChainType.TON:
-                derivationPath = `${DERIVATION_PATHS[chainType.toLowerCase() as keyof typeof DERIVATION_PATHS]}${accountIndex}'`;
-                break;
             case ChainType.NEAR:
             case ChainType.FILECOIN:
-                derivationPath = `${DERIVATION_PATHS[chainType.toLowerCase() as keyof typeof DERIVATION_PATHS]}/${accountIndex}'`;
+                derivationPath = buildEd25519DerivationPath(chainType, accountIndex);
                 break;
             default:
                 throw new Error(`Unsupported chain type: ${chainType}`);

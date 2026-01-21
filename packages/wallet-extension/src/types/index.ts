@@ -68,6 +68,11 @@ export interface EncryptedVault {
 export interface VaultData {
     mnemonic?: string;
     privateKeys?: Record<string, string>; // accountId -> privateKey
+    wallets?: Record<string, {
+        mnemonic?: string;
+        privateKeys?: Record<string, string>;
+    }>;
+    accountWalletIds?: Record<string, string>;
     version: number;
 }
 
@@ -224,6 +229,8 @@ export interface UTXO {
 export const STORAGE_KEYS = {
     VAULT: 'vault',
     WALLET: 'wallet',
+    WALLETS: 'wallets',
+    CURRENT_WALLET_ID: 'current_wallet_id',
     SETTINGS: 'settings',
     NETWORKS: 'networks',
     TOKENS: 'tokens',
@@ -240,6 +247,8 @@ export enum MessageType {
     IMPORT_WALLET = 'IMPORT_WALLET',
     UNLOCK_WALLET = 'UNLOCK_WALLET',
     LOCK_WALLET = 'LOCK_WALLET',
+    GET_UNLOCK_STATUS = 'GET_UNLOCK_STATUS',
+    GET_UNLOCK_PASSWORD = 'GET_UNLOCK_PASSWORD',
 
     // Account operations
     CREATE_ACCOUNT = 'CREATE_ACCOUNT',

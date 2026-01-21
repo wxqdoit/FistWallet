@@ -1,8 +1,21 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { generateMnemonic } from '@core/wallet';
-import { Alert, AlertDescription, Button, Checkbox, Input, Label, Progress } from '@/ui';
-import { ArrowLeft } from '@phosphor-icons/react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    Button,
+    Checkbox,
+    Input,
+    Label,
+    Progress,
+} from '@/ui';
+import { ArrowLeftIcon } from '@phosphor-icons/react';
 
 export default function CreatePassword() {
     const navigate = useNavigate();
@@ -12,6 +25,11 @@ export default function CreatePassword() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [error, setError] = useState('');
+    const handleErrorDialogChange = (open: boolean) => {
+        if (!open) {
+            setError('');
+        }
+    };
 
     const getPasswordStrength = (pwd: string): 'weak' | 'medium' | 'strong' => {
         if (pwd.length < 8) return 'weak';
@@ -74,7 +92,7 @@ export default function CreatePassword() {
                     onClick={() => navigate(-1)}
                     className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeftIcon size={16} />
                     Back
                 </Button>
                 <h1 className="text-2xl font-bold">Create Password</h1>
@@ -125,17 +143,24 @@ export default function CreatePassword() {
                     </Label>
                 </div>
 
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
             </div>
 
             {/* Continue button */}
             <Button onClick={handleContinue} disabled={!password || !confirmPassword || !agreedToTerms} className="w-full">
                 Continue
             </Button>
+
+            <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Unable to continue</AlertDialogTitle>
+                        <AlertDialogDescription>{error}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

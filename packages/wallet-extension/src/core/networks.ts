@@ -1,4 +1,4 @@
-import type { Network, ChainType } from '../types';
+import type { Account, Network, ChainType } from '../types';
 
 /**
  * Predefined network configurations
@@ -276,6 +276,17 @@ export function getDefaultNetwork(chainType: ChainType): Network {
     return networks.find((n) => !n.isTestnet) || networks[0];
 }
 
+export function getSupportedNetworksForAccount(account?: Account | null): Network[] {
+    if (!account) {
+        return [];
+    }
+
+    return Object.values(NETWORKS).filter((network) => {
+        const address = account.addresses[network.chainType];
+        return typeof address === 'string' && address.length > 0;
+    });
+}
+
 /**
  * Derivation paths for different chains
  */
@@ -289,7 +300,7 @@ export const DERIVATION_PATHS = {
     aptos: "m/44'/637'/0'/0'/0'",
     sui: "m/44'/784'/0'/0'/0'",
     tron: "m/44'/195'/0'/0",
-    ton: "m/44'/607'/0'/0'/0'",
+    ton: "m/44'/607'/0'",
     near: "m/44'/397'/0'",
-    filecoin: "m/44'/461'/0'/0",
+    filecoin: "m/44'/461'/0'/0'/0'",
 } as const;

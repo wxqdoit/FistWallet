@@ -1,8 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
-import { Alert, AlertDescription, Button, Input, Label } from '@/ui';
-import { Lock } from '@phosphor-icons/react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    Button,
+    Input,
+    Label,
+} from '@/ui';
+import { LockIcon } from '@phosphor-icons/react';
 
 export default function Unlock() {
     const navigate = useNavigate();
@@ -10,6 +21,11 @@ export default function Unlock() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isUnlocking, setIsUnlocking] = useState(false);
+    const handleErrorDialogChange = (open: boolean) => {
+        if (!open) {
+            setError('');
+        }
+    };
 
     const handleUnlock = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,7 +54,7 @@ export default function Unlock() {
             {/* Logo */}
             <div className="text-center mb-12">
                 <div className="text-6xl mb-4 flex items-center justify-center">
-                    <Lock size={48} />
+                    <LockIcon size={48} />
                 </div>
                 <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
                 <p className="text-muted-foreground text-sm">Unlock your wallet to continue</p>
@@ -58,12 +74,6 @@ export default function Unlock() {
                     />
                 </div>
 
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
-
                 <Button
                     type="submit"
                     disabled={!password || isUnlocking}
@@ -77,6 +87,18 @@ export default function Unlock() {
             <div className="mt-8 text-center text-xs text-muted-foreground">
                 <p>Forgot password? You'll need to restore from recovery phrase</p>
             </div>
+
+            <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Unable to unlock</AlertDialogTitle>
+                        <AlertDialogDescription>{error}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

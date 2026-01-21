@@ -2,38 +2,60 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import QRCode from 'react-qr-code';
-import { Alert, AlertDescription, Badge, Button, Card, CardContent } from '@/ui';
-import { ArrowLeft, Check, Copy, WarningCircle } from '@phosphor-icons/react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+    Badge,
+    Button,
+    Card,
+    CardContent,
+} from '@/ui';
+import { ArrowLeftIcon, CheckIcon, CopyIcon, WarningCircleIcon } from '@phosphor-icons/react';
 import { NetworkIcon } from '@/components/NetworkIcon';
+import { toast } from 'sonner';
 
 export default function Receive() {
     const navigate = useNavigate();
     const { currentAccount, currentNetwork } = useWalletStore();
     const [copied, setCopied] = useState(false);
+    const [isWarningOpen, setIsWarningOpen] = useState(true);
 
     if (!currentAccount) return null;
 
     const currentAddress = currentAccount.addresses[currentNetwork.chainType];
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(currentAddress);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+    const handleCopy = async () => {
+        const toastId = toast.loading('Copying address...');
+        try {
+            await navigator.clipboard.writeText(currentAddress);
+            setCopied(true);
+            toast.success('Address copied', { id: toastId });
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error(err);
+            toast.error('Failed to copy address', { id: toastId });
+        }
     };
 
     return (
         <div className="h-full flex flex-col bg-background">
             {/* Header */}
-            <div className="p-4 border-b border-border/60 flex items-center gap-3">
+            <div className="p-4  flex items-center gap-3">
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate(-1)}
-                    className="px-0 text-muted-foreground hover:text-foreground"
+                    className=" px-2 text-muted-foreground hover:text-foreground"
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeftIcon size={16} />
+                    Receive {currentNetwork.nativeCurrency.symbol}
                 </Button>
-                <h1 className="text-lg font-semibold">Receive {currentNetwork.nativeCurrency.symbol}</h1>
             </div>
 
             {/* Content */}
@@ -41,7 +63,12 @@ export default function Receive() {
                 {/* Network badge */}
                 <Badge variant="secondary" className="mb-6 px-4 py-2 text-sm">
                     <span className="flex items-center gap-2">
-                        <NetworkIcon chainType={currentNetwork.chainType} className="text-foreground" size={18} />
+                        <NetworkIcon
+                            chainType={currentNetwork.chainType}
+                            iconKey={currentNetwork.icon}
+                            className="text-foreground"
+                            size={18}
+                        />
                         <span className="text-sm font-medium">{currentNetwork.name}</span>
                     </span>
                 </Badge>
@@ -65,25 +92,37 @@ export default function Receive() {
                                 onClick={handleCopy}
                                 className="text-primary hover:text-primary/80 shrink-0"
                             >
-                                {copied ? <Check size={18} /> : <Copy size={18} />}
+                                {copied ? <CheckIcon size={18} /> : <CopyIcon size={18} />}
                             </Button>
                         </CardContent>
                     </Card>
                 </div>
 
                 {/* Warning */}
-                <Alert variant="warning" className="mt-6">
-                    <AlertDescription>
-                        <p className="text-sm text-warning font-medium mb-1 flex items-center gap-2">
-                            <WarningCircle size={16} />
-                            Important
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                            Only send <strong>{currentNetwork.nativeCurrency.symbol}</strong> and tokens on{' '}
-                            <strong>{currentNetwork.name}</strong> to this address. Sending other assets may result in permanent loss.
-                        </p>
-                    </AlertDescription>
-                </Alert>
+                <AlertDialog open={isWarningOpen} onOpenChange={setIsWarningOpen}>
+                    <AlertDialogTrigger asChild>
+                        <Button
+                            variant="secondary"
+                            className="mt-6 w-full justify-start gap-2 border border-warning/40 bg-warning/10 text-warning hover:bg-warning/20"
+                        >
+                            <WarningCircleIcon size={16} />
+                            Important: Check network before sending
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Important</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Only send <strong>{currentNetwork.nativeCurrency.symbol}</strong> and tokens on{' '}
+                                <strong>{currentNetwork.name}</strong> to this address. Sending other assets may result in
+                                permanent loss.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction>Got it</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     );

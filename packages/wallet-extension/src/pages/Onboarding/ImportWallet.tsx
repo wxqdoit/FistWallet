@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { ChainType } from '@/types';
 import { validateMnemonic } from '@core/wallet';
 import {
-    Alert,
-    AlertDescription,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
     Button,
     Input,
     Label,
@@ -20,11 +25,14 @@ import {
     TabsTrigger,
     Textarea,
 } from '@/ui';
-import { ArrowLeft } from '@phosphor-icons/react';
+import { ArrowLeftIcon } from '@phosphor-icons/react';
 
 export default function ImportWallet() {
     const navigate = useNavigate();
-    const { importWallet, importFromPrivateKey } = useWalletStore();
+    const { importWallet, importFromPrivateKey, addWalletFromMnemonic, addWalletFromPrivateKey } = useWalletStore();
+    const [searchParams] = useSearchParams();
+    const mode = searchParams.get('mode');
+    const isAddMode = mode === 'add';
     const [importType, setImportType] = useState<'mnemonic' | 'privateKey'>('mnemonic');
     const [mnemonic, setMnemonic] = useState('');
     const [privateKey, setPrivateKey] = useState('');
@@ -32,6 +40,11 @@ export default function ImportWallet() {
     const [error, setError] = useState('');
     const [isImporting, setIsImporting] = useState(false);
     const [tempPassword, setTempPassword] = useState('');
+    const handleErrorDialogChange = (open: boolean) => {
+        if (!open) {
+            setError('');
+        }
+    };
 
     const chainOptions = [
         { value: ChainType.EVM, label: 'EVM' },
@@ -46,18 +59,22 @@ export default function ImportWallet() {
     ];
 
     useEffect(() => {
+        if (isAddMode) {
+            return;
+        }
+
         const storedPassword = sessionStorage.getItem('tempPassword');
         if (!storedPassword) {
             navigate('/create-password?mode=import');
             return;
         }
         setTempPassword(storedPassword);
-    }, [navigate]);
+    }, [isAddMode, navigate]);
 
     const handleImport = async () => {
         setError('');
 
-        if (!tempPassword) {
+        if (!tempPassword && !isAddMode) {
             setError('Please create a password first.');
             return;
         }
@@ -72,9 +89,14 @@ export default function ImportWallet() {
 
             setIsImporting(true);
             try {
-                await importWallet(tempPassword, trimmedMnemonic);
-                sessionStorage.removeItem('tempPassword');
-                navigate('/');
+                if (isAddMode) {
+                    await addWalletFromMnemonic(trimmedMnemonic);
+                    navigate('/');
+                } else {
+                    await importWallet(tempPassword, trimmedMnemonic);
+                    sessionStorage.removeItem('tempPassword');
+                    navigate('/');
+                }
             } catch (err) {
                 setError('Failed to import wallet. Please check your recovery phrase.');
                 console.error(err);
@@ -92,9 +114,14 @@ export default function ImportWallet() {
 
         setIsImporting(true);
         try {
-            await importFromPrivateKey(tempPassword, trimmedPrivateKey, chainType);
-            sessionStorage.removeItem('tempPassword');
-            navigate('/');
+            if (isAddMode) {
+                await addWalletFromPrivateKey(trimmedPrivateKey, chainType);
+                navigate('/');
+            } else {
+                await importFromPrivateKey(tempPassword, trimmedPrivateKey, chainType);
+                sessionStorage.removeItem('tempPassword');
+                navigate('/');
+            }
         } catch (err) {
             setError('Failed to import wallet. Please check your private key.');
             console.error(err);
@@ -113,7 +140,7 @@ export default function ImportWallet() {
                     onClick={() => navigate(-1)}
                     className="mb-4 px-2 text-muted-foreground hover:text-foreground"
                 >
-                    <ArrowLeft size={16} />
+                    <ArrowLeftIcon size={16} />
                     Back
                 </Button>
                 <h1 className="text-2xl font-bold">Import Wallet</h1>
@@ -186,11 +213,6 @@ export default function ImportWallet() {
                     </div>
                 )}
 
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
             </div>
 
             {/* Import button */}
@@ -204,6 +226,18 @@ export default function ImportWallet() {
             >
                 {isImporting ? 'Importing...' : 'Import Wallet'}
             </Button>
+
+            <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Import failed</AlertDialogTitle>
+                        <AlertDialogDescription>{error}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
