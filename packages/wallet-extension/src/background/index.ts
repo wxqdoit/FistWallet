@@ -9,15 +9,6 @@ console.log('FistWallet background service worker initialized');
 let unlockedPassword: string | null = null;
 let unlockExpiresAt: number | null = null;
 let autoLockDurationMs = DEFAULT_AUTO_LOCK_DURATION;
-const SIDE_PANEL_MENU_ID = 'open_side_panel';
-
-
-
-browser.contextMenus.onClicked.addListener((info) => {
-    if (info.menuItemId === SIDE_PANEL_MENU_ID) {
-        void setSidePanelMode(true, true);
-    }
-});
 
 function clearUnlockState(): void {
     unlockedPassword = null;
