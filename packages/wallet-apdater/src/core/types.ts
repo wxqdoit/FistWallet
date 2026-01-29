@@ -7,6 +7,7 @@ export enum ChainType {
     SUI = 'SUI',
     APTOS = 'APTOS',
     TRON = 'TRON',
+    STARKNET = 'STARKNET',
 }
 
 export interface BtcAccount {

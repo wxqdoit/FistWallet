@@ -1,12 +1,13 @@
 import ModalHeader from '../Header/ModalHeader';
 import Modal from './index';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import useStore from '../../state/store';
 import { type WalletAdapter } from 'wallet-apdater';
-import {AppModal, ConnectStatus} from "../../types/configType";
-import useProvidersStore from "../../state/providers";
-import Icon from "../Icon";
+import { AppModal, ConnectStatus } from '../../types/configType';
+import useProvidersStore from '../../state/providers';
+import Icon from '../Icon';
 import { adapterIconMap } from '../../adapters/icons';
+import { DialogDescription, DialogTitle } from '../ui/dialog';
 
 interface ModalProps {
     isOpen: boolean;
@@ -31,9 +32,15 @@ export function ConnectModal({isOpen}: ModalProps) {
     }
     return (
         <Modal isOpen={isOpen} maxHeight={90}>
-            <div className="flex flex-1 flex-col justify-start p-5">
-                <ModalHeader text={t('title')}/>
-                <div className="mt-4">
+            <div className="flex max-h-[90vh] flex-col">
+                <DialogTitle className="sr-only">{t('title') || 'Connect Wallet'}</DialogTitle>
+                <DialogDescription className="sr-only">
+                    Select a wallet to connect to this application.
+                </DialogDescription>
+                <div className="sticky top-0 z-10 bg-white px-5 pt-5">
+                    <ModalHeader text={t('title')}/>
+                </div>
+                <div className="wallet-kit-scrollbar flex-1 overflow-y-auto px-5 pb-5 pt-4">
                     <div className="mx-auto flex flex-col gap-3">
                         {providers && providers.map((provider) => {
                             const iconSrc = provider.info.icon ?? adapterIconMap[provider.info.rdns] ?? '';

@@ -13,6 +13,7 @@ interface ModalProps {
 
 export default function Modal({ isOpen, children, closeAble = true, maxHeight, minHeight, initialFocusRef }: ModalProps) {
 	const useCloseModal = useStore((state: any) => state.closeModal);
+	const resolvedMaxHeight = typeof maxHeight === 'number' ? maxHeight : 90;
 	return (
 		<Dialog
 			open={isOpen}
@@ -25,7 +26,7 @@ export default function Modal({ isOpen, children, closeAble = true, maxHeight, m
 			<DialogContent
 				aria-label="dialog"
 				style={{
-					maxHeight: typeof maxHeight === 'number' ? `${maxHeight}vh` : undefined,
+					maxHeight: `${resolvedMaxHeight}vh`,
 					minHeight: typeof minHeight === 'number' ? `${minHeight}vh` : undefined
 				}}
 				className="overflow-hidden p-0"

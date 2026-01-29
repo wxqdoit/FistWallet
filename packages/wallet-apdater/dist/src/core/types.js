@@ -6,5 +6,6 @@ export var ChainType;
     ChainType["SUI"] = "SUI";
     ChainType["APTOS"] = "APTOS";
     ChainType["TRON"] = "TRON";
+    ChainType["STARKNET"] = "STARKNET";
 })(ChainType || (ChainType = {}));
 //# sourceMappingURL=types.js.map

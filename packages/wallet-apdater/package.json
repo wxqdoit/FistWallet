@@ -10,6 +10,7 @@
     "build": "tsc --build tsconfig.json"
   },
   "dependencies": {
+    "@mysten/wallet-standard": "^0.11.3",
     "mipd": "^0.0.7"
   },
   "devDependencies": {

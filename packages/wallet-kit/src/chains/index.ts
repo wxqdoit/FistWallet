@@ -13,6 +13,7 @@ export const chains: IChainMap = {
     [ChainType.APTOS]: [],
     [ChainType.SUI]: [],
     [ChainType.TRON]: [],
+    [ChainType.STARKNET]: [],
 }
 
 export const getChainInfo = ({chainType,chainId}:{chainType:ChainType,chainId:number}) => {
