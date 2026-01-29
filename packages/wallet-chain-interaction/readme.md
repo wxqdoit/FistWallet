@@ -25,7 +25,7 @@ pnpm install
 ## Usage
 
 ```typescript
-import { createProvider, EVMProvider } from 'chain-interaction';
+import { createProvider, EVMProvider } from 'wallet-chain-interaction';
 
 // Using factory function
 const provider = createProvider('evm', {

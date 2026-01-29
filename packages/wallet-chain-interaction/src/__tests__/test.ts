@@ -1,9 +1,9 @@
 /**
- * Simple test script for chain-interaction package
+ * Simple test script for wallet-chain-interaction package
  * Run with: npx tsx src/__tests__/test.ts
  */
 
-import { createProvider, EVMProvider, SolanaProvider } from '../index';
+import { createProvider, EVMProvider } from '../index';
 import type { ChainProvider } from '../provider/base';
 
 // Test configuration

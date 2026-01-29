@@ -1,5 +1,5 @@
 {
-  "name": "chain-interaction",
+  "name": "wallet-chain-interaction",
   "version": "1.0.0",
   "type": "module",
   "description": "Unified blockchain RPC interaction library for 9+ chains",

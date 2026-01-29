@@ -1,0 +1,15 @@
+{
+  "name": "fistwallet",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/*\" build",
+    "build:wallet-core": "pnpm --filter wallet-core build",
+    "build:wallet-chain-interaction": "pnpm --filter wallet-chain-interaction build",
+    "build:wallet-apdater": "pnpm --filter wallet-apdater build",
+    "build:wallet-kit": "pnpm --filter wallet-kit build",
+    "build:wallet-extension": "pnpm --filter wallet-extension build",
+    "build:wallet-example": "pnpm --filter wallet-example build"
+  }
+}

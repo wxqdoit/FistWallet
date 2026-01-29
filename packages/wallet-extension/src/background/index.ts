@@ -1,8 +1,8 @@
 import browser from 'webextension-polyfill';
+import type { Runtime } from 'webextension-polyfill';
 import type { Message, Response } from '../types';
 import { MessageType, STORAGE_KEYS } from '../types';
 import { DEFAULT_AUTO_LOCK_DURATION, clearAutoLockTimer, getAutoLockDurationMs, resetAutoLockTimer } from '../core/storage';
-import { setSidePanelMode } from '../core/sidePanel';
 
 console.log('FistWallet background service worker initialized');
 
@@ -73,7 +73,7 @@ browser.storage.onChanged.addListener((changes, areaName) => {
     }
 });
 
-function isExtensionSender(sender: browser.runtime.MessageSender): boolean {
+function isExtensionSender(sender: Runtime.MessageSender): boolean {
     const senderUrl = sender.url ?? '';
     return senderUrl.startsWith(browser.runtime.getURL(''));
 }
@@ -81,7 +81,7 @@ function isExtensionSender(sender: browser.runtime.MessageSender): boolean {
 /**
  * Message handler
  */
-async function handleMessage(message: Message, sender: browser.runtime.MessageSender): Promise<Response> {
+async function handleMessage(message: Message, sender: Runtime.MessageSender): Promise<Response> {
     try {
         switch (message.type) {
             case MessageType.CREATE_WALLET:

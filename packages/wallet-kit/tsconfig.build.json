@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types",
+    "outDir": "dist/types",
+    "noEmit": false
+  },
+  "include": ["src/**/*", "package.json"],
+  "exclude": ["src/dev.tsx"]
+}

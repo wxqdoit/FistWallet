@@ -1,0 +1,18 @@
+{
+  "name": "wallet-apdater",
+  "version": "0.0.1",
+  "description": "Wallet adapter core for plugin wallets",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --build tsconfig.json"
+  },
+  "dependencies": {
+    "mipd": "^0.0.7"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  }
+}
