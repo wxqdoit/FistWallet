@@ -1,0 +1,68 @@
+[
+  {
+    "name": "metamask",
+    "base_url": "https://docs.metamask.io/wallet/",
+    "allowed_prefix": "https://docs.metamask.io/wallet/",
+    "sitemap": "https://docs.metamask.io/sitemap.xml"
+  },
+  {
+    "name": "phantom",
+    "base_url": "https://docs.phantom.com/",
+    "allowed_prefix": "https://docs.phantom.com/"
+  },
+  {
+    "name": "okx",
+    "base_url": "https://web3.okx.com/build/dev-docs/",
+    "allowed_prefix": "https://web3.okx.com/build/dev-docs/"
+  },
+  {
+    "name": "bitget",
+    "base_url": "https://web3.bitget.com/en/docs/",
+    "allowed_prefix": "https://web3.bitget.com/en/docs/"
+  },
+  {
+    "name": "petra",
+    "base_url": "https://petra.app/docs",
+    "allowed_prefix": "https://petra.app/docs"
+  },
+  {
+    "name": "martian",
+    "base_url": "https://docs.martianwallet.xyz/docs/",
+    "allowed_prefix": "https://docs.martianwallet.xyz/docs/"
+  },
+  {
+    "name": "suiet",
+    "base_url": "https://kit.suiet.app/docs/",
+    "allowed_prefix": "https://kit.suiet.app/docs/"
+  },
+  {
+    "name": "slush",
+    "base_url": "https://docs.sui.io/standards/wallet-standard",
+    "allowed_prefix": "https://docs.sui.io/standards/"
+  },
+  {
+    "name": "pontem",
+    "base_url": "https://docs.pontem.network/01.-wallet/",
+    "allowed_prefix": "https://docs.pontem.network/01.-wallet/"
+  },
+  {
+    "name": "razor",
+    "base_url": "https://kit.razorwallet.xyz/docs/",
+    "allowed_prefix": "https://kit.razorwallet.xyz/docs/"
+  },
+  {
+    "name": "tronlink",
+    "base_url": "https://docs.tronlink.org/dapp/",
+    "allowed_prefix": "https://docs.tronlink.org/dapp/"
+  },
+  {
+    "name": "unisat",
+    "base_url": "https://docs.unisat.io/developer-support/open-api-documentation/unisat-wallet",
+    "allowed_prefix": "https://docs.unisat.io/"
+  },
+  {
+    "name": "braavos",
+    "base_url": "https://www.starknetkit.com/docs/",
+    "allowed_prefix": "https://www.starknetkit.com/docs/"
+  }
+]

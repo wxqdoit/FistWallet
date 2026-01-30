@@ -1,0 +1,39 @@
+[LI] Petra WebIntroduction
+[LI] Frequently Asked Questions
+[LI] Developer's GuideQuick Start
+[LI] Error Codes
+[LI] Telegram
+[LI] Sign In with Aptos
+[LI] Petra VaultIntroduction
+[LI] GuidesCreate a Vault
+[LI] Transaction Management
+[LI] Publish a Contract
+[LI] Backup your Vaults
+[LI] Earn
+[LI] DevelopersAccounts Types
+[LI] Connecting to Petra Wallet
+[LI] Deep Linking to Mobile App
+[LI] Event Listening
+[LI] Identifying Errors
+[LI] Sending a Transaction
+[LI] Signing Messages
+[LI] Using Petra
+[LI] Frequently Asked Questions
+[P] On This Page
+[LI] Code 4000
+[LI] Code 4001
+[LI] Code 4100
+[H1] Errors
+[P] When making requests to Petra API, you may receive an error. The following is a partial list of the possible errors and their corresponding codes:
+[H2] Code 4000
+[LI] Code: 4000
+[LI] Name: No Accounts
+[LI] Message: No accounts found.
+[H2] Code 4001
+[LI] Code: 4001
+[LI] Name: User rejection
+[LI] Message: The user rejected the request.
+[H2] Code 4100
+[LI] Code: 4100
+[LI] Name: Unauthorized
+[LI] Message: The requested method and/or account has not been authorized by the user.

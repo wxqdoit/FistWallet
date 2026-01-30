@@ -1,0 +1,9 @@
+https://petra.app/docs
+https://petra.app/docs/accounts-types
+https://petra.app/docs/connect-to-petra
+https://petra.app/docs/mobile-deeplinks
+https://petra.app/docs/event-listening
+https://petra.app/docs/errors
+https://petra.app/docs/sending-a-transaction
+https://petra.app/docs/signing-a-message
+https://petra.app/docs/use

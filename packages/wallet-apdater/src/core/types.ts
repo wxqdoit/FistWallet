@@ -1,4 +1,4 @@
-import type { EvmChainConfig } from './evm';
+import type { EvmChainConfig } from '@/core/evm';
 
 export enum ChainType {
     EVM = 'EVM',
@@ -32,6 +32,13 @@ export interface DisconnectOptions {
     chainType?: ChainType;
 }
 
+export interface SendTransactionOptions {
+    chainType: ChainType;
+    chainId?: number;
+    transaction: unknown;
+}
+
+
 export interface AdapterInfo {
     rdns: string;
     name: string;
@@ -44,6 +51,7 @@ export interface WalletAdapter {
     supports: ChainType[];
     connect(options: ConnectOptions): Promise<ConnectedAccount>;
     disconnect(options?: DisconnectOptions): Promise<void>;
+    sendTransaction?(options: SendTransactionOptions): Promise<unknown>;
     switchNetwork?(options: { chainId: number; chainType?: ChainType }): Promise<boolean>;
     addNetwork?(options: { chainId: number; chainType?: ChainType; chainConfig: EvmChainConfig }): Promise<boolean>;
 }

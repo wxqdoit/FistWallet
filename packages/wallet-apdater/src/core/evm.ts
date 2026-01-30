@@ -11,6 +11,18 @@ export interface EvmChainConfig {
     blockExplorerUrls?: Array<string>;
 }
 
+export interface EvmSendTransaction {
+    from: string;
+    to?: string;
+    value?: string;
+    data?: string;
+    gas?: string;
+    gasPrice?: string;
+    maxFeePerGas?: string;
+    maxPriorityFeePerGas?: string;
+    nonce?: string;
+}
+
 export interface Eip1193Provider {
     isStatus?: boolean;
     host?: string;

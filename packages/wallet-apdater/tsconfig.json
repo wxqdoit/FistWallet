@@ -12,6 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "removeComments": true,

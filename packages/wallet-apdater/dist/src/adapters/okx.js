@@ -1,69 +1,37 @@
-import { AdapterError, ADAPTER_ERROR_CODES } from '../core/errors';
+import { BaseAdapter } from '../core/handlers';
 import { ChainType } from '../core/types';
-import { createBtcStrategy } from './strategies/btc';
-import { createEvmStrategy } from './strategies/evm';
-import { createSolStrategy } from './strategies/sol';
-export const OKX_RDNS = 'com.okex.wallet';
-export function createOkxAdapter(detail) {
-    const okxwallet = typeof window !== 'undefined' ? window.okxwallet : undefined;
-    const evmProvider = detail?.provider ?? okxwallet?.ethereum;
-    const solProvider = okxwallet?.solana;
-    const btcProvider = okxwallet?.bitcoin;
-    const evmStrategy = createEvmStrategy(evmProvider);
-    const solStrategy = createSolStrategy(solProvider);
-    const btcStrategy = createBtcStrategy(btcProvider);
-    const installed = !!detail || !!okxwallet;
-    return {
-        info: {
-            rdns: OKX_RDNS,
+import { BtcHandler } from './handlers/btc';
+import { EvmHandler } from './handlers/evm';
+import { SolHandler } from './handlers/sol';
+export class OkxAdapter extends BaseAdapter {
+    constructor(detail) {
+        super();
+        this.supports = [ChainType.EVM, ChainType.SOL, ChainType.BTC];
+        const okxwallet = typeof window !== 'undefined' ? window.okxwallet : undefined;
+        const evmProvider = detail?.provider ?? okxwallet?.ethereum;
+        const solProvider = okxwallet?.solana;
+        const btcProvider = okxwallet?.bitcoin;
+        this.handlers.set(ChainType.EVM, new EvmHandler(evmProvider));
+        this.handlers.set(ChainType.SOL, new SolHandler(solProvider));
+        this.handlers.set(ChainType.BTC, new BtcHandler(btcProvider));
+        this.info = {
+            rdns: 'com.okex.wallet',
             name: 'OKEx',
-            installed,
-        },
-        supports: [ChainType.EVM, ChainType.SOL, ChainType.BTC],
-        async connect(options) {
-            switch (options.chainType) {
-                case ChainType.EVM:
-                    return evmStrategy.connect(options.chainId);
-                case ChainType.SOL:
-                    return solStrategy.connect();
-                case ChainType.BTC:
-                    return btcStrategy.connect();
-                default:
-                    throw new AdapterError(ADAPTER_ERROR_CODES.UNSUPPORTED_CHAIN, `Unsupported chain type: ${options.chainType}`);
-            }
-        },
-        async disconnect(options) {
-            switch (options?.chainType) {
-                case ChainType.EVM:
-                    await evmStrategy.disconnect();
-                    return;
-                case ChainType.SOL:
-                    await solStrategy.disconnect();
-                    return;
-                case ChainType.BTC:
-                    throw new AdapterError(ADAPTER_ERROR_CODES.REQUEST_FAILED, 'Bitcoin disconnect not supported');
-                case undefined:
-                    await Promise.allSettled([
-                        evmStrategy.disconnect(),
-                        solStrategy.disconnect(),
-                    ]);
-                    return;
-                default:
-                    throw new AdapterError(ADAPTER_ERROR_CODES.UNSUPPORTED_CHAIN, `Unsupported chain type: ${options?.chainType}`);
-            }
-        },
-        async switchNetwork({ chainId, chainType }) {
-            if (chainType && chainType !== ChainType.EVM) {
-                return false;
-            }
-            return evmStrategy.switchNetwork?.(chainId) ?? false;
-        },
-        async addNetwork({ chainConfig, chainType }) {
-            if (chainType && chainType !== ChainType.EVM) {
-                return false;
-            }
-            return evmStrategy.addNetwork?.(chainConfig) ?? false;
-        },
-    };
+            installed: !!detail || !!okxwallet,
+        };
+    }
+    async switchNetwork({ chainId, chainType }) {
+        if (chainType && chainType !== ChainType.EVM)
+            return false;
+        return this.handlers.get(ChainType.EVM)?.switchNetwork?.({ chainId, chainType: ChainType.EVM }) ?? false;
+    }
+    async addNetwork({ chainId, chainConfig, chainType }) {
+        if (chainType && chainType !== ChainType.EVM)
+            return false;
+        return this.handlers.get(ChainType.EVM)?.addNetwork?.({ chainId, chainType: ChainType.EVM, chainConfig }) ?? false;
+    }
+}
+export function createOkxAdapter(detail) {
+    return new OkxAdapter(detail);
 }
 //# sourceMappingURL=okx.js.map

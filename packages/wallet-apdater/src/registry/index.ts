@@ -1,19 +1,19 @@
 import type { EIP6963ProviderDetail } from 'mipd';
-import { createMetamaskAdapter, METAMASK_RDNS } from '../adapters/metamask';
-import { createOkxAdapter, OKX_RDNS } from '../adapters/okx';
-import { createPhantomAdapter, PHANTOM_RDNS } from '../adapters/phantom';
-import { createBitgetAdapter, BITGET_RDNS } from '../adapters/bitget';
-import { createPontemAdapter, PONTEM_RDNS } from '../adapters/pontem';
-import { createPetraAdapter, PETRA_RDNS } from '../adapters/petra';
-import { createSlushAdapter, SLUSH_RDNS } from '../adapters/slush';
-import { createSuietAdapter, SUIET_RDNS } from '../adapters/suiet';
-import { createMartianAdapter, MARTIAN_RDNS } from '../adapters/martian';
-import { createTronLinkAdapter, TRONLINK_RDNS } from '../adapters/tronlink';
-import { createUnisatAdapter, UNISAT_RDNS } from '../adapters/unisat';
-import { createBraavosAdapter, BRAAVOS_RDNS } from '../adapters/braavos';
-import { createRazorAdapter, RAZOR_RDNS } from '../adapters/razor';
-import type { WalletAdapter } from '../core/types';
-import { getEip6963Providers, subscribeEip6963Providers } from '../discovery/eip6963';
+import { createMetamaskAdapter } from '@/adapters/metamask';
+import { createOkxAdapter } from '@/adapters/okx';
+import { createPhantomAdapter } from '@/adapters/phantom';
+import { createBitgetAdapter } from '@/adapters/bitget';
+import { createPontemAdapter } from '@/adapters/pontem';
+import { createPetraAdapter } from '@/adapters/petra';
+import { createSlushAdapter } from '@/adapters/slush';
+import { createSuietAdapter } from '@/adapters/suiet';
+import { createMartianAdapter } from '@/adapters/martian';
+import { createTronLinkAdapter } from '@/adapters/tronlink';
+import { createUnisatAdapter } from '@/adapters/unisat';
+import { createBraavosAdapter } from '@/adapters/braavos';
+import { createRazorAdapter } from '@/adapters/razor';
+import type { WalletAdapter } from '@/core/types';
+import { getEip6963Providers, subscribeEip6963Providers } from '@/discovery/eip6963';
 
 export interface AdapterFactory {
     rdns: string;
@@ -27,19 +27,19 @@ export interface AdapterRegistry {
 }
 
 export const defaultAdapterFactories: AdapterFactory[] = [
-    { rdns: METAMASK_RDNS, create: createMetamaskAdapter },
-    { rdns: PHANTOM_RDNS, create: createPhantomAdapter },
-    { rdns: OKX_RDNS, create: createOkxAdapter },
-    { rdns: BITGET_RDNS, create: createBitgetAdapter },
-    { rdns: PONTEM_RDNS, create: createPontemAdapter },
-    { rdns: PETRA_RDNS, create: createPetraAdapter },
-    { rdns: SLUSH_RDNS, create: createSlushAdapter },
-    { rdns: SUIET_RDNS, create: createSuietAdapter },
-    { rdns: MARTIAN_RDNS, create: createMartianAdapter },
-    { rdns: TRONLINK_RDNS, create: createTronLinkAdapter },
-    { rdns: UNISAT_RDNS, create: createUnisatAdapter },
-    { rdns: BRAAVOS_RDNS, create: createBraavosAdapter },
-    { rdns: RAZOR_RDNS, create: createRazorAdapter },
+    { rdns: 'io.metamask', create: createMetamaskAdapter },
+    { rdns: 'app.phantom', create: createPhantomAdapter },
+    { rdns: 'com.okex.wallet', create: createOkxAdapter },
+    { rdns: 'com.bitget.wallet', create: createBitgetAdapter },
+    { rdns: 'network.pontem', create: createPontemAdapter },
+    { rdns: 'app.petra', create: createPetraAdapter },
+    { rdns: 'app.slush', create: createSlushAdapter },
+    { rdns: 'app.suiet', create: createSuietAdapter },
+    { rdns: 'app.martian', create: createMartianAdapter },
+    { rdns: 'org.tronlink', create: createTronLinkAdapter },
+    { rdns: 'io.unisat', create: createUnisatAdapter },
+    { rdns: 'wallet.braavos', create: createBraavosAdapter },
+    { rdns: 'wallet.razor', create: createRazorAdapter },
 ];
 
 export function createAdapterRegistry(

@@ -1,0 +1,78 @@
+[LI] Petra WebIntroduction
+[LI] Frequently Asked Questions
+[LI] Developer's GuideQuick Start
+[LI] Error Codes
+[LI] Telegram
+[LI] Sign In with Aptos
+[LI] Petra VaultIntroduction
+[LI] GuidesCreate a Vault
+[LI] Transaction Management
+[LI] Publish a Contract
+[LI] Backup your Vaults
+[LI] Earn
+[LI] DevelopersAccounts Types
+[LI] Connecting to Petra Wallet
+[LI] Deep Linking to Mobile App
+[LI] Event Listening
+[LI] Identifying Errors
+[LI] Sending a Transaction
+[LI] Signing Messages
+[LI] Using Petra
+[LI] Frequently Asked Questions
+[P] On This Page
+[LI] Sign and submit
+[LI] Sign only
+[H1] Sending a Transaction
+[P] After your web app is connected to Petra, the web app can prompt the user to sign and send transactions to the Aptos blockchain.
+[P] Petra API handles the transactions in two ways:
+[LI] Sign a transaction and submit it to the Aptos blockchain. Return a pending transaction to the web app.
+[LI] Sign a transaction but do not submit the transaction to the Aptos blockchain. Return the signed transaction to the web app for the web app to submit the transaction.
+[P] See the below examples for both the options.
+[P] For more on Aptos transactions, see the Aptos
+SDKs (opens in a new tab) and Transactions guide from
+Aptos (opens in a new tab).
+[H2] Sign and submit
+[CODE] The below code example shows how to use the signAndSubmitTransaction()
+[CODE] const wallet = getAptosWallet(); // see "Connecting"
+ 
+// Example Transaction, following an [EntryFunctionPayload](https://github.com/aptos-labs/aptos-core/blob/main/ecosystem/typescript/sdk/src/generated/models/EntryFunctionPayload.ts#L8-L21)
+const transaction = {
+  arguments: [address, '717'],
+  function: '0x1::coin::transfer',
+  type: 'entry_function_payload',
+  type_arguments: ['0x1::aptos_coin::AptosCoin'],
+};
+ 
+try {
+  const pendingTransaction = await(
+    window as any,
+  ).aptos.signAndSubmitTransaction(transaction);
+ 
+  // In most cases a dApp will want to wait for the transaction, in these cases you can use the typescript sdk
+  const client = new AptosClient('https://testnet.aptoslabs.com');
+  const txn = await client.waitForTransactionWithResult(
+    pendingTransaction.hash,
+  );
+} catch (error) {
+  // see "Errors"
+}
+[H2] Sign only
+[P] IMPORTANT: We don't recommend using this because in most cases you don't need it, and it isn't super safe for users. They will receive an extra warning for this.
+[CODE] The below code example shows how to use the signTransaction()
+[CODE] const wallet = getAptosWallet(); // see "Connecting"
+ 
+// Example Transaction
+const transaction = {
+  arguments: [address, '717'],
+  function: '0x1::coin::transfer',
+  type: 'entry_function_payload',
+  type_arguments: ['0x1::aptos_coin::AptosCoin'],
+};
+ 
+try {
+  const signTransaction = await (window as any).aptos.signTransaction(
+    transaction,
+  );
+} catch (error) {
+  // see "Errors"
+}
