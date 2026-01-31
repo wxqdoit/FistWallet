@@ -8,9 +8,10 @@ export enum AppModal {
 }
 
 export interface IChainInfo {
-    id: number;
+    id: number | string;
     name: string;
     type?: ChainType;
+    isMainnet: boolean;
 }
 
 export type IBtcAccount = BtcAccount;

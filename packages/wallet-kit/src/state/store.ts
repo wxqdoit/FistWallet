@@ -12,7 +12,7 @@ import {
 
 export interface IAccount {
 	address:string | IBtcAccount,
-	chainId?:number,
+	chainId?:number | string,
 	chainType:ChainType,
 	walletRdns:string,
 	status:ConnectStatus
@@ -25,7 +25,7 @@ export interface IWalletKit {
 	theme: Theme | null;
 	account:IAccount | null
 	toggleModal:(modal: AppModal)=>void
-	setChain:({id,name,type}: IChainInfo)=>void
+	setChain:({id,name,type,isMainnet}: IChainInfo)=>void
 	setAccount:(account:IAccount | null)=>void
 }
 
@@ -55,8 +55,8 @@ const useStore = create(
 			setTheme(theme: Theme) {
 				return set(() => ({ theme }));
 			},
-			setChain({id,name,type}: IChainInfo) {
-				return set(() => ({ chain: {id, name, type} }));
+			setChain({id,name,type,isMainnet}: IChainInfo) {
+				return set(() => ({ chain: {id, name, type, isMainnet} }));
 			},
 			setAccount(account:IAccount | null){
 				return set(() => ({ account }));

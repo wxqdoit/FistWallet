@@ -31,6 +31,9 @@ export interface Eip1193Provider {
         method: string;
         params?: Array<unknown>;
     }) => Promise<unknown>;
+    on?: (event: string, listener: (...args: unknown[]) => void) => void;
+    removeListener?: (event: string, listener: (...args: unknown[]) => void) => void;
+    off?: (event: string, listener: (...args: unknown[]) => void) => void;
     sendAsync?: (
         request: { method: string; params?: Array<unknown> },
         callback: (error: Error | null, response: unknown) => void

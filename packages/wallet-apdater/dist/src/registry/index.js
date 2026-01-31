@@ -1,17 +1,17 @@
-import { createMetamaskAdapter } from '@/adapters/metamask';
-import { createOkxAdapter } from '@/adapters/okx';
-import { createPhantomAdapter } from '@/adapters/phantom';
-import { createBitgetAdapter } from '@/adapters/bitget';
-import { createPontemAdapter } from '@/adapters/pontem';
-import { createPetraAdapter } from '@/adapters/petra';
-import { createSlushAdapter } from '@/adapters/slush';
-import { createSuietAdapter } from '@/adapters/suiet';
-import { createMartianAdapter } from '@/adapters/martian';
-import { createTronLinkAdapter } from '@/adapters/tronlink';
-import { createUnisatAdapter } from '@/adapters/unisat';
-import { createBraavosAdapter } from '@/adapters/braavos';
-import { createRazorAdapter } from '@/adapters/razor';
-import { getEip6963Providers, subscribeEip6963Providers } from '@/discovery/eip6963';
+import { createMetamaskAdapter } from '../adapters/metamask';
+import { createOkxAdapter } from '../adapters/okx';
+import { createPhantomAdapter } from '../adapters/phantom';
+import { createBitgetAdapter } from '../adapters/bitget';
+import { createPontemAdapter } from '../adapters/pontem';
+import { createPetraAdapter } from '../adapters/petra';
+import { createSlushAdapter } from '../adapters/slush';
+import { createSuietAdapter } from '../adapters/suiet';
+import { createMartianAdapter } from '../adapters/martian';
+import { createTronLinkAdapter } from '../adapters/tronlink';
+import { createUnisatAdapter } from '../adapters/unisat';
+import { createBraavosAdapter } from '../adapters/braavos';
+import { createRazorAdapter } from '../adapters/razor';
+import { getEip6963Providers, subscribeEip6963Providers } from '../discovery/eip6963';
 export const defaultAdapterFactories = [
     { rdns: 'io.metamask', create: createMetamaskAdapter },
     { rdns: 'app.phantom', create: createPhantomAdapter },

@@ -10,7 +10,7 @@ import { WalletKitThemeProvider } from './ThemeProvider';
 interface IWalletKitProvider {
 	children: ReactNode;
 	language?: Locals;
-	defaultChainId?: number ;
+	defaultChainId?: number | string;
 	defaultChainType?: ChainType;
 	theme?: Theme;
 }

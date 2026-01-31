@@ -77,6 +77,26 @@ export class EvmProvider implements IBaseProvider {
         }
     }
 
+    on(event: string, listener: (...args: unknown[]) => void): () => void {
+        const evmProvider = this.requireProvider();
+        if (!evmProvider.on) {
+            throw new AdapterError(
+                ADAPTER_ERROR_CODES.REQUEST_FAILED,
+                'EVM provider does not support events'
+            );
+        }
+        evmProvider.on(event, listener);
+        return () => {
+            if (evmProvider.removeListener) {
+                evmProvider.removeListener(event, listener);
+                return;
+            }
+            if (evmProvider.off) {
+                evmProvider.off(event, listener);
+            }
+        };
+    }
+
     async switchNetwork({ chainId }: { chainId: number; chainType?: ChainType }): Promise<boolean> {
         const evmProvider = this.requireProvider();
         try {

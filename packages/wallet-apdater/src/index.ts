@@ -1,4 +1,4 @@
-export { ChainType, type AdapterInfo, type ConnectedAccount, type ConnectOptions, type DisconnectOptions, type SendTransactionOptions, type WalletAdapter, type BtcAccount } from '@/core/types';
+export { ChainType, type AccountChangeListener, type AdapterEvent, type AdapterEventListener, type AdapterInfo, type ConnectedAccount, type ConnectOptions, type DisconnectListener, type DisconnectOptions, type NetworkChangeInfo, type NetworkChangeListener, type SendTransactionOptions, type WalletAdapter, type BtcAccount } from '@/core/types';
 export type { EvmChainConfig, EvmSendTransaction, Eip1193Provider } from '@/core/evm';
 export { AdapterError, ADAPTER_ERROR_CODES } from '@/core/errors';
 export { BaseAdapter } from '@/core/handlers';

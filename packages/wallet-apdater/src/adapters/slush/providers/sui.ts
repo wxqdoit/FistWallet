@@ -1,6 +1,6 @@
 import type { IBaseProvider } from '@/core/providers/sui';
 import { AdapterError, ADAPTER_ERROR_CODES } from '@/core/errors';
-import { ChainType, type ConnectedAccount, type ConnectOptions } from '@/core/types';
+import { ChainType, type ConnectedAccount, type ConnectOptions, type SendTransactionOptions } from '@/core/types';
 
 type SuiAccount = {
     address?: string;
@@ -12,10 +12,15 @@ type SuiConnectResult = {
 };
 
 type SuiWalletProvider = {
-    features?: Record<string, { connect?: () => Promise<SuiConnectResult> } | { disconnect?: () => Promise<void> }>;
+    features?: Record<string, unknown>;
     connect?: () => Promise<SuiConnectResult>;
     disconnect?: () => Promise<void>;
     accounts?: SuiAccount[];
+    signAndExecuteTransactionBlock?: (input: unknown) => Promise<unknown>;
+    signAndExecuteTransaction?: (input: unknown) => Promise<unknown>;
+    on?: (event: string, listener: (...args: unknown[]) => void) => void;
+    off?: (event: string, listener: (...args: unknown[]) => void) => void;
+    removeListener?: (event: string, listener: (...args: unknown[]) => void) => void;
 };
 
 type ProviderSource = SuiWalletProvider | (() => SuiWalletProvider | undefined);
@@ -59,6 +64,74 @@ export class SuiProvider implements IBaseProvider {
         if (suiProvider.disconnect) {
             await suiProvider.disconnect();
         }
+    }
+
+    async sendTransaction(options: SendTransactionOptions): Promise<unknown> {
+        const suiProvider = this.resolveProvider();
+        const transaction = options.transaction;
+
+        const standardExecute = suiProvider.features?.['sui:signAndExecuteTransactionBlock'] as { signAndExecuteTransactionBlock?: (input: unknown) => Promise<unknown> } | undefined;
+        if (standardExecute?.signAndExecuteTransactionBlock) {
+            return standardExecute.signAndExecuteTransactionBlock(transaction);
+        }
+
+        const standardExecuteLegacy = suiProvider.features?.['sui:signAndExecuteTransaction'] as { signAndExecuteTransaction?: (input: unknown) => Promise<unknown> } | undefined;
+        if (standardExecuteLegacy?.signAndExecuteTransaction) {
+            return standardExecuteLegacy.signAndExecuteTransaction(transaction);
+        }
+
+        if (suiProvider.signAndExecuteTransactionBlock) {
+            return suiProvider.signAndExecuteTransactionBlock(transaction);
+        }
+
+        if (suiProvider.signAndExecuteTransaction) {
+            return suiProvider.signAndExecuteTransaction(transaction);
+        }
+
+        throw new AdapterError(
+            ADAPTER_ERROR_CODES.REQUEST_FAILED,
+            'Sui sendTransaction not supported'
+        );
+    }
+
+    on(event: string, listener: (...args: unknown[]) => void): () => void {
+        const suiProvider = this.resolveProvider();
+        const events = suiProvider.features?.['standard:events'] as { on?: (event: string, listener: (...args: unknown[]) => void) => void; off?: (event: string, listener: (...args: unknown[]) => void) => void; removeListener?: (event: string, listener: (...args: unknown[]) => void) => void } | undefined;
+        const mappedEvent = event === 'accountsChanged' ? 'accountChanged' : event;
+        const handler = event === 'accountsChanged'
+            ? (accounts: unknown) => listener(Array.isArray(accounts) ? accounts : [accounts])
+            : listener;
+
+        if (events?.on) {
+            events.on(mappedEvent, handler);
+            return () => {
+                if (events.removeListener) {
+                    events.removeListener(mappedEvent, handler);
+                    return;
+                }
+                if (events.off) {
+                    events.off(mappedEvent, handler);
+                }
+            };
+        }
+
+        if (suiProvider.on) {
+            suiProvider.on(mappedEvent, handler);
+            return () => {
+                if (suiProvider.removeListener) {
+                    suiProvider.removeListener(mappedEvent, handler);
+                    return;
+                }
+                if (suiProvider.off) {
+                    suiProvider.off(mappedEvent, handler);
+                }
+            };
+        }
+
+        throw new AdapterError(
+            ADAPTER_ERROR_CODES.REQUEST_FAILED,
+            'Sui provider does not support events'
+        );
     }
 
     private resolveAddress(result?: SuiConnectResult | null, provider?: SuiWalletProvider): string | undefined {

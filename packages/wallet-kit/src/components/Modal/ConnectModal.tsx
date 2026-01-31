@@ -18,6 +18,10 @@ export function ConnectModal({isOpen}: ModalProps) {
     const {t} = useTranslation();
     const {chain, setAccount, toggleModal} = useStore()
     const {providers, setConnectedProvider} = useProvidersStore()
+    const chainType = chain?.type;
+    const filteredProviders = providers && chainType
+        ? providers.filter((provider) => provider.supports.includes(chainType))
+        : providers;
 
     const handleConnect = async (provider: WalletAdapter) => {
         if (!chain || !chain.type) return
@@ -42,7 +46,7 @@ export function ConnectModal({isOpen}: ModalProps) {
                 </div>
                 <div className="wallet-kit-scrollbar flex-1 overflow-y-auto px-5 pb-5 pt-4">
                     <div className="mx-auto flex flex-col gap-3">
-                        {providers && providers.map((provider) => {
+                        {filteredProviders && filteredProviders.map((provider) => {
                             const iconSrc = provider.info.icon ?? adapterIconMap[provider.info.rdns] ?? '';
                             const installed = provider.info.installed;
                             return (
@@ -71,6 +75,11 @@ export function ConnectModal({isOpen}: ModalProps) {
                                 </button>
                             );
                         })}
+                        {filteredProviders && chainType && filteredProviders.length === 0 && (
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+                                No wallets detected for {chainType}.
+                            </div>
+                        )}
 
                     </div>
 

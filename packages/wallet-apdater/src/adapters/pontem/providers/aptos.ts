@@ -1,6 +1,6 @@
 import type { IBaseProvider } from '@/core/providers/aptos';
 import { AdapterError, ADAPTER_ERROR_CODES } from '@/core/errors';
-import { ChainType, type ConnectedAccount, type ConnectOptions } from '@/core/types';
+import { ChainType, type ConnectedAccount, type ConnectOptions, type SendTransactionOptions } from '@/core/types';
 
 type AptosConnectResult = {
     address?: string;
@@ -12,6 +12,13 @@ type AptosWalletProvider = {
     connect?: () => Promise<AptosConnectResult>;
     account?: () => Promise<{ address?: string }>;
     disconnect?: () => Promise<void>;
+    signAndSubmitTransaction?: (transaction: unknown) => Promise<unknown>;
+    signAndSubmit?: (payload: unknown, options?: unknown) => Promise<unknown>;
+    onAccountChange?: (callback: (account: unknown) => void) => void;
+    onChangeAccount?: (callback: (account: unknown) => void) => void;
+    onNetworkChange?: (callback: (network: unknown) => void) => void;
+    onChangeNetwork?: (callback: (network: unknown) => void) => void;
+    onDisconnect?: (callback: () => void) => void;
 };
 
 export class AptosProvider implements IBaseProvider {
@@ -50,6 +57,65 @@ export class AptosProvider implements IBaseProvider {
         if (aptosProvider.disconnect) {
             await aptosProvider.disconnect();
         }
+    }
+
+    async sendTransaction(options: SendTransactionOptions): Promise<unknown> {
+        const aptosProvider = this.requireProvider();
+        const transaction = options.transaction as any;
+
+        if (aptosProvider.signAndSubmitTransaction) {
+            return aptosProvider.signAndSubmitTransaction(transaction);
+        }
+
+        if (aptosProvider.signAndSubmit) {
+            if (transaction && typeof transaction === 'object' && 'payload' in transaction) {
+                return aptosProvider.signAndSubmit(transaction.payload, transaction.options);
+            }
+            return aptosProvider.signAndSubmit(transaction);
+        }
+
+        throw new AdapterError(
+            ADAPTER_ERROR_CODES.REQUEST_FAILED,
+            'Aptos sendTransaction not supported'
+        );
+    }
+
+    on(event: string, listener: (...args: unknown[]) => void): () => void {
+        const aptosProvider = this.requireProvider();
+        if (event === 'accountsChanged' || event === 'accountChanged') {
+            const handler = event === 'accountsChanged'
+                ? (account: unknown) => listener(Array.isArray(account) ? account : [account])
+                : listener;
+            if (aptosProvider.onAccountChange) {
+                aptosProvider.onAccountChange(handler);
+                return () => {};
+            }
+            if (aptosProvider.onChangeAccount) {
+                aptosProvider.onChangeAccount(handler);
+                return () => {};
+            }
+        }
+
+        if (event === 'networkChanged') {
+            if (aptosProvider.onNetworkChange) {
+                aptosProvider.onNetworkChange(listener);
+                return () => {};
+            }
+            if (aptosProvider.onChangeNetwork) {
+                aptosProvider.onChangeNetwork(listener);
+                return () => {};
+            }
+        }
+
+        if (event === 'disconnect' && aptosProvider.onDisconnect) {
+            aptosProvider.onDisconnect(() => listener(undefined));
+            return () => {};
+        }
+
+        throw new AdapterError(
+            ADAPTER_ERROR_CODES.REQUEST_FAILED,
+            `Aptos provider does not support event: ${event}`
+        );
     }
 
     private resolveAddress(result?: AptosConnectResult | { address?: string } | null): string | undefined {

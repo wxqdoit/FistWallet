@@ -7,13 +7,14 @@
   "main": "./dist/src/index.js",
   "types": "./src/index.ts",
   "scripts": {
-    "build": "tsc --build tsconfig.json"
+    "build": "rm -rf dist && tsc --build tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "dependencies": {
     "@mysten/wallet-standard": "^0.11.3",
     "mipd": "^0.0.7"
   },
   "devDependencies": {
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.5.2"
   }
 }

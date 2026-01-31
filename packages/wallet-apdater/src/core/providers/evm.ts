@@ -8,4 +8,5 @@ export interface IBaseProvider {
     sendTransaction?(options: SendTransactionOptions & { transaction: EvmSendTransaction }): Promise<unknown>;
     switchNetwork?(options: { chainId: number; chainType?: ChainType }): Promise<boolean>;
     addNetwork?(options: { chainId: number; chainType?: ChainType; chainConfig: EvmChainConfig }): Promise<boolean>;
+    on?(event: import('@/core/types').AdapterEvent, listener: import('@/core/types').AdapterEventListener): () => void;
 }

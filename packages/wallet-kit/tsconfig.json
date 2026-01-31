@@ -12,6 +12,10 @@
 		"forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true,
 		"moduleResolution": "Bundler",
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["../wallet-apdater/src/*"]
+		},
 		"experimentalDecorators": true,
 		"resolveJsonModule": true,
 		"removeComments": true,

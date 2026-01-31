@@ -1,9 +1,10 @@
 import type { IBaseProvider } from '@/core/providers/starknet';
 import { AdapterError, ADAPTER_ERROR_CODES } from '@/core/errors';
-import { ChainType, type ConnectedAccount, type ConnectOptions } from '@/core/types';
+import { ChainType, type ConnectedAccount, type ConnectOptions, type SendTransactionOptions } from '@/core/types';
 
 type StarknetAccount = {
     address?: string;
+    execute?: (transactions: unknown, abis?: unknown) => Promise<unknown>;
 };
 
 type StarknetWalletProvider = {
@@ -11,6 +12,10 @@ type StarknetWalletProvider = {
     account?: StarknetAccount;
     selectedAddress?: string;
     disconnect?: () => Promise<void>;
+    execute?: (transactions: unknown, abis?: unknown) => Promise<unknown>;
+    on?: (event: string, listener: (...args: unknown[]) => void) => void;
+    removeListener?: (event: string, listener: (...args: unknown[]) => void) => void;
+    off?: (event: string, listener: (...args: unknown[]) => void) => void;
 };
 
 export class StarknetProvider implements IBaseProvider {
@@ -43,6 +48,52 @@ export class StarknetProvider implements IBaseProvider {
         if (starknetProvider.disconnect) {
             await starknetProvider.disconnect();
         }
+    }
+
+    async sendTransaction(options: SendTransactionOptions): Promise<unknown> {
+        const starknetProvider = this.requireProvider();
+        const account = starknetProvider.account;
+        const transaction = options.transaction as any;
+        const calls = transaction && typeof transaction === 'object'
+            ? (transaction.transactions ?? transaction.calls ?? transaction)
+            : transaction;
+        const abis = transaction && typeof transaction === 'object'
+            ? (transaction.abis ?? transaction.abi)
+            : undefined;
+
+        if (account?.execute) {
+            return account.execute(calls, abis);
+        }
+
+        if (starknetProvider.execute) {
+            return starknetProvider.execute(calls, abis);
+        }
+
+        throw new AdapterError(
+            ADAPTER_ERROR_CODES.REQUEST_FAILED,
+            'Starknet sendTransaction not supported'
+        );
+    }
+
+    on(event: string, listener: (...args: unknown[]) => void): () => void {
+        const starknetProvider = this.requireProvider();
+        const mappedEvent = event === 'accountChanged' ? 'accountsChanged' : event;
+        if (!starknetProvider.on) {
+            throw new AdapterError(
+                ADAPTER_ERROR_CODES.REQUEST_FAILED,
+                'Starknet provider does not support events'
+            );
+        }
+        starknetProvider.on(mappedEvent, listener);
+        return () => {
+            if (starknetProvider.removeListener) {
+                starknetProvider.removeListener(mappedEvent, listener);
+                return;
+            }
+            if (starknetProvider.off) {
+                starknetProvider.off(mappedEvent, listener);
+            }
+        };
     }
 
     private resolveAddress(provider: StarknetWalletProvider, result?: Array<string | StarknetAccount>): string | undefined {
