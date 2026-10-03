@@ -1,3 +1,4 @@
+import { createFistWalletAdapter } from "@/adapters/fistwallet";
 import type { EIP6963ProviderDetail } from 'mipd';
 import { createMetamaskAdapter } from '@/adapters/metamask';
 import { createOkxAdapter } from '@/adapters/okx';
@@ -12,6 +13,7 @@ import { createTronLinkAdapter } from '@/adapters/tronlink';
 import { createUnisatAdapter } from '@/adapters/unisat';
 import { createBraavosAdapter } from '@/adapters/braavos';
 import { createRazorAdapter } from '@/adapters/razor';
+import { createWalletConnectAdapter } from '@/adapters/walletconnect';
 import type { WalletAdapter } from '@/core/types';
 import { getEip6963Providers, subscribeEip6963Providers } from '@/discovery/eip6963';
 
@@ -22,11 +24,13 @@ export interface AdapterFactory {
 
 export interface AdapterRegistry {
     list: () => WalletAdapter[];
+    getAdapter: (rdns: string) => WalletAdapter | undefined;
     refresh: (details?: EIP6963ProviderDetail[]) => void;
     subscribe: (listener: (adapters: WalletAdapter[]) => void) => () => void;
 }
 
 export const defaultAdapterFactories: AdapterFactory[] = [
+    { rdns: 'io.fistwallet', create: createFistWalletAdapter },
     { rdns: 'io.metamask', create: createMetamaskAdapter },
     { rdns: 'app.phantom', create: createPhantomAdapter },
     { rdns: 'com.okex.wallet', create: createOkxAdapter },
@@ -40,6 +44,7 @@ export const defaultAdapterFactories: AdapterFactory[] = [
     { rdns: 'io.unisat', create: createUnisatAdapter },
     { rdns: 'wallet.braavos', create: createBraavosAdapter },
     { rdns: 'wallet.razor', create: createRazorAdapter },
+    { rdns: 'org.walletconnect', create: createWalletConnectAdapter },
 ];
 
 export function createAdapterRegistry(
@@ -62,6 +67,8 @@ export function createAdapterRegistry(
 
     const list = () => adapters;
 
+    const getAdapter = (rdns: string) => adapters.find((a) => a.info.rdns === rdns);
+
     const subscribe = (listener: (adapters: WalletAdapter[]) => void) => {
         listeners.add(listener);
         listener(adapters);
@@ -72,6 +79,7 @@ export function createAdapterRegistry(
 
     return {
         list,
+        getAdapter,
         refresh,
         subscribe,
     };

@@ -38,6 +38,10 @@ import {
     ChainError,
     ChainErrorCode,
     HexString,
+    FeeTiersEstimate,
+    ApproveTokenParams, NFTMetadata, SwapQuoteParams, SwapQuoteResult,
+    DetailedTransactionReceipt,
+    BatchTokenBalanceResult,
 } from '../types';
 
 // ERC20 ABI for token interactions
@@ -80,11 +84,70 @@ const ERC20_ABI = [
         ],
         outputs: [{ name: '', type: 'bool' }],
     },
+    {
+        name: 'allowance',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [
+            { name: 'owner', type: 'address' },
+            { name: 'spender', type: 'address' },
+        ],
+        outputs: [{ name: '', type: 'uint256' }],
+    },
 ] as const;
 
 /**
  * EVM Chain Provider implementation
  */
+
+/**
+ * ABI encode an ERC-20 transfer call (0xa9059cbb)
+ */
+export function encodeERC20Transfer(to: string, amount: string | bigint): HexString {
+    const cleanTo = to.toLowerCase().replace(/^0x/, '').padStart(64, '0');
+    const cleanAmount = BigInt(amount).toString(16).padStart(64, '0');
+    return `0xa9059cbb${cleanTo}${cleanAmount}` as HexString;
+}
+
+/**
+ * Decode an ERC-20 transfer calldata (recipient and amount)
+ */
+export function decodeERC20Transfer(data: string): { to: string; amount: string } {
+    const clean = data.startsWith('0x') ? data.slice(2) : data;
+    if (clean.length < 136 || !clean.startsWith('a9059cbb')) {
+        throw new Error('Invalid ERC-20 transfer calldata');
+    }
+    const toHex = clean.slice(8, 72).replace(/^0+/, '');
+    const to = ('0x' + (toHex.length <= 40 ? toHex.padStart(40, '0') : toHex.slice(-40))).toLowerCase();
+    const amountHex = clean.slice(72, 136);
+    const amount = BigInt('0x' + amountHex).toString();
+    return { to, amount };
+}
+
+/**
+ * ABI encode an ERC-20 approve call (0x095ea7b3)
+ */
+export function encodeERC20Approve(spender: string, amount: string | bigint): HexString {
+    const cleanSpender = spender.toLowerCase().replace(/^0x/, '').padStart(64, '0');
+    const cleanAmount = BigInt(amount).toString(16).padStart(64, '0');
+    return `0x095ea7b3${cleanSpender}${cleanAmount}` as HexString;
+}
+
+/**
+ * Decode an ERC-20 approve calldata (spender and amount)
+ */
+export function decodeERC20Approve(data: string): { spender: string; amount: string } {
+    const clean = data.startsWith('0x') ? data.slice(2) : data;
+    if (clean.length < 136 || !clean.startsWith('095ea7b3')) {
+        throw new Error('Invalid ERC-20 approve calldata');
+    }
+    const spenderHex = clean.slice(8, 72).replace(/^0+/, '');
+    const spender = ('0x' + (spenderHex.length <= 40 ? spenderHex.padStart(40, '0') : spenderHex.slice(-40))).toLowerCase();
+    const amountHex = clean.slice(72, 136);
+    const amount = BigInt('0x' + amountHex).toString();
+    return { spender, amount };
+}
+
 export class EVMProvider extends ChainProvider {
     readonly chainType: ChainType = 'evm';
     private publicClient: PublicClient;
@@ -275,16 +338,25 @@ export class EVMProvider extends ChainProvider {
 
     async simulateTransaction(params: TransactionParams, from: Address): Promise<SimulationResult> {
         try {
-            const result = await this.publicClient.call({
-                account: from as HexString,
-                to: params.to as HexString,
-                value: BigInt(params.value),
-                data: params.data as HexString | undefined,
-            });
+            const [result, gasEst] = await Promise.all([
+                this.publicClient.call({
+                    account: from as HexString,
+                    to: params.to as HexString,
+                    value: BigInt(params.value),
+                    data: params.data as HexString | undefined,
+                }),
+                this.publicClient.estimateGas({
+                    account: from as HexString,
+                    to: params.to as HexString,
+                    value: BigInt(params.value),
+                    data: params.data as HexString | undefined,
+                }).catch(() => undefined),
+            ]);
 
             return {
                 success: true,
                 returnValue: result.data,
+                gasEstimate: gasEst ? gasEst.toString() : undefined,
             };
         } catch (error: unknown) {
             return {
@@ -430,6 +502,125 @@ export class EVMProvider extends ChainProvider {
         }));
     }
 
+    // ==================== Contract Read Methods ====================
+
+    /**
+     * Execute arbitrary contract call (eth_call)
+     */
+    async callContract(to: Address, data: HexString): Promise<HexString> {
+        try {
+            const res = await this.publicClient.call({
+                to: to as HexString,
+                data,
+            });
+            return (res.data || "0x") as HexString;
+        } catch (error) {
+            throw new ChainError(
+                ChainErrorCode.NETWORK_ERROR,
+                `Contract call failed: ${error}`,
+                error
+            );
+        }
+    }
+
+    /**
+     * Get ERC20 token metadata (name, symbol, decimals)
+     */
+    async getTokenMetadata(tokenAddress: Address): Promise<{ name: string; symbol: string; decimals: number }> {
+        try {
+            const [tokenName, tokenSymbol, tokenDecimals] = await Promise.all([
+                this.publicClient.readContract({
+                    address: tokenAddress as HexString,
+                    abi: ERC20_ABI,
+                    functionName: "name",
+                }),
+                this.publicClient.readContract({
+                    address: tokenAddress as HexString,
+                    abi: ERC20_ABI,
+                    functionName: "symbol",
+                }),
+                this.publicClient.readContract({
+                    address: tokenAddress as HexString,
+                    abi: ERC20_ABI,
+                    functionName: "decimals",
+                }),
+            ]);
+
+            return { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals };
+        } catch (error) {
+            throw new ChainError(
+                ChainErrorCode.NETWORK_ERROR,
+                `Failed to get token metadata: ${error}`,
+                error
+            );
+        }
+    }
+
+    /**
+     * Get ERC20 token allowance for spender
+     */
+    async getTokenAllowance(tokenAddress: Address, owner: Address, spender: Address): Promise<string> {
+        try {
+            const allowanceAmount = await this.publicClient.readContract({
+                address: tokenAddress as HexString,
+                abi: ERC20_ABI,
+                functionName: "allowance",
+                args: [owner as HexString, spender as HexString],
+            });
+
+            return allowanceAmount.toString();
+        } catch (error) {
+            throw new ChainError(
+                ChainErrorCode.NETWORK_ERROR,
+                `Failed to get token allowance: ${error}`,
+                error
+            );
+        }
+    }
+
+    /**
+     * Estimate dynamic EIP-1559 fee tiers (slow, standard, fast)
+     */
+    async estimateFeeTiers(): Promise<FeeTiersEstimate> {
+        try {
+            const [gasPrice, block] = await Promise.all([
+                this.publicClient.getGasPrice(),
+                this.publicClient.getBlock({ blockTag: "latest" }),
+            ]);
+
+            const baseFee = block.baseFeePerGas || (gasPrice / 2n);
+
+            const prioritySlow = parseUnits("1", 9);
+            const priorityStd = parseUnits("1.5", 9);
+            const priorityFast = parseUnits("2.5", 9);
+
+            return {
+                baseFeePerGas: baseFee.toString(),
+                slow: {
+                    maxPriorityFeePerGas: prioritySlow.toString(),
+                    maxFeePerGas: (baseFee * 110n / 100n + prioritySlow).toString(),
+                    estimatedTimeMs: 30000,
+                },
+                standard: {
+                    maxPriorityFeePerGas: priorityStd.toString(),
+                    maxFeePerGas: (baseFee * 125n / 100n + priorityStd).toString(),
+                    estimatedTimeMs: 15000,
+                },
+                fast: {
+                    maxPriorityFeePerGas: priorityFast.toString(),
+                    maxFeePerGas: (baseFee * 150n / 100n + priorityFast).toString(),
+                    estimatedTimeMs: 5000,
+                },
+            };
+        } catch (error) {
+            throw new ChainError(
+                ChainErrorCode.NETWORK_ERROR,
+                `Failed to estimate fee tiers: ${error}`,
+                error
+            );
+        }
+    }
+
     // ==================== Utility Methods ====================
 
     isValidAddress(address: string): boolean {
@@ -438,5 +629,194 @@ export class EVMProvider extends ChainProvider {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Approve ERC20 token spending
+     */
+    async approveToken(
+        privateKey: string,
+        params: ApproveTokenParams
+    ): Promise<TransactionResult> {
+        try {
+            const data = encodeERC20Approve(params.spender, params.amount);
+            return await this.sendTransaction(privateKey, {
+                to: params.tokenAddress,
+                value: '0',
+                data,
+            });
+        } catch (error) {
+            throw new ChainError(
+                ChainErrorCode.TRANSACTION_FAILED,
+                `Failed to approve token: ${error}`,
+                error
+            );
+        }
+    }
+
+    /**
+     * Get detailed transaction receipt
+     */
+    async getDetailedReceipt(hash: string): Promise<DetailedTransactionReceipt | null> {
+        try {
+            const receipt = await this.publicClient.getTransactionReceipt({
+                hash: hash as HexString,
+            });
+
+            return {
+                hash,
+                status: receipt.status === 'success' ? 'success' : 'reverted',
+                blockNumber: Number(receipt.blockNumber),
+                blockHash: receipt.blockHash,
+                gasUsed: receipt.gasUsed.toString(),
+                effectiveGasPrice: receipt.effectiveGasPrice ? receipt.effectiveGasPrice.toString() : '0',
+                from: receipt.from,
+                to: receipt.to || undefined,
+                contractAddress: receipt.contractAddress || undefined,
+                cumulativeGasUsed: receipt.cumulativeGasUsed.toString(),
+                logs: receipt.logs.map((log) => ({
+                    address: log.address,
+                    topics: log.topics as string[],
+                    data: log.data,
+                })),
+            };
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Query batch token balances concurrently
+     */
+    async getBatchBalances(
+        address: string,
+        tokenAddresses: string[]
+    ): Promise<BatchTokenBalanceResult[]> {
+        const results = await Promise.allSettled(
+            tokenAddresses.map(async (tokenAddress) => {
+                const [tokenBal, metadata] = await Promise.all([
+                    this.getTokenBalance(address, tokenAddress),
+                    this.getTokenMetadata(tokenAddress).catch(() => ({ decimals: 18, symbol: 'UNKNOWN' })),
+                ]);
+                return {
+                    tokenAddress,
+                    balance: tokenBal.formatted,
+                    rawBalance: tokenBal.balance,
+                    decimals: metadata.decimals,
+                    symbol: metadata.symbol,
+                };
+            })
+        );
+
+        return results
+            .filter((r): r is PromiseFulfilledResult<BatchTokenBalanceResult> => r.status === 'fulfilled')
+            .map((r) => r.value);
+    }
+
+
+    /**
+     * Resolves IPFS or Arweave URIs to public HTTPS gateway URLs
+     */
+    resolveURI(uri: string): string {
+        if (!uri) return '';
+        if (uri.startsWith('ipfs://')) {
+            return uri.replace('ipfs://', 'https://ipfs.io/ipfs/');
+        }
+        if (uri.startsWith('ar://')) {
+            return uri.replace('ar://', 'https://arweave.net/');
+        }
+        return uri;
+    }
+
+    /**
+     * Fetch NFT Metadata for ERC-721 or ERC-1155 token
+     */
+    async getNFTMetadata(contractAddress: string, tokenId: string): Promise<NFTMetadata> {
+        try {
+            // Encode tokenURI(uint256) selector 0xc87b56dd
+            const tokenIdHex = BigInt(tokenId).toString(16).padStart(64, '0');
+            const data = (`0xc87b56dd${tokenIdHex}`) as HexString;
+
+            const res = await this.publicClient.call({
+                to: contractAddress as HexString,
+                data,
+            });
+
+            let uri = '';
+            if (res.data && res.data !== '0x') {
+                const hex = res.data.slice(2);
+                if (hex.length >= 128) {
+                    const offset = parseInt(hex.slice(0, 64), 16) * 2;
+                    const len = parseInt(hex.slice(offset, offset + 64), 16);
+                    const strHex = hex.slice(offset + 64, offset + 64 + len * 2);
+                    uri = Buffer.from(strHex, 'hex').toString('utf8');
+                }
+            }
+
+            const resolvedUri = this.resolveURI(uri);
+            if (resolvedUri) {
+                const fetched = await fetch(resolvedUri);
+                if (fetched.ok) {
+                    const json = (await fetched.json()) as any;
+                    return {
+                        name: json.name || `Token #${tokenId}`,
+                        description: json.description,
+                        image: this.resolveURI(json.image || json.image_url || ''),
+                        animationUrl: this.resolveURI(json.animation_url || ''),
+                        attributes: json.attributes,
+                        tokenId,
+                        contractAddress,
+                        standard: 'ERC721',
+                    };
+                }
+            }
+        } catch {
+            // fallback
+        }
+
+        return {
+            name: `Collectible #${tokenId}`,
+            image: '',
+            tokenId,
+            contractAddress,
+            standard: 'ERC721',
+        };
+    }
+
+    /**
+     * Compute simulated DEX Swap Quote & Route
+     */
+    async getSwapQuote(params: SwapQuoteParams): Promise<SwapQuoteResult> {
+        const slippageBps = params.slippageBasisPoints ?? 50; // 0.5% default
+        const amountInBig = BigInt(params.amountIn || '0');
+
+        // Dynamic price ratio simulation (e.g. 1 ETH ~ 2650 USDC / USDT)
+        let rateNumerator = 1n;
+        let rateDenominator = 1n;
+
+        const fromLower = params.fromToken.toLowerCase();
+        const toLower = params.toToken.toLowerCase();
+
+        if (fromLower.includes('usdt') || fromLower.includes('usdc')) {
+            if (toLower.includes('eth') || toLower.includes('matic') || toLower.includes('bnb')) {
+                rateNumerator = 1n;
+                rateDenominator = 2650n;
+            }
+        } else {
+            rateNumerator = 2650n;
+            rateDenominator = 1n;
+        }
+
+        const expectedOut = (amountInBig * rateNumerator) / rateDenominator;
+        const slippageReduction = (expectedOut * BigInt(slippageBps)) / 10000n;
+        const minOut = expectedOut > slippageReduction ? expectedOut - slippageReduction : 0n;
+
+        return {
+            amountIn: params.amountIn,
+            expectedAmountOut: expectedOut.toString(),
+            minimumAmountOut: minOut.toString(),
+            priceImpactPercent: 0.08,
+            route: [params.fromToken, 'FistSwap V2 Pool', params.toToken],
+        };
     }
 }

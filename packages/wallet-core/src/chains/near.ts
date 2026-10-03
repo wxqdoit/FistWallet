@@ -1,3 +1,11 @@
+
+function cleanPrivateKeyHex(key: string): string {
+    let clean = key.trim();
+    if (clean.startsWith("0x") || clean.startsWith("0X")) {
+        clean = clean.slice(2);
+    }
+    return clean;
+}
 import {ICreateWallet, IWalletFields} from "../types";
 import {generateMnemonic, mnemonicToSeedSync, validateMnemonic} from "bip39";
 import {NEAR_DERIVATION_PATH} from "../constans";
@@ -53,6 +61,7 @@ export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string): strin
  * @returns NEAR implicit address (hex-encoded public key)
  */
 export function getAddressByPrivateKey(privateKeyHex: string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -70,6 +79,7 @@ export function getAddressByPrivateKey(privateKeyHex: string): string {
  * @returns Signature in hex format
  */
 export function signTransaction(privateKeyHex: string, messageBytes: Uint8Array): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -89,6 +99,7 @@ export function signTransaction(privateKeyHex: string, messageBytes: Uint8Array)
  * @returns Signature in hex format
  */
 export function signMessage(privateKeyHex: string, message: string | Uint8Array): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -175,6 +186,7 @@ export function validateAddress(address: string): boolean {
  * @returns Public key in hex format
  */
 export function getPublicKey(privateKeyHex: string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -193,19 +205,13 @@ export function getPublicKey(privateKeyHex: string): string {
  */
 export function validatePrivateKey(privateKey: string): boolean {
     try {
-        const key = privateKey.trim();
-
-        // Check length (must be 64 hex chars = 32 bytes)
-        if (key.length !== 64) {
+        let key = privateKey.trim();
+        if (key.startsWith('0x') || key.startsWith('0X')) {
+            key = key.slice(2);
+        }
+        if (key.length !== 64 || !/^[0-9a-f]{64}$/i.test(key)) {
             return false;
         }
-
-        // Check if valid hex
-        if (!/^[0-9a-f]{64}$/i.test(key)) {
-            return false;
-        }
-
-        // For ed25519, any 32-byte value is valid
         return true;
     } catch {
         return false;

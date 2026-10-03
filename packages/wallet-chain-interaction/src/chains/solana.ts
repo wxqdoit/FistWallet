@@ -17,6 +17,7 @@ import {
     getAssociatedTokenAddress,
     createTransferInstruction,
     getMint,
+    TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { ChainProvider } from '../provider/base';
 import {
@@ -35,6 +36,7 @@ import {
     Address,
     ChainError,
     ChainErrorCode,
+    ParsedTokenAccount,
 } from '../types';
 import { base58 } from '@scure/base';
 
@@ -121,6 +123,39 @@ export class SolanaProvider extends ChainProvider {
             throw new ChainError(
                 ChainErrorCode.NETWORK_ERROR,
                 `Failed to get token balance: ${error}`,
+                error
+            );
+        }
+    }
+
+
+    /**
+     * Get all SPL token accounts owned by an address
+     */
+    async getAllTokenAccounts(address: Address): Promise<ParsedTokenAccount[]> {
+        try {
+            const ownerPubkey = new PublicKey(address);
+            const response = await this.connection.getParsedTokenAccountsByOwner(
+                ownerPubkey,
+                { programId: TOKEN_PROGRAM_ID }
+            );
+
+            return response.value.map(item => {
+                const info = item.account.data.parsed.info;
+                const amount = info.tokenAmount.amount;
+                const decimals = info.tokenAmount.decimals;
+                return {
+                    pubkey: item.pubkey.toBase58(),
+                    mint: info.mint,
+                    amount,
+                    decimals,
+                    formatted: this.formatBalance(amount, decimals),
+                };
+            });
+        } catch (error) {
+            throw new ChainError(
+                ChainErrorCode.NETWORK_ERROR,
+                `Failed to get all token accounts: ${error}`,
                 error
             );
         }

@@ -1,3 +1,4 @@
+import { generateMnemonic as bip39GenerateMnemonic } from "bip39";
 import {
     createWallet,
     getPrivateKeyByMnemonic,
@@ -181,6 +182,5 @@ describe('Filecoin Address Formats', () => {
 
 // Helper function for testing
 function generateMnemonic(length: 128 | 256): string {
-    const bip39 = require('bip39');
-    return bip39.generateMnemonic(length);
+    return bip39GenerateMnemonic(length);
 }

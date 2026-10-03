@@ -9,50 +9,28 @@
         ],
         "module": "ESNext",
         "skipLibCheck": true,
-        /* Bundler mode */
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "react-jsx",
-        /* Linting */
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        /* Path Mapping */
         "baseUrl": ".",
         "paths": {
-            "@/*": [
-                "./src/*"
-            ],
-            "@components/*": [
-                "./src/components/*"
-            ],
-            "@pages/*": [
-                "./src/pages/*"
-            ],
-            "@core/*": [
-                "./src/core/*"
-            ],
-            "@store/*": [
-                "./src/store/*"
-            ],
-            "@services/*": [
-                "./src/services/*"
-            ],
-            "@utils/*": [
-                "./src/utils/*"
-            ],
-            "@types/*": [
-                "./src/types/*"
-            ],
-            "@assets/*": [
-                "./src/assets/*"
-            ]
+            "@/*": ["./src/*"],
+            "@components/*": ["./src/components/*"],
+            "@pages/*": ["./src/pages/*"],
+            "@core/*": ["./src/core/*"],
+            "@store/*": ["./src/store/*"],
+            "@services/*": ["./src/services/*"],
+            "@utils/*": ["./src/utils/*"],
+            "@types/*": ["./src/types/*"],
+            "@assets/*": ["./src/assets/*"]
         },
-        /* Types */
         "types": [
             "chrome",
             "node",
@@ -61,6 +39,13 @@
     },
     "include": [
         "src"
+    ],
+    "exclude": [
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "src/test-setup.ts",
+        "node_modules",
+        "dist"
     ],
     "references": [
         {

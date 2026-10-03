@@ -1,3 +1,10 @@
 {
-	"title": "wallet"
+  "title": "Wallet",
+  "connect": "Connect Wallet",
+  "disconnect": "Disconnect",
+  "switchNetwork": "Switch Network",
+  "wrongNetwork": "Wrong Network",
+  "copyAddress": "Copy Address",
+  "addressCopied": "Address copied!",
+  "viewOnExplorer": "View on Explorer"
 }

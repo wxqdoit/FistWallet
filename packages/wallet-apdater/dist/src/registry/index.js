@@ -1,3 +1,4 @@
+import { createFistWalletAdapter } from "../adapters/fistwallet";
 import { createMetamaskAdapter } from '../adapters/metamask';
 import { createOkxAdapter } from '../adapters/okx';
 import { createPhantomAdapter } from '../adapters/phantom';
@@ -11,8 +12,10 @@ import { createTronLinkAdapter } from '../adapters/tronlink';
 import { createUnisatAdapter } from '../adapters/unisat';
 import { createBraavosAdapter } from '../adapters/braavos';
 import { createRazorAdapter } from '../adapters/razor';
+import { createWalletConnectAdapter } from '../adapters/walletconnect';
 import { getEip6963Providers, subscribeEip6963Providers } from '../discovery/eip6963';
 export const defaultAdapterFactories = [
+    { rdns: 'io.fistwallet', create: createFistWalletAdapter },
     { rdns: 'io.metamask', create: createMetamaskAdapter },
     { rdns: 'app.phantom', create: createPhantomAdapter },
     { rdns: 'com.okex.wallet', create: createOkxAdapter },
@@ -26,6 +29,7 @@ export const defaultAdapterFactories = [
     { rdns: 'io.unisat', create: createUnisatAdapter },
     { rdns: 'wallet.braavos', create: createBraavosAdapter },
     { rdns: 'wallet.razor', create: createRazorAdapter },
+    { rdns: 'org.walletconnect', create: createWalletConnectAdapter },
 ];
 export function createAdapterRegistry(factories = defaultAdapterFactories) {
     let adapters = [];
@@ -41,6 +45,7 @@ export function createAdapterRegistry(factories = defaultAdapterFactories) {
         notify();
     };
     const list = () => adapters;
+    const getAdapter = (rdns) => adapters.find((a) => a.info.rdns === rdns);
     const subscribe = (listener) => {
         listeners.add(listener);
         listener(adapters);
@@ -50,6 +55,7 @@ export function createAdapterRegistry(factories = defaultAdapterFactories) {
     };
     return {
         list,
+        getAdapter,
         refresh,
         subscribe,
     };

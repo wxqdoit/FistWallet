@@ -1,4 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 10_000,
+            retry: 2,
+            refetchOnWindowFocus: false,
+        },
+    },
+});
 import { useWalletStore } from '@store/wallet';
 import { useSettingsStore } from '@store/settings';
 import { useEffect, useMemo } from 'react';
@@ -20,6 +31,10 @@ import Receive from '@pages/Receive';
 import Swap from '@pages/Swap';
 import Settings from '@pages/Settings';
 import ChangePassword from '@pages/Settings/ChangePassword';
+import Contacts from '@pages/Settings/Contacts';
+import ConnectedSites from '@pages/Settings/ConnectedSites';
+import Activity from '@pages/Activity';
+import Notification from '@pages/Notification';
 import ChainSelect from '@pages/Chains';
 import Wallets from '@pages/Wallets';
 import WalletManage from '@pages/Wallets/Manage';
@@ -55,6 +70,7 @@ function App() {
     }
 
     return (
+        <QueryClientProvider client={queryClient}>
         <BrowserRouter>
             <div
                 className={cn(
@@ -106,6 +122,10 @@ function App() {
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/swap" element={<Swap />} />
                             <Route path="/settings" element={<Settings />} />
+                            <Route path="/settings/contacts" element={<Contacts />} />
+                            <Route path="/settings/connections" element={<ConnectedSites />} />
+                            <Route path="/activity" element={<Activity />} />
+                            <Route path="/notification" element={<Notification />} />
                             <Route path="/settings/change-password" element={<ChangePassword />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </>
@@ -115,6 +135,7 @@ function App() {
                 <Toaster />
             </div>
         </BrowserRouter>
+        </QueryClientProvider>
     );
 }
 

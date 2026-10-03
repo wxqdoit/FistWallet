@@ -10,10 +10,10 @@ export * from './types';
 export { ChainProvider } from './provider/base';
 
 // Export chain providers
-export { EVMProvider } from './chains/evm';
+export { EVMProvider, encodeERC20Transfer, decodeERC20Transfer, encodeERC20Approve, decodeERC20Approve } from './chains/evm';
 export { SolanaProvider } from './chains/solana';
 export { TronProvider } from './chains/tron';
-export { TonProvider } from './chains/ton';
+export { TonProvider, TonProvider as TONProvider } from './chains/ton';
 export { AptosProvider } from './chains/aptos';
 export { SuiProvider } from './chains/sui';
 export { NearProvider } from './chains/near';

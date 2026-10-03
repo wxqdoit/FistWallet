@@ -1,0 +1,10 @@
+{
+  "title": "錢包",
+  "connect": "連接錢包",
+  "disconnect": "斷開連接",
+  "switchNetwork": "切換網絡",
+  "wrongNetwork": "網絡不匹配",
+  "copyAddress": "複製地址",
+  "addressCopied": "已複製到剪貼板！",
+  "viewOnExplorer": "在區塊鏈瀏覽器中查看"
+}

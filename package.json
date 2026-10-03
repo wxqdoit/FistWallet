@@ -10,6 +10,14 @@
     "build:wallet-apdater": "pnpm --filter wallet-apdater build",
     "build:wallet-kit": "pnpm --filter wallet-kit build",
     "build:wallet-extension": "pnpm --filter wallet-extension build",
-    "build:wallet-example": "pnpm --filter wallet-example build"
+    "build:wallet-example": "pnpm --filter wallet-example build",
+    "test": "pnpm -r test",
+    "test:core": "pnpm --filter wallet-core test",
+    "test:interaction": "pnpm --filter wallet-chain-interaction test",
+    "test:adapter": "pnpm --filter wallet-apdater test",
+    "test:kit": "pnpm --filter wallet-kit test",
+    "test:extension": "pnpm --filter wallet-extension test",
+    "test:example": "pnpm --filter wallet-example test",
+    "dev:chrome": "pnpm --filter wallet-extension open:chrome"
   }
 }

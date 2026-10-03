@@ -1,3 +1,4 @@
+import { motion, type HTMLMotionProps } from 'framer-motion';
 import * as React from 'react';
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
@@ -529,6 +530,49 @@ const Toaster = ({ ...props }: React.ComponentProps<typeof SonnerToaster>) => (
     />
 );
 
+
+function Skeleton({
+    className,
+    ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div
+            className={cn('animate-pulse rounded-md bg-muted/60', className)}
+            {...props}
+        />
+    );
+}
+
+const GlassCard = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+    <div
+        ref={ref}
+        className={cn(
+            'glass-card rounded-2xl p-4 transition-all duration-200',
+            className
+        )}
+        {...props}
+    />
+));
+GlassCard.displayName = 'GlassCard';
+
+const MotionButton = React.forwardRef<
+    HTMLButtonElement,
+    HTMLMotionProps<'button'> & VariantProps<typeof buttonVariants>
+>(({ className, variant, size, whileHover = { scale: 1.02 }, whileTap = { scale: 0.96 }, ...props }, ref) => (
+    <motion.button
+        ref={ref}
+        whileHover={whileHover}
+        whileTap={whileTap}
+        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+    />
+));
+MotionButton.displayName = 'MotionButton';
+
 export {
     AlertDialog,
     AlertDialogAction,
@@ -571,4 +615,7 @@ export {
     ToggleGroup,
     ToggleGroupItem,
     buttonVariants,
+    Skeleton,
+    GlassCard,
+    MotionButton,
 };

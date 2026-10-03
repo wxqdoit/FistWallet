@@ -1,3 +1,11 @@
+
+function cleanPrivateKeyHex(key: string): string {
+    let clean = key.trim();
+    if (clean.startsWith("0x") || clean.startsWith("0X")) {
+        clean = clean.slice(2);
+    }
+    return clean;
+}
 import {TRON_DERIVATION_PATH} from "../constans";
 import {ICreateWallet, IWalletFields} from "../types";
 import {InvalidMnemonicError, InvalidPrivateKeyError, KeyDerivationError} from "../errors";
@@ -62,6 +70,7 @@ export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string) {
  * @returns TRON address starting with 'T'
  */
 export function getAddressByPrivateKey(privateKeyHex: string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -107,6 +116,7 @@ export function getAddressByPrivateKey(privateKeyHex: string): string {
  * @returns Signature in hex format
  */
 export function signTransaction(privateKeyHex: string, txHash: Uint8Array): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -132,6 +142,7 @@ export function signTransaction(privateKeyHex: string, txHash: Uint8Array): stri
  * @returns Signature in hex format
  */
 export function signMessage(privateKeyHex: string, message: string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -281,6 +292,7 @@ export function validateAddress(address: string): boolean {
  * @returns Public key in hex format (uncompressed)
  */
 export function getPublicKey(privateKeyHex: string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -298,29 +310,18 @@ export function getPublicKey(privateKeyHex: string): string {
  */
 export function validatePrivateKey(privateKey: string): boolean {
     try {
-        // Remove 0x prefix if present
-        const key = privateKey.startsWith('0x') ? privateKey.slice(2) : privateKey.trim();
-
-        // Check length (must be 64 hex chars = 32 bytes)
-        if (key.length !== 64) {
+        let key = privateKey.trim();
+        if (key.startsWith('0x') || key.startsWith('0X')) {
+            key = key.slice(2);
+        }
+        if (key.length !== 64 || !/^[0-9a-f]{64}$/i.test(key)) {
             return false;
         }
-
-        // Check if valid hex
-        if (!/^[0-9a-f]{64}$/i.test(key)) {
-            return false;
-        }
-
-        // Convert to BigInt and check range
-        // secp256k1 curve order n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
         const keyBigInt = BigInt('0x' + key);
         const secp256k1_n = BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141');
-
-        // Private key must be: 0 < key < n
         if (keyBigInt === BigInt(0) || keyBigInt >= secp256k1_n) {
             return false;
         }
-
         return true;
     } catch {
         return false;

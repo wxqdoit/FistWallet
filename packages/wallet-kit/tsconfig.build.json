@@ -7,6 +7,13 @@
     "outDir": "dist/types",
     "noEmit": false
   },
-  "include": ["src/**/*", "package.json"],
-  "exclude": ["src/dev.tsx"]
+  "include": [
+    "src/**/*",
+    "package.json"
+  ],
+  "exclude": [
+    "src/dev.tsx",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ]
 }

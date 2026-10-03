@@ -1,0 +1,10 @@
+{
+  "title": "지갑",
+  "connect": "지갑 연결",
+  "disconnect": "연결 해제",
+  "switchNetwork": "네트워크 전환",
+  "wrongNetwork": "지원하지 않는 네트워크",
+  "copyAddress": "주소 복사",
+  "addressCopied": "주소가 복사되었습니다!",
+  "viewOnExplorer": "탐색기에서 보기"
+}

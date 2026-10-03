@@ -1,0 +1,10 @@
+{
+  "title": "ウォレット",
+  "connect": "ウォレット接続",
+  "disconnect": "切断",
+  "switchNetwork": "ネットワーク切り替え",
+  "wrongNetwork": "未対応のネットワーク",
+  "copyAddress": "アドレスをコピー",
+  "addressCopied": "コピーしました！",
+  "viewOnExplorer": "エクスプローラーで表示"
+}

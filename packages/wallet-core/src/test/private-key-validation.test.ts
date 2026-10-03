@@ -271,6 +271,110 @@ describe('Private Key Validation - All Chains', () => {
         });
     });
 
+    
+    describe("0x and 0X Prefix Tolerance Across All Chains", () => {
+        const rawHexKey = "1ab42cc412b618bdea3a599e3c9bae199ebf030895b039e9db1e30dafb12b727";
+        const prefixed0x = "0x" + rawHexKey;
+        const prefixed0X = "0X" + rawHexKey;
+        const padded0x = "  0x" + rawHexKey + "  ";
+
+        test("EVM derives same address with and without 0x prefix", () => {
+            const addr1 = EVM.getAddressByPrivateKey(rawHexKey);
+            const addr2 = EVM.getAddressByPrivateKey(prefixed0x);
+            const addr3 = EVM.getAddressByPrivateKey(prefixed0X);
+            const addr4 = EVM.getAddressByPrivateKey(padded0x);
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(addr4).toBe(addr1);
+            expect(EVM.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(EVM.validatePrivateKey(prefixed0X)).toBe(true);
+            expect(EVM.validatePrivateKey(padded0x)).toBe(true);
+        });
+
+        test("Bitcoin derives same address with and without 0x prefix", () => {
+            const addr1 = BTC.getAddressByPrivateKey(rawHexKey, "p2wpkh");
+            const addr2 = BTC.getAddressByPrivateKey(prefixed0x, "p2wpkh");
+            const addr3 = BTC.getAddressByPrivateKey(prefixed0X, "p2wpkh");
+            const addr4 = BTC.getAddressByPrivateKey(padded0x, "p2wpkh");
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(addr4).toBe(addr1);
+            expect(BTC.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(BTC.validatePrivateKey(prefixed0X)).toBe(true);
+            expect(BTC.validatePrivateKey(padded0x)).toBe(true);
+        });
+
+        test("Tron derives same address with and without 0x prefix", () => {
+            const addr1 = Tron.getAddressByPrivateKey(rawHexKey);
+            const addr2 = Tron.getAddressByPrivateKey(prefixed0x);
+            const addr3 = Tron.getAddressByPrivateKey(prefixed0X);
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(Tron.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(Tron.validatePrivateKey(prefixed0X)).toBe(true);
+        });
+
+        test("Aptos derives same address with and without 0x prefix", () => {
+            const addr1 = Aptos.getAddressByPrivateKey(rawHexKey);
+            const addr2 = Aptos.getAddressByPrivateKey(prefixed0x);
+            const addr3 = Aptos.getAddressByPrivateKey(prefixed0X);
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(Aptos.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(Aptos.validatePrivateKey(prefixed0X)).toBe(true);
+        });
+
+        test("Sui derives same address with and without 0x prefix", () => {
+            const addr1 = Sui.getAddressByPrivateKey(rawHexKey);
+            const addr2 = Sui.getAddressByPrivateKey(prefixed0x);
+            const addr3 = Sui.getAddressByPrivateKey(prefixed0X);
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(Sui.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(Sui.validatePrivateKey(prefixed0X)).toBe(true);
+        });
+
+        test("Solana derives same address with and without 0x prefix", () => {
+            const addr1 = Solana.getAddressByPrivateKey(rawHexKey);
+            const addr2 = Solana.getAddressByPrivateKey(prefixed0x);
+            const addr3 = Solana.getAddressByPrivateKey(prefixed0X);
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(Solana.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(Solana.validatePrivateKey(prefixed0X)).toBe(true);
+        });
+
+        test("TON derives same address with and without 0x prefix", () => {
+            const addr1 = Ton.getAddressByPrivateKey(rawHexKey);
+            const addr2 = Ton.getAddressByPrivateKey(prefixed0x);
+            const addr3 = Ton.getAddressByPrivateKey(prefixed0X);
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(Ton.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(Ton.validatePrivateKey(prefixed0X)).toBe(true);
+        });
+
+        test("Near derives same address with and without 0x prefix", () => {
+            const addr1 = Near.getAddressByPrivateKey(rawHexKey);
+            const addr2 = Near.getAddressByPrivateKey(prefixed0x);
+            const addr3 = Near.getAddressByPrivateKey(prefixed0X);
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(Near.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(Near.validatePrivateKey(prefixed0X)).toBe(true);
+        });
+
+        test("Filecoin derives same address with and without 0x prefix", () => {
+            const addr1 = Filecoin.getAddressByPrivateKey(rawHexKey, "secp256k1");
+            const addr2 = Filecoin.getAddressByPrivateKey(prefixed0x, "secp256k1");
+            const addr3 = Filecoin.getAddressByPrivateKey(prefixed0X, "secp256k1");
+            expect(addr2).toBe(addr1);
+            expect(addr3).toBe(addr1);
+            expect(Filecoin.validatePrivateKey(prefixed0x)).toBe(true);
+            expect(Filecoin.validatePrivateKey(prefixed0X)).toBe(true);
+        });
+    });
+
     describe('Cross-Chain Edge Cases', () => {
         test('should handle case-insensitive hex for all chains', () => {
             const lowerKey = '1ab42cc412b618bdea3a599e3c9bae199ebf030895b039e9db1e30dafb12b727';

@@ -23,3 +23,18 @@ export { TronLinkAdapter, createTronLinkAdapter } from '@/adapters/tronlink';
 export { UnisatAdapter, createUnisatAdapter } from '@/adapters/unisat';
 export { BraavosAdapter, createBraavosAdapter } from '@/adapters/braavos';
 export { RazorAdapter, createRazorAdapter } from '@/adapters/razor';
+export { FistWalletAdapter, createFistWalletAdapter } from "@/adapters/fistwallet";
+export { WalletConnectAdapter, createWalletConnectAdapter } from "@/adapters/walletconnect";
+
+export {
+    rememberConnectedWallet,
+    getRememberedWallet,
+    clearRememberedWallet,
+    eagerConnect,
+    type RememberedConnection,
+} from './utils/reconnect';
+
+export {
+    parseRpcError,
+    type StandardRpcError,
+} from './utils/errors';

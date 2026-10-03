@@ -9,7 +9,7 @@ i18n.use(initReactI18next).init({
 		useSuspense: true
 	},
 	fallbackLng: 'en',
-	preload: ['zh-CN', 'en', 'zh', 'en-US'],
+	preload: ['zh-CN', 'en', 'zh', 'zh-TW', 'ko', 'ja', 'en-US'],
 	keySeparator: false,
 	interpolation: {
 		escapeValue: false

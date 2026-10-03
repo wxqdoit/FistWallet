@@ -64,7 +64,17 @@ export const EVM = {
     signMessage: EVMChain.signMessage,
     verifySignature: EVMChain.verifySignature,
     validateAddress: EVMChain.validateAddress,
-    toChecksumAddress: EVMChain.toChecksumAddress
+    toChecksumAddress: EVMChain.toChecksumAddress,
+    hashTypedData: EVMChain.hashTypedData,
+    signTypedData: EVMChain.signTypedData,
+    verifyTypedData: EVMChain.verifyTypedData,
+    recoverPersonalSignature: EVMChain.recoverPersonalSignature,
+    recoverTypedSignature: EVMChain.recoverTypedSignature,
+    getUserOperationHash: EVMChain.getUserOperationHash,
+    signUserOperation: EVMChain.signUserOperation,
+    packUserOperation: EVMChain.packUserOperation,
+    hashAuthorization: EVMChain.hashAuthorization,
+    signAuthorization: EVMChain.signAuthorization
 }
 
 export const BTC = {
@@ -75,7 +85,9 @@ export const BTC = {
     signTransaction: BTCChain.signTransaction,
     signMessage: BTCChain.signMessage,
     verifySignature: BTCChain.verifySignature,
-    validateAddress: BTCChain.validateAddress
+    validateAddress: BTCChain.validateAddress,
+    signSchnorr: BTCChain.signSchnorr,
+    verifySchnorr: BTCChain.verifySchnorr
 }
 
 export const Solana = {
@@ -86,7 +98,10 @@ export const Solana = {
     signTransaction: SolanaChain.signTransaction,
     signMessage: SolanaChain.signMessage,
     verifySignature: SolanaChain.verifySignature,
-    validateAddress: SolanaChain.validateAddress
+    verifyMessage: SolanaChain.verifyMessage,
+    validateAddress: SolanaChain.validateAddress,
+    serializeV0Message: SolanaChain.serializeV0Message,
+    signVersionedTransaction: SolanaChain.signVersionedTransaction
 }
 
 export const Sui = {

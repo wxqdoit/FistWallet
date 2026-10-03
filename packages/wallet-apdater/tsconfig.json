@@ -36,7 +36,7 @@
     "sourceMap": true,
     "incremental": true,
     "preserveSymlinks": false,
-    "declaration": false,
+    "declaration": true,
     "outDir": "dist"
   },
   "exclude": [

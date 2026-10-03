@@ -23,6 +23,7 @@ export interface Network {
     chainId?: number | string;
     rpcUrl: string;
     explorerUrl: string;
+    fallbackRpcUrls?: string[];
     nativeCurrency: {
         name: string;
         symbol: string;
@@ -254,6 +255,7 @@ export const STORAGE_KEYS = {
     TOKENS: 'tokens',
     DAPP_CONNECTIONS: 'dapp_connections',
     TRANSACTION_HISTORY: 'transaction_history',
+    CUSTOM_NETWORKS: 'custom_networks',
 } as const;
 
 /**

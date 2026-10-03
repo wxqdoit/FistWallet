@@ -390,12 +390,14 @@ export class FilecoinProvider extends ChainProvider {
 
     isValidAddress(address: string): boolean {
         // Filecoin address formats:
-        // f0xxx - ID address
-        // f1xxx - secp256k1 address
-        // f2xxx - actor address
-        // f3xxx - BLS address
-        // t prefix for testnet
-        const pattern = /^[ft][0-3][a-z0-9]{7,}$/i;
-        return pattern.test(address);
+        // f0xxx / t0xxx - ID address (numeric payload)
+        // f1-f4xxx / t1-t4xxx - secp256k1, actor, BLS, delegated addresses
+        if (!/^[ft][0-4]/i.test(address)) {
+            return false;
+        }
+        if (/^[ft]0[0-9]+$/i.test(address)) {
+            return true;
+        }
+        return /^[ft][1-4][a-z0-9]{5,}$/i.test(address);
     }
 }

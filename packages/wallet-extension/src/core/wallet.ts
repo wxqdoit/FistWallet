@@ -7,7 +7,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Wallet, Account, VaultData } from '../types';
 import { ChainType } from '../types';
-import { saveVault, loadVault } from './storage';
+import { saveVault, loadVault, getStorage, setStorage } from './storage';
+import { STORAGE_KEYS } from '../types';
 import { DERIVATION_PATHS } from './networks';
 
 // Import wallet-core - all wallet operations use this
@@ -89,13 +90,33 @@ function normalizeVaultData(vault: VaultData | null): VaultData {
     };
 }
 
+
+/**
+ * Normalize private key string: trim whitespace, strip 0x/0X prefix for hex keys
+ */
+export function normalizePrivateKey(privateKey: string, chainType?: ChainType): string {
+    let clean = privateKey.trim();
+    if (clean.startsWith("suiprivkey")) {
+        return clean;
+    }
+    if (chainType === ChainType.SOLANA && !clean.startsWith("0x") && !clean.startsWith("0X") && clean.length > 66) {
+        return clean;
+    }
+    if (clean.startsWith("0x") || clean.startsWith("0X")) {
+        clean = clean.slice(2);
+    }
+    return clean;
+}
+
 function hasPrivateKey(vault: VaultData | null, privateKey: string): boolean {
     if (!vault) {
         return false;
     }
+    const normalized = normalizePrivateKey(privateKey);
 
-    if (vault.privateKeys && Object.values(vault.privateKeys).includes(privateKey)) {
-        return true;
+    if (vault.privateKeys) {
+        const matches = Object.values(vault.privateKeys).some((k) => normalizePrivateKey(k) === normalized);
+        if (matches) return true;
     }
 
     const walletEntries = vault.wallets ? Object.values(vault.wallets) : [];
@@ -103,7 +124,7 @@ function hasPrivateKey(vault: VaultData | null, privateKey: string): boolean {
         if (!entry?.privateKeys) {
             return false;
         }
-        return Object.values(entry.privateKeys).includes(privateKey);
+        return Object.values(entry.privateKeys).some((k) => normalizePrivateKey(k) === normalized);
     });
 }
 
@@ -142,17 +163,23 @@ function attachWalletToVault(
 }
 
 function getAddressFromPrivateKey(chainType: ChainType, privateKey: string): string {
+    const cleanKey = normalizePrivateKey(privateKey, chainType);
     const module = getChainModule(chainType);
 
     if (chainType === ChainType.BITCOIN) {
-        return BTC.getAddressByPrivateKey(privateKey, 'p2wpkh');
+        return BTC.getAddressByPrivateKey(cleanKey, 'p2wpkh');
     }
 
     if (chainType === ChainType.FILECOIN) {
-        return Filecoin.getAddressByPrivateKey(privateKey, 'secp256k1');
+        return Filecoin.getAddressByPrivateKey(cleanKey, 'secp256k1');
     }
 
-    return module.getAddressByPrivateKey(privateKey as any);
+    if (chainType === ChainType.EVM) {
+        const raw = EVM.getAddressByPrivateKey(cleanKey);
+        return raw.startsWith('0x') ? raw : `0x${raw}`;
+    }
+
+    return module.getAddressByPrivateKey(cleanKey as any);
 }
 
 /**
@@ -204,6 +231,9 @@ export async function deriveAddress(
         return BTC.getAddressByPrivateKey(privateKey, 'p2wpkh');
     } else if (chainType === ChainType.FILECOIN) {
         return Filecoin.getAddressByPrivateKey(privateKey, 'secp256k1');
+    } else if (chainType === ChainType.EVM) {
+        const raw = EVM.getAddressByPrivateKey(privateKey);
+        return raw.startsWith('0x') ? raw : `0x${raw}`;
     } else {
         return module.getAddressByPrivateKey(privateKey as any);
     }
@@ -215,6 +245,7 @@ export async function deriveAddress(
 export async function deriveAddressesFromPrivateKey(
     privateKey: string
 ): Promise<Record<ChainType, string>> {
+    const normalizedKey = normalizePrivateKey(privateKey);
     const chainTypes: ChainType[] = [
         ChainType.EVM,
         ChainType.BITCOIN,
@@ -231,7 +262,7 @@ export async function deriveAddressesFromPrivateKey(
 
     for (const chainType of chainTypes) {
         try {
-            addresses[chainType] = getAddressFromPrivateKey(chainType, privateKey);
+            addresses[chainType] = getAddressFromPrivateKey(chainType, normalizedKey);
         } catch (error) {
             console.error(`Failed to derive ${chainType} address from private key:`, error);
             addresses[chainType] = '';
@@ -311,6 +342,10 @@ export async function createWallet(password: string, mnemonic?: string): Promise
 
     await saveVault(nextVault, password);
 
+    const storedWallets = (await getStorage<Wallet[]>(STORAGE_KEYS.WALLETS)) || [];
+    storedWallets.push(wallet);
+    await setStorage(STORAGE_KEYS.WALLETS, storedWallets);
+
     return wallet;
 }
 
@@ -351,14 +386,15 @@ export async function importWalletFromPrivateKey(
     privateKey: string,
     chainType: ChainType
 ): Promise<Wallet> {
+    const normalizedKey = normalizePrivateKey(privateKey, chainType);
     const existingVault = await loadVault(password);
-    if (hasPrivateKey(existingVault, privateKey)) {
+    if (hasPrivateKey(existingVault, normalizedKey)) {
         throw new Error('Private key already imported');
     }
 
     // Validate private key against the selected chain type
-    const address = getAddressFromPrivateKey(chainType, privateKey);
-    const addresses = await deriveAddressesFromPrivateKey(privateKey);
+    const address = getAddressFromPrivateKey(chainType, normalizedKey);
+    const addresses = await deriveAddressesFromPrivateKey(normalizedKey);
     addresses[chainType] = address;
 
     const account: Account = {
@@ -376,7 +412,7 @@ export async function importWalletFromPrivateKey(
         createdAt: Date.now(),
     };
 
-    const nextVault = attachWalletToVault(existingVault, wallet, { privateKey });
+    const nextVault = attachWalletToVault(existingVault, wallet, { privateKey: normalizedKey });
     nextVault.version = 2;
 
     await saveVault(nextVault, password);
@@ -514,8 +550,88 @@ export async function signMessage(
     message: string
 ): Promise<string> {
     const privateKey = await getPrivateKey(password, accountId, chainType, accountIndex);
-    const module = getChainModule(chainType);
 
-    // Use wallet-core's signMessage
+    // If EVM and message is structured EIP-712 typed data
+    if (chainType === ChainType.EVM) {
+        try {
+            const parsed = typeof message === 'string' ? JSON.parse(message) : message;
+            if (parsed && typeof parsed === 'object' && parsed.types && parsed.domain) {
+                return EVM.signTypedData(privateKey, parsed);
+            }
+        } catch {
+            // Not structured JSON, proceed to standard personal_sign
+        }
+    }
+
+    const module = getChainModule(chainType);
     return module.signMessage(privateKey, message);
+}
+
+/**
+ * Derive and save the next account under a mnemonic wallet
+ */
+export async function createNextAccount(
+    walletId: string,
+    password: string,
+    customName?: string
+): Promise<Account> {
+    const vault = await loadVault(password);
+    if (!vault) throw new Error('Vault not initialized');
+    const mnemonic = vault.wallets?.[walletId]?.mnemonic || vault.mnemonic;
+    if (!mnemonic) {
+        throw new Error('Wallet not found or was imported from a private key');
+    }
+
+    const wallets = (await getStorage<Wallet[]>(STORAGE_KEYS.WALLETS)) || [];
+    const walletIdx = wallets.findIndex(w => w.id === walletId);
+    const targetWallet = walletIdx !== -1 ? wallets[walletIdx] : wallets[0];
+    if (!targetWallet) {
+        throw new Error('Target wallet not found in local storage');
+    }
+
+    const nextIndex = targetWallet.accounts.length;
+    const newAccount = await createAccount(mnemonic, nextIndex);
+    if (customName) {
+        newAccount.name = customName;
+    }
+
+    targetWallet.accounts.push(newAccount);
+    wallets[walletIdx !== -1 ? walletIdx : 0] = targetWallet;
+    await setStorage(STORAGE_KEYS.WALLETS, wallets);
+
+    return newAccount;
+}
+
+/**
+ * Export account private key after password authentication
+ */
+export async function exportAccountPrivateKey(
+    password: string,
+    accountId: string,
+    chainType: ChainType
+): Promise<string> {
+    const wallets = (await getStorage<Wallet[]>(STORAGE_KEYS.WALLETS)) || [];
+    let targetAccount: Account | undefined;
+    for (const w of wallets) {
+        targetAccount = w.accounts.find(a => a.id === accountId);
+        if (targetAccount) break;
+    }
+    const accountIndex = targetAccount?.index ?? 0;
+    return await getPrivateKey(password, accountId, chainType, accountIndex);
+}
+
+/**
+ * Export wallet recovery phrase after password authentication
+ */
+export async function exportWalletMnemonic(
+    password: string,
+    walletId: string
+): Promise<string> {
+    const vault = await loadVault(password);
+    if (!vault) throw new Error('Vault not initialized');
+    const mnemonic = vault.wallets?.[walletId]?.mnemonic || vault.mnemonic;
+    if (!mnemonic) {
+        throw new Error('No secret recovery phrase found for this wallet');
+    }
+    return mnemonic;
 }

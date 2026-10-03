@@ -1,3 +1,10 @@
 {
-	"title": "钱包"
+  "title": "钱包",
+  "connect": "连接钱包",
+  "disconnect": "断开连接",
+  "switchNetwork": "切换网络",
+  "wrongNetwork": "网络不匹配",
+  "copyAddress": "复制地址",
+  "addressCopied": "已复制到剪贴板！",
+  "viewOnExplorer": "在浏览器中查看"
 }

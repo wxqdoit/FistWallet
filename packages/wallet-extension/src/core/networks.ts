@@ -1,4 +1,6 @@
 import type { Account, Network, ChainType } from '../types';
+import { getStorage, setStorage } from './storage';
+import { STORAGE_KEYS } from '../types';
 
 /**
  * Predefined network configurations
@@ -10,7 +12,11 @@ export const NETWORKS: Record<string, Network> = {
         name: 'Ethereum',
         chainType: 'evm' as ChainType,
         chainId: 1,
-        rpcUrl: 'https://eth.llamarpc.com',
+        rpcUrl: 'https://ethereum-rpc.publicnode.com',
+        fallbackRpcUrls: [
+            'https://eth.drpc.org',
+            'https://1rpc.io/eth',
+        ],
         explorerUrl: 'https://etherscan.io',
         nativeCurrency: {
             name: 'Ether',
@@ -24,7 +30,11 @@ export const NETWORKS: Record<string, Network> = {
         name: 'Sepolia Testnet',
         chainType: 'evm' as ChainType,
         chainId: 11155111,
-        rpcUrl: 'https://rpc.sepolia.org',
+        rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
+        fallbackRpcUrls: [
+            'https://rpc.sepolia.ethpandaops.io',
+            'https://1rpc.io/sepolia',
+        ],
         explorerUrl: 'https://sepolia.etherscan.io',
         nativeCurrency: {
             name: 'Sepolia Ether',
@@ -39,7 +49,11 @@ export const NETWORKS: Record<string, Network> = {
         name: 'BNB Smart Chain',
         chainType: 'evm' as ChainType,
         chainId: 56,
-        rpcUrl: 'https://bsc-dataseed1.binance.org',
+        rpcUrl: 'https://bsc-rpc.publicnode.com',
+        fallbackRpcUrls: [
+            'https://bsc-dataseed1.binance.org',
+            'https://1rpc.io/bnb',
+        ],
         explorerUrl: 'https://bscscan.com',
         nativeCurrency: {
             name: 'BNB',
@@ -53,7 +67,11 @@ export const NETWORKS: Record<string, Network> = {
         name: 'Polygon',
         chainType: 'evm' as ChainType,
         chainId: 137,
-        rpcUrl: 'https://polygon-rpc.com',
+        rpcUrl: 'https://polygon-bor-rpc.publicnode.com',
+        fallbackRpcUrls: [
+            'https://polygon.drpc.org',
+            'https://polygon.gateway.tenderly.co',
+        ],
         explorerUrl: 'https://polygonscan.com',
         nativeCurrency: {
             name: 'MATIC',
@@ -67,7 +85,11 @@ export const NETWORKS: Record<string, Network> = {
         name: 'Arbitrum One',
         chainType: 'evm' as ChainType,
         chainId: 42161,
-        rpcUrl: 'https://arb1.arbitrum.io/rpc',
+        rpcUrl: 'https://arbitrum-one-rpc.publicnode.com',
+        fallbackRpcUrls: [
+            'https://arb1.arbitrum.io/rpc',
+            'https://arbitrum.drpc.org',
+        ],
         explorerUrl: 'https://arbiscan.io',
         nativeCurrency: {
             name: 'Ether',
@@ -81,7 +103,10 @@ export const NETWORKS: Record<string, Network> = {
         name: 'Optimism',
         chainType: 'evm' as ChainType,
         chainId: 10,
-        rpcUrl: 'https://mainnet.optimism.io',
+        rpcUrl: 'https://optimism-rpc.publicnode.com',
+        fallbackRpcUrls: [
+            'https://mainnet.optimism.io',
+        ],
         explorerUrl: 'https://optimistic.etherscan.io',
         nativeCurrency: {
             name: 'Ether',
@@ -95,7 +120,10 @@ export const NETWORKS: Record<string, Network> = {
         name: 'Base',
         chainType: 'evm' as ChainType,
         chainId: 8453,
-        rpcUrl: 'https://mainnet.base.org',
+        rpcUrl: 'https://base-rpc.publicnode.com',
+        fallbackRpcUrls: [
+            'https://mainnet.base.org',
+        ],
         explorerUrl: 'https://basescan.org',
         nativeCurrency: {
             name: 'Ether',
@@ -304,3 +332,42 @@ export const DERIVATION_PATHS = {
     near: "m/44'/397'/0'",
     filecoin: "m/44'/461'/0'/0'/0'",
 } as const;
+
+/**
+ * Get all custom networks stored by the user
+ */
+export async function getCustomNetworks(): Promise<Network[]> {
+    return (await getStorage<Network[]>(STORAGE_KEYS.CUSTOM_NETWORKS)) || [];
+}
+
+/**
+ * Add a custom EVM network
+ */
+export async function addCustomNetwork(network: Network): Promise<Network> {
+    const custom = await getCustomNetworks();
+    const existingIndex = custom.findIndex(n => n.id === network.id || n.chainId === network.chainId);
+    if (existingIndex !== -1) {
+        custom[existingIndex] = network;
+    } else {
+        custom.push(network);
+    }
+    await setStorage(STORAGE_KEYS.CUSTOM_NETWORKS, custom);
+    return network;
+}
+
+/**
+ * Remove a custom network by ID
+ */
+export async function deleteCustomNetwork(networkId: string): Promise<void> {
+    const custom = await getCustomNetworks();
+    const filtered = custom.filter(n => n.id !== networkId);
+    await setStorage(STORAGE_KEYS.CUSTOM_NETWORKS, filtered);
+}
+
+/**
+ * Get all networks including predefined and custom
+ */
+export async function getAllNetworks(): Promise<Network[]> {
+    const custom = await getCustomNetworks();
+    return [...Object.values(NETWORKS), ...custom];
+}

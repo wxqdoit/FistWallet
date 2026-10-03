@@ -1,10 +1,18 @@
+
+function cleanPrivateKeyHex(key: string): string {
+    let clean = key.trim();
+    if (clean.startsWith("0x") || clean.startsWith("0X")) {
+        clean = clean.slice(2);
+    }
+    return clean;
+}
 import {BTC_DERIVATION_PATH} from "../constans";
 import {ICreateWallet, IWalletFields, BitcoinTransaction, BitcoinAddressType} from "../types";
 import {InvalidMnemonicError, InvalidPrivateKeyError, KeyDerivationError} from "../errors";
 import {generateMnemonic, mnemonicToSeedSync, validateMnemonic} from "bip39";
 import {HDKey} from "@scure/bip32";
 import {bytesToHex, hexToBytes} from "@noble/hashes/utils";
-import {secp256k1} from "@noble/curves/secp256k1";
+import {secp256k1, schnorr} from "@noble/curves/secp256k1";
 import {sha256} from "@noble/hashes/sha256";
 import {ripemd160} from "@noble/hashes/ripemd160";
 import bs58 from "bs58";
@@ -22,7 +30,7 @@ export function createWallet(params?: ICreateWallet): IWalletFields {
         ...params
     };
     const mnemonic = generateMnemonic(args.length);
-    const {privateKey, publicKey} = getPrivateKeyByMnemonic(mnemonic, args.path);
+    const {privateKey, publicKey} = getPrivateKeyByMnemonic(mnemonic, args.path, args.passphrase);
     const address = getAddressByPrivateKey(privateKey, args.addressType as BitcoinAddressType);
     return {
         mnemonic,
@@ -38,11 +46,11 @@ export function createWallet(params?: ICreateWallet): IWalletFields {
  * @param hdPath Hierarchical deterministic derivation path
  * @returns Private key and public key in hex format
  */
-export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string) {
+export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string = BTC_DERIVATION_PATH, passphrase?: string) {
     if (!validateMnemonic(mnemonic)) {
         throw new InvalidMnemonicError();
     }
-    const seed = mnemonicToSeedSync(mnemonic);
+    const seed = mnemonicToSeedSync(mnemonic, passphrase);
     const masterKey = HDKey.fromMasterSeed(seed);
     const key = masterKey.derive(hdPath);
 
@@ -63,6 +71,7 @@ export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string) {
  * @returns Bitcoin address in the specified format
  */
 export function getAddressByPrivateKey(privateKeyHex: string, addressType: BitcoinAddressType = 'p2wpkh'): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -162,32 +171,33 @@ function getP2WPKHAddress(privateKeyHex: string): string {
  * @param privateKeyHex Private key in hex format
  * @returns P2TR Bech32m address
  */
+function taggedHash(tag: string, data: Uint8Array): Uint8Array {
+    const tagHash = sha256(new TextEncoder().encode(tag));
+    const combined = new Uint8Array(tagHash.length * 2 + data.length);
+    combined.set(tagHash, 0);
+    combined.set(tagHash, tagHash.length);
+    combined.set(data, tagHash.length * 2);
+    return sha256(combined);
+}
+
+/**
+ * Generate P2TR address (Taproot, starts with 'bc1p')
+ * Implements BIP-341 TapTweak key aggregation
+ * @param privateKeyHex Private key in hex format
+ * @returns P2TR Bech32m address
+ */
 function getP2TRAddress(privateKeyHex: string): string {
     const privateKey = hexToBytes(privateKeyHex);
+    const internalPubKey = schnorr.getPublicKey(privateKey);
+    const tweak = taggedHash("TapTweak", internalPubKey);
 
-    // For Taproot, we need to tweak the public key
-    // Get the internal public key (x-only, 32 bytes)
-    const publicKeyPoint = secp256k1.ProjectivePoint.fromPrivateKey(privateKey);
+    const P = schnorr.utils.lift_x(BigInt("0x" + bytesToHex(internalPubKey)));
+    const tweakPoint = secp256k1.ProjectivePoint.fromPrivateKey(tweak);
+    const Q = P.add(tweakPoint);
+    const outputPubKey = Q.toRawBytes(true).slice(1);
 
-    // Get x-coordinate only (Schnorr/Taproot uses x-only pubkeys)
-    let xOnlyPubKey = publicKeyPoint.toRawBytes(true).slice(1); // Remove the prefix byte
-
-    // If the y-coordinate is odd, we need to negate the private key
-    // For simplicity in this implementation, we'll use the x-coordinate directly
-    // In production, proper BIP340/BIP341 implementation is needed
-
-    // Taproot commitment: tweaked_pubkey = internal_pubkey + tagged_hash("TapTweak", internal_pubkey)
-    // For now, using simplified version without actual taproot tree
-    // TODO: Implement proper BIP341 taproot key derivation with tagged hash
-
-    // Add the tweak to get the output key (simplified, needs proper elliptic curve addition)
-    // For this implementation, we'll use the x-only pubkey directly as a placeholder
-
-    // Bech32m encode: witness version 1 + x-only pubkey (32 bytes)
-    const words = bech32m.toWords(xOnlyPubKey);
-    const address = bech32m.encode('bc', [1, ...words]);
-
-    return address;
+    const words = bech32m.toWords(outputPubKey);
+    return bech32m.encode("bc", [1, ...words]);
 }
 
 // ==================== Transaction Signing ====================
@@ -201,6 +211,7 @@ function getP2TRAddress(privateKeyHex: string): string {
  * @returns Signature in hex format
  */
 export function signTransaction(privateKeyHex: string, tx: BitcoinTransaction, inputIndex: number): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -292,6 +303,7 @@ export function signTransaction(privateKeyHex: string, tx: BitcoinTransaction, i
  * @returns Signature in base64 format
  */
 export function signMessage(privateKeyHex: string, message: string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -494,6 +506,7 @@ function validateBech32Address(address: string): boolean {
  * @returns Public key in hex format (compressed)
  */
 export function getPublicKey(privateKeyHex: string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -539,30 +552,62 @@ function varint(n: number): number[] {
  */
 export function validatePrivateKey(privateKey: string): boolean {
     try {
-        // Remove any whitespace
-        const key = privateKey.trim();
-
-        // Check length (must be 64 hex chars = 32 bytes)
-        if (key.length !== 64) {
+        let key = privateKey.trim();
+        if (key.startsWith('0x') || key.startsWith('0X')) {
+            key = key.slice(2);
+        }
+        if (key.length !== 64 || !/^[0-9a-f]{64}$/i.test(key)) {
             return false;
         }
-
-        // Check if valid hex
-        if (!/^[0-9a-f]{64}$/i.test(key)) {
-            return false;
-        }
-
-        // Convert to BigInt and check range
-        // secp256k1 curve order n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
         const keyBigInt = BigInt('0x' + key);
         const secp256k1_n = BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141');
-
-        // Private key must be: 0 < key < n
         if (keyBigInt === BigInt(0) || keyBigInt >= secp256k1_n) {
             return false;
         }
-
         return true;
+    } catch {
+        return false;
+    }
+}
+// ==================== BIP-340 Schnorr Signature ====================
+
+/**
+ * Sign a 32-byte message hash using BIP-340 Schnorr signature
+ * @param privateKeyHex Private key in hex format (with or without 0x prefix)
+ * @param messageHash 32-byte message hash
+ * @returns 64-byte Schnorr signature in hex format
+ */
+export function signSchnorr(privateKeyHex: string, messageHash: Uint8Array | string): string {
+    privateKeyHex = cleanPrivateKeyHex(privateKeyHex);
+    if (privateKeyHex.length !== 64) {
+        throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
+    }
+
+    const hashBytes = typeof messageHash === "string"
+        ? (messageHash.startsWith("0x") ? hexToBytes(messageHash.slice(2)) : hexToBytes(messageHash))
+        : messageHash;
+
+    const signature = schnorr.sign(hashBytes, hexToBytes(privateKeyHex));
+    return bytesToHex(signature);
+}
+
+/**
+ * Verify a BIP-340 Schnorr signature
+ * @param signature 64-byte signature in hex format
+ * @param messageHash 32-byte message hash
+ * @param publicKeyHex 32-byte x-only public key in hex format
+ * @returns true if signature is valid
+ */
+export function verifySchnorr(signature: string, messageHash: Uint8Array | string, publicKeyHex: string): boolean {
+    try {
+        const cleanSig = signature.startsWith("0x") ? signature.slice(2) : signature;
+        const cleanPub = publicKeyHex.startsWith("0x") ? publicKeyHex.slice(2) : publicKeyHex;
+
+        const hashBytes = typeof messageHash === "string"
+            ? (messageHash.startsWith("0x") ? hexToBytes(messageHash.slice(2)) : hexToBytes(messageHash))
+            : messageHash;
+
+        return schnorr.verify(hexToBytes(cleanSig), hashBytes, hexToBytes(cleanPub));
     } catch {
         return false;
     }

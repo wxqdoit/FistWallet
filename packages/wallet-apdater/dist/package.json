@@ -5,9 +5,11 @@
     "license": "MIT",
     "type": "module",
     "main": "./dist/src/index.js",
-    "types": "./src/index.ts",
+    "types": "./dist/src/index.d.ts",
     "scripts": {
-        "build": "rm -rf dist && tsc --build tsconfig.json && tsc-alias -p tsconfig.json"
+        "build": "rm -rf dist && tsc --build tsconfig.json && tsc-alias -p tsconfig.json",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "dependencies": {
         "@mysten/wallet-standard": "^0.11.3",
@@ -15,6 +17,7 @@
     },
     "devDependencies": {
         "tsc-alias": "^1.8.10",
-        "typescript": "^5.5.2"
+        "typescript": "^5.5.2",
+        "vitest": "^1.6.0"
     }
 }

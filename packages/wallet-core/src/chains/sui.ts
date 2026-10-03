@@ -43,9 +43,19 @@ export function createWallet(params?: ICreateWallet): IWalletFields {
  * @returns Sui address (0x-prefixed hex string)
  */
 export function getAddressByPrivateKey(privateKey: string | Uint8Array): string {
-    const publicKey = typeof privateKey === 'string'
-        ? ed25519.getPublicKey(hexToBytes(privateKey))
-        : ed25519.getPublicKey(privateKey);
+    let keyBytes: Uint8Array;
+    if (typeof privateKey === 'string') {
+        let cleanKey = privateKey.trim();
+        if (cleanKey.startsWith('suiprivkey')) {
+            keyBytes = decodeSuiPrivateKey(cleanKey).secretKey;
+        } else {
+            if (cleanKey.startsWith('0x') || cleanKey.startsWith('0X')) cleanKey = cleanKey.slice(2);
+            keyBytes = hexToBytes(cleanKey);
+        }
+    } else {
+        keyBytes = privateKey;
+    }
+    const publicKey = ed25519.getPublicKey(keyBytes);
 
     const suiBytes = new Uint8Array(publicKey.length + 1);
     suiBytes.set([SIGNATURE_SCHEME_TO_FLAG.ED25519]);
@@ -126,10 +136,12 @@ export function signTransaction(privateKey: string, messageBytes: Uint8Array): s
         secretKey = decoded.secretKey;
     } else {
         // Assume it's hex format
-        if (privateKey.length !== 64) {
+        let cleanKey = privateKey.trim();
+        if (cleanKey.startsWith('0x') || cleanKey.startsWith('0X')) cleanKey = cleanKey.slice(2);
+        if (cleanKey.length !== 64) {
             throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
         }
-        secretKey = hexToBytes(privateKey);
+        secretKey = hexToBytes(cleanKey);
     }
 
     const signature = ed25519.sign(messageBytes, secretKey);
@@ -153,10 +165,12 @@ export function signMessage(privateKey: string, message: string | Uint8Array): s
         secretKey = decoded.secretKey;
     } else {
         // Assume it's hex format
-        if (privateKey.length !== 64) {
+        let cleanKey = privateKey.trim();
+        if (cleanKey.startsWith('0x') || cleanKey.startsWith('0X')) cleanKey = cleanKey.slice(2);
+        if (cleanKey.length !== 64) {
             throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
         }
-        secretKey = hexToBytes(privateKey);
+        secretKey = hexToBytes(cleanKey);
     }
 
     // Convert message to bytes
@@ -242,10 +256,12 @@ export function getPublicKey(privateKey: string): string {
         secretKey = decoded.secretKey;
     } else {
         // Assume it's hex format
-        if (privateKey.length !== 64) {
+        let cleanKey = privateKey.trim();
+        if (cleanKey.startsWith('0x') || cleanKey.startsWith('0X')) cleanKey = cleanKey.slice(2);
+        if (cleanKey.length !== 64) {
             throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
         }
-        secretKey = hexToBytes(privateKey);
+        secretKey = hexToBytes(cleanKey);
     }
 
     const publicKey = ed25519.getPublicKey(secretKey);
@@ -262,30 +278,21 @@ export function getPublicKey(privateKey: string): string {
  */
 export function validatePrivateKey(privateKey: string): boolean {
     try {
-        const key = privateKey.trim();
-
-        // Check if it's a Bech32-encoded private key (suiprivkey...)
+        let key = privateKey.trim();
         if (key.startsWith('suiprivkey')) {
             try {
                 const decoded = decodeSuiPrivateKey(key);
-                // Should have 32-byte secret key
                 return decoded.secretKey.length === 32;
             } catch {
                 return false;
             }
         }
-
-        // Check hex format
-        if (key.length !== 64) {
+        if (key.startsWith('0x') || key.startsWith('0X')) {
+            key = key.slice(2);
+        }
+        if (key.length !== 64 || !/^[0-9a-f]{64}$/i.test(key)) {
             return false;
         }
-
-        // Check if valid hex
-        if (!/^[0-9a-f]{64}$/i.test(key)) {
-            return false;
-        }
-
-        // For ed25519, any 32-byte value is valid
         return true;
     } catch {
         return false;

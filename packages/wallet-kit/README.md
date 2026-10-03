@@ -1,54 +1,118 @@
-# wallet-kit
+# WalletKit
 
-A React-based TypeScript library for connecting web3 wallets, supporting multiple chains (EVM, Solana, BTC) via a unified strategy pattern.
+A production-ready, multi-chain React component library and Web3 hooks suite designed for seamless DApp connectivity.
 
-## 🛠 Technology Stack
+## Features
 
-- **Core:** React 18, TypeScript
-- **State Management:** Zustand (with persistence)
-- **Styling:** Tailwind CSS, @react-spring/web (animations)
-- **UI Components:** @reach/dialog (accessibility)
-- **Internationalization:** i18next, react-i18next
-- **Wallet Discovery:** mipd (EIP-6963) via `wallet-apdater`
-- **Build Tool:** Vite (library mode) + TypeScript declarations
+- 🌐 **Multi-Chain Architecture**: Native support for EVM, Solana, Bitcoin, Aptos, Sui, TRON, and Starknet.
+- 🎨 **Luxury UI Components**: Ready-to-use `ConnectButton` and modal with responsive layout and customizable themes.
+- ⚡ **Full Hook Ecosystem**: High-level hooks for account state, wallet connectivity, chain switching, message signing, and EIP-712 typed data.
+- 🔌 **Standard Compliant**: Compatible with EIP-1193, EIP-6963 (multi-injected discovery), and modern Web3 adapters.
 
-## 📂 Project Structure
+## Installation
 
-```text
-src/
-├── components/       # UI Components (ConnectButton, Modal, etc.)
-├── adapters/         # Adapter registry + icons
-├── chains/           # Chain definitions (EVM, BTC, SOL)
-├── hooks/            # React Hooks (useAccount, useDisconnect, etc.)
-├── locals/           # i18n configuration and resources
-├── state/            # Global state management (Zustand)
-└── types/            # UI-level types
+```bash
+pnpm add wallet-kit
 ```
 
-## 📦 Dependencies Notes
+## Quick Start
 
-- **Core Dependencies:** `react`, `react-dom`, `wallet-apdater` (EIP-6963 discovery + adapters).
-- **Styling:** Tailwind CSS with PostCSS.
-- **Translation:** `i18next-xhr-backend` loads locales at runtime; evaluate whether bundling JSON is preferred for your distribution model.
+### 1. Setup Provider
 
-## 🧪 Test Coverage
+Wrap your application tree with `WalletKitProvider`:
 
-**Status: ⚠️ Critical Missing**
+```tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { WalletKitProvider, ChainType } from 'wallet-kit';
+import 'wallet-kit/dist/style.css';
+import App from './App';
 
-- Although `@testing-library/react` and `jest-dom` are present in `devDependencies`, **no test files (`*.test.ts`, `*.spec.ts`) were found** in the codebase.
-- **Action Item:** Urgent need to implement unit tests, especially for:
-  - `src/core/strategy` (logic is complex here)
-  - `src/state/store.ts` (state persistence and updates)
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <WalletKitProvider
+      defaultChainType={ChainType.EVM}
+      defaultChainId={1}
+      language="en"
+    >
+      <App />
+    </WalletKitProvider>
+  </React.StrictMode>
+);
+```
 
-## ♻️ Refactoring & Improvements
+### 2. Add Connect Button
 
-1.  **Explicit Typing:** Ensure `zustand` stores remain strictly typed.
-2.  **Translation Strategy:** Review `i18next-xhr-backend`. For a library, shipping JSON files or using a memory backend might be more robust than runtime fetches.
-3.  **Bundle Review:** Confirm `wallet-apdater` is externalized in consuming apps to avoid duplicate dependencies.
+```tsx
+import { ConnectButton } from 'wallet-kit';
 
-## 🚀 Performance & Security
+export function Header() {
+  return (
+    <header className="flex justify-between items-center p-4">
+      <h1 className="font-bold">My DApp</h1>
+      <ConnectButton />
+    </header>
+  );
+}
+```
 
-- **Performance:**
-  - Check bundle size impact of `@react-spring/web` if animations are minimal.
-- **Security:**
-  - `localStorage` is used to persist connection state (`WALLET_KIT_APP`). This is generally safe for non-sensitive data (like "connected address"), but ensure no private keys or signing capabilities are ever stored here.
+### 3. Use Web3 Hooks
+
+```tsx
+import {
+  useAccount,
+  useDisconnect,
+  useSwitchChain,
+  useSignMessage,
+  useSignTypedData,
+} from 'wallet-kit';
+
+export function Dashboard() {
+  const account = useAccount();
+  const { disConnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
+  const { signMessageAsync } = useSignMessage();
+
+  if (!account.address) {
+    return <p>Please connect your wallet.</p>;
+  }
+
+  return (
+    <div>
+      <p>Connected Address: {account.address}</p>
+      <p>Chain Type: {account.chainType}</p>
+      <p>Chain ID: {account.chainId}</p>
+
+      <button onClick={() => switchChain({ chainId: 137 })}>
+        Switch to Polygon
+      </button>
+
+      <button onClick={async () => {
+        const sig = await signMessageAsync({ message: 'Login confirmation' });
+        console.log('Signature:', sig);
+      }}>
+        Sign Message
+      </button>
+
+      <button onClick={disConnect}>Disconnect</button>
+    </div>
+  );
+}
+```
+
+## Available Hooks
+
+| Hook | Purpose |
+| :--- | :--- |
+| `useAccount()` | Reads connected address, chain type, chain ID, and connection status |
+| `useConnectedProvider()` | Retrieves the active provider instance for the connected chain |
+| `useDisconnect()` | Disconnects the currently active session |
+| `useOpenConnectModal()` | Programmatically opens the wallet selection dialog |
+| `useSwitchChain()` | Requests chain/network switch with automatic prompt handling |
+| `useSignMessage()` | Requests standard text message signature across any chain |
+| `useSignTypedData()` | Signs structured EIP-712 typed data payloads |
+| `useSendTransaction()` | Submits native or token transactions to the network |
+
+## License
+
+MIT

@@ -268,13 +268,117 @@ export type Address = string;
 /**
  * Supported chain types
  */
-export type ChainType =
-    | 'evm'
-    | 'solana'
-    | 'bitcoin'
-    | 'tron'
-    | 'ton'
-    | 'aptos'
-    | 'sui'
-    | 'near'
-    | 'filecoin';
+export const ChainType = {
+    EVM: 'evm',
+    SOLANA: 'solana',
+    BITCOIN: 'bitcoin',
+    TRON: 'tron',
+    TON: 'ton',
+    APTOS: 'aptos',
+    SUI: 'sui',
+    NEAR: 'near',
+    FILECOIN: 'filecoin',
+} as const;
+
+export type ChainType = (typeof ChainType)[keyof typeof ChainType];
+
+/**
+ * Fee Tiers for EIP-1559 Dynamic Gas Estimation
+ */
+export interface FeeTier {
+    maxFeePerGas: string;
+    maxPriorityFeePerGas: string;
+    estimatedTimeMs?: number;
+}
+
+export interface FeeTiersEstimate {
+    slow: FeeTier;
+    standard: FeeTier;
+    fast: FeeTier;
+    baseFeePerGas: string;
+}
+
+/**
+ * Parsed Token Account for Solana SPL Tokens
+ */
+export interface ParsedTokenAccount {
+    pubkey: string;
+    mint: string;
+    amount: string;
+    decimals: number;
+    formatted: string;
+}
+
+/**
+ * Detailed transaction receipt with logs and execution status
+ */
+export interface DetailedTransactionReceipt {
+    hash: string;
+    status: 'success' | 'reverted' | 'pending';
+    blockNumber: number;
+    blockHash: string;
+    gasUsed: string;
+    effectiveGasPrice: string;
+    from: string;
+    to?: string;
+    contractAddress?: string;
+    cumulativeGasUsed: string;
+    logs: Array<{
+        address: string;
+        topics: string[];
+        data: string;
+    }>;
+}
+
+/**
+ * Result for batch token balance queries
+ */
+export interface BatchTokenBalanceResult {
+    tokenAddress: string;
+    balance: string;
+    rawBalance: string;
+    decimals: number;
+    symbol: string;
+}
+
+/**
+ * Parameters for token approvals
+ */
+export interface ApproveTokenParams {
+    tokenAddress: string;
+    spender: string;
+    amount: string | bigint;
+}
+
+/**
+ * NFT Metadata and Collection Details
+ */
+export interface NFTMetadata {
+    name: string;
+    description?: string;
+    image: string;
+    animationUrl?: string;
+    attributes?: Array<{ trait_type: string; value: string | number }>;
+    tokenId: string;
+    contractAddress: string;
+    standard: 'ERC721' | 'ERC1155' | 'Metaplex';
+}
+
+/**
+ * Parameters for DEX Swap Quoting & Simulation
+ */
+export interface SwapQuoteParams {
+    fromToken: string;
+    toToken: string;
+    amountIn: string;
+    slippageBasisPoints?: number;
+}
+
+export interface SwapQuoteResult {
+    amountIn: string;
+    expectedAmountOut: string;
+    minimumAmountOut: string;
+    priceImpactPercent: number;
+    route: string[];
+    calldata?: string;
+}

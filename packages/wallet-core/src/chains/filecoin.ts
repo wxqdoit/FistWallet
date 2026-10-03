@@ -1,3 +1,11 @@
+
+function cleanPrivateKeyHex(key: string): string {
+    let clean = key.trim();
+    if (clean.startsWith("0x") || clean.startsWith("0X")) {
+        clean = clean.slice(2);
+    }
+    return clean;
+}
 import {bytesToHex, hexToBytes} from "@noble/hashes/utils";
 import {blake2b} from '@noble/hashes/blake2b';
 import {ed25519} from '@noble/curves/ed25519';
@@ -45,6 +53,9 @@ export function getAddressByPrivateKey(
     privateKey: string | Uint8Array,
     addressType: FilecoinAddressType = 'secp256k1'
 ): string {
+    if (typeof privateKey === "string") {
+        privateKey = cleanPrivateKeyHex(privateKey);
+    }
     if (addressType === 'secp256k1') {
         return getSecp256k1Address(privateKey);
     } else {
@@ -178,6 +189,9 @@ export function signTransaction(
     messageBytes: Uint8Array,
     addressType: FilecoinAddressType = 'secp256k1'
 ): string {
+    if (privateKeyHex.startsWith('0x') || privateKeyHex.startsWith('0X')) {
+        privateKeyHex = privateKeyHex.slice(2);
+    }
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -209,6 +223,9 @@ export function signMessage(
     message: string | Uint8Array,
     addressType: FilecoinAddressType = 'secp256k1'
 ): string {
+    if (privateKeyHex.startsWith('0x') || privateKeyHex.startsWith('0X')) {
+        privateKeyHex = privateKeyHex.slice(2);
+    }
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -348,6 +365,9 @@ export function validateAddress(address: string): boolean {
  * @returns Public key in hex format
  */
 export function getPublicKey(privateKeyHex: string, addressType: FilecoinAddressType = 'secp256k1'): string {
+    if (privateKeyHex.startsWith('0x') || privateKeyHex.startsWith('0X')) {
+        privateKeyHex = privateKeyHex.slice(2);
+    }
     if (privateKeyHex.length !== 64) {
         throw new InvalidPrivateKeyError("Private key must be 64 hex characters (32 bytes)");
     }
@@ -373,30 +393,20 @@ export function getPublicKey(privateKeyHex: string, addressType: FilecoinAddress
  */
 export function validatePrivateKey(privateKey: string, addressType: FilecoinAddressType = 'secp256k1'): boolean {
     try {
-        const key = privateKey.trim();
-
-        // Check length (must be 64 hex chars = 32 bytes)
-        if (key.length !== 64) {
+        let key = privateKey.trim();
+        if (key.startsWith('0x') || key.startsWith('0X')) {
+            key = key.slice(2);
+        }
+        if (key.length !== 64 || !/^[0-9a-f]{64}$/i.test(key)) {
             return false;
         }
-
-        // Check if valid hex
-        if (!/^[0-9a-f]{64}$/i.test(key)) {
-            return false;
-        }
-
-        // For secp256k1, check range
         if (addressType === 'secp256k1') {
             const keyBigInt = BigInt('0x' + key);
             const secp256k1_n = BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141');
-
-            // Private key must be: 0 < key < n
             if (keyBigInt === BigInt(0) || keyBigInt >= secp256k1_n) {
                 return false;
             }
         }
-        // For BLS (ed25519), any 32-byte value is valid
-
         return true;
     } catch {
         return false;

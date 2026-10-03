@@ -158,17 +158,16 @@ export class BitcoinProvider extends ChainProvider {
 
     // ==================== Transaction Methods ====================
 
-    async sendTransaction(_privateKey: string, _params: TransactionParams): Promise<TransactionResult> {
-        // Full Bitcoin transaction requires:
-        // 1. Fetch UTXOs
-        // 2. Build transaction with proper inputs/outputs
-        // 3. Sign with private key
-        // 4. Broadcast via sendrawtransaction
+    async sendTransaction(_privateKey: string, params: TransactionParams): Promise<TransactionResult> {
+        // If raw signed transaction hex is supplied in data, broadcast directly
+        if (params.data && params.data.length > 0) {
+            return this.broadcastTransaction(params.data);
+        }
 
-        // This is a placeholder - full implementation would use wallet-core's Bitcoin signing
+        // Otherwise prompt caller to sign UTXO transaction first
         throw new ChainError(
             ChainErrorCode.UNSUPPORTED_OPERATION,
-            'Bitcoin transaction sending requires UTXO-based transaction building. Use wallet-core for signing and provide the raw transaction.'
+            'Bitcoin transaction sending requires UTXO-based transaction building. Use wallet-core for signing and provide the raw transaction hex in params.data.'
         );
     }
 

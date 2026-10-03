@@ -8,6 +8,7 @@ export interface IWalletFields {
 export interface ICreateWallet {
     length?: 128 | 256,
     path?: string,
+    passphrase?: string,
     addressType?: BitcoinAddressType | FilecoinAddressType // For Bitcoin and Filecoin wallets
 }
 
@@ -139,4 +140,67 @@ export interface FilecoinTransaction {
     gasPremium: string;
     method: number;
     params?: string;
+}
+/**
+ * EIP-712 Typed Data Specification
+ */
+export interface EIP712TypeProperty {
+    name: string;
+    type: string;
+}
+
+export interface EIP712Domain {
+    name?: string;
+    version?: string;
+    chainId?: number | string;
+    verifyingContract?: string;
+    salt?: string;
+}
+
+export interface EIP712TypedData {
+    types: Record<string, EIP712TypeProperty[]>;
+    primaryType: string;
+    domain: EIP712Domain;
+    message: Record<string, any>;
+}
+
+/**
+ * ERC-4337 UserOperation specification
+ */
+export interface UserOperation {
+    sender: string;
+    nonce: bigint | string;
+    initCode: string;
+    callData: string;
+    callGasLimit: bigint | string;
+    verificationGasLimit: bigint | string;
+    preVerificationGas: bigint | string;
+    maxFeePerGas: bigint | string;
+    maxPriorityFeePerGas: bigint | string;
+    paymasterAndData: string;
+    signature?: string;
+}
+
+export interface PackedUserOperation {
+    sender: string;
+    nonce: string;
+    initCode: string;
+    callData: string;
+    accountGasLimits: string;
+    preVerificationGas: string;
+    gasFees: string;
+    paymasterAndData: string;
+    signature: string;
+}
+
+/**
+ * EIP-7702 Authorization specification
+ */
+export interface EIP7702Authorization {
+    chainId: number;
+    address: string;
+    nonce: number | bigint;
+    yParity?: number;
+    r?: string;
+    s?: string;
 }
