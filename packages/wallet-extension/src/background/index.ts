@@ -75,8 +75,76 @@ browser.storage.onChanged.addListener((changes, areaName) => {
 });
 
 function isExtensionSender(sender: Runtime.MessageSender): boolean {
+    if (sender.id && sender.id === browser.runtime.id) {
+        return true;
+    }
     const senderUrl = sender.url ?? '';
     return senderUrl.startsWith(browser.runtime.getURL(''));
+}
+
+interface PendingApproval {
+    resolve: (approved: boolean) => void;
+    reject: (error: Error) => void;
+    windowId?: number;
+    origin: string;
+    action: string;
+}
+
+const pendingApprovals = new Map<string, PendingApproval>();
+
+// Cleanup pending approvals if user manually closes popup window
+browser.windows.onRemoved.addListener((windowId) => {
+    for (const [id, req] of pendingApprovals.entries()) {
+        if (req.windowId === windowId) {
+            pendingApprovals.delete(id);
+            req.resolve(false);
+        }
+    }
+});
+
+/**
+ * Launch an approval notification popup and await user response
+ */
+async function requestUserApproval(params: {
+    action: 'connect' | 'sign';
+    origin: string;
+    message?: string;
+}): Promise<boolean> {
+    const id = 'req_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+    const searchParams = new URLSearchParams({
+        id,
+        action: params.action,
+        origin: params.origin,
+    });
+    if (params.message) {
+        searchParams.set('message', params.message);
+    }
+
+    const popupUrl = browser.runtime.getURL(`index.html#/notification?${searchParams.toString()}`);
+
+    return new Promise<boolean>((resolve, reject) => {
+        pendingApprovals.set(id, {
+            resolve,
+            reject,
+            origin: params.origin,
+            action: params.action,
+        });
+
+        browser.windows.create({
+            url: popupUrl,
+            type: 'popup',
+            width: 380,
+            height: 620,
+            focused: true,
+        }).then((win) => {
+            if (win?.id && pendingApprovals.has(id)) {
+                pendingApprovals.get(id)!.windowId = win.id;
+            }
+        }).catch((err) => {
+            pendingApprovals.delete(id);
+            reject(err);
+        });
+    });
 }
 
 /**
@@ -129,12 +197,31 @@ async function handleMessage(message: Message, sender: Runtime.MessageSender): P
                 return { success: true, data };
             }
 
-            case MessageType.REQUEST_ACCOUNTS: {
-                const session = getUnlockPassword();
-                if (!session) {
-                    return { success: false, error: "Wallet locked. Please unlock FistWallet extension first." };
+            case MessageType.DAPP_APPROVAL_RESOLVE:
+            case 'DAPP_APPROVAL_RESOLVE' as any: {
+                const payload = (message.payload || {}) as { id?: string; approved: boolean };
+                const reqId = payload.id;
+                let pending: PendingApproval | undefined;
+                if (reqId && pendingApprovals.has(reqId)) {
+                    pending = pendingApprovals.get(reqId);
+                    pendingApprovals.delete(reqId);
+                } else if (!reqId && pendingApprovals.size > 0) {
+                    const firstEntry = pendingApprovals.entries().next().value;
+                    if (firstEntry) {
+                        const [firstKey, firstVal] = firstEntry;
+                        pendingApprovals.delete(firstKey);
+                        pending = firstVal;
+                    }
                 }
 
+                if (pending) {
+                    pending.resolve(Boolean(payload.approved));
+                    return { success: true };
+                }
+                return { success: false, error: 'No pending approval found' };
+            }
+
+            case MessageType.REQUEST_ACCOUNTS: {
                 const wallets = (await getStorage<Wallet[]>(STORAGE_KEYS.WALLETS)) || [];
                 const currentWalletId = await getStorage<string>(STORAGE_KEYS.CURRENT_WALLET_ID);
                 const activeWallet = wallets.find((w) => w.id === currentWalletId) || wallets[0];
@@ -151,14 +238,45 @@ async function handleMessage(message: Message, sender: Runtime.MessageSender): P
                     return { success: false, error: `No address found for ${reqChainType} in current account.` };
                 }
 
+                const origin = (message.payload as any)?.origin || (sender?.url ? new URL(sender.url).origin : 'Unknown');
+
+                // Check if origin is already connected
+                const connections = (await getStorage<DAppConnection[]>(STORAGE_KEYS.DAPP_CONNECTIONS)) || [];
+                const existingConn = connections.find(c => c.origin === origin);
+                if (existingConn && existingConn.connectedAccounts?.includes(address)) {
+                    return { success: true, data: [address] };
+                }
+
+                // Request user approval via notification window
+                const approved = await requestUserApproval({
+                    action: 'connect',
+                    origin,
+                });
+
+                if (!approved) {
+                    return { success: false, error: 'User rejected the connection request.' };
+                }
+
+                const connectionEntry: DAppConnection = {
+                    origin,
+                    favicon: `https://www.google.com/s2/favicons?domain=${origin}&sz=64`,
+                    name: (message.payload as any)?.name || origin.replace(/^https?:\/\//, ''),
+                    connectedAccounts: [address],
+                    permissions: ['eth_accounts', 'personal_sign'],
+                    connectedAt: Date.now(),
+                };
+                const existingIdx = connections.findIndex(c => c.origin === origin);
+                if (existingIdx !== -1) {
+                    connections[existingIdx] = connectionEntry;
+                } else {
+                    connections.push(connectionEntry);
+                }
+                await setStorage(STORAGE_KEYS.DAPP_CONNECTIONS, connections);
+
                 return { success: true, data: [address] };
             }
 
             case MessageType.CONNECT_DAPP: {
-                const session = getUnlockPassword();
-                if (!session) {
-                    return { success: false, error: 'Wallet locked. Please unlock FistWallet extension first.' };
-                }
                 const origin = (message.payload as any)?.origin || (sender?.url ? new URL(sender.url).origin : 'Unknown');
                 const wallets = (await getStorage<Wallet[]>(STORAGE_KEYS.WALLETS)) || [];
                 const currentWalletId = await getStorage<string>(STORAGE_KEYS.CURRENT_WALLET_ID);
@@ -166,13 +284,30 @@ async function handleMessage(message: Message, sender: Runtime.MessageSender): P
                 const activeAccount = activeWallet?.accounts?.[0];
                 const address = activeAccount?.addresses?.evm || '';
 
+                if (!address) {
+                    return { success: false, error: 'No active account found.' };
+                }
+
                 const connections = (await getStorage<DAppConnection[]>(STORAGE_KEYS.DAPP_CONNECTIONS)) || [];
                 const existingIdx = connections.findIndex(c => c.origin === origin);
+                if (existingIdx !== -1 && connections[existingIdx].connectedAccounts?.includes(address)) {
+                    return { success: true, data: { connected: true, connection: connections[existingIdx] } };
+                }
+
+                const approved = await requestUserApproval({
+                    action: 'connect',
+                    origin,
+                });
+
+                if (!approved) {
+                    return { success: false, error: 'User rejected the connection request.' };
+                }
+
                 const connectionEntry: DAppConnection = {
                     origin,
                     favicon: `https://www.google.com/s2/favicons?domain=${origin}&sz=64`,
                     name: (message.payload as any)?.name || origin.replace(/^https?:\/\//, ''),
-                    connectedAccounts: address ? [address] : [],
+                    connectedAccounts: [address],
                     permissions: ['eth_accounts', 'personal_sign'],
                     connectedAt: Date.now(),
                 };
@@ -194,11 +329,6 @@ async function handleMessage(message: Message, sender: Runtime.MessageSender): P
             }
 
             case MessageType.SIGN_MESSAGE: {
-                const session = getUnlockPassword();
-                if (!session) {
-                    return { success: false, error: "Wallet locked. Please unlock FistWallet extension first." };
-                }
-
                 const payload = message.payload as any;
                 let msgToSign: string | undefined = payload?.message;
 
@@ -214,6 +344,24 @@ async function handleMessage(message: Message, sender: Runtime.MessageSender): P
 
                 if (!msgToSign) {
                     return { success: false, error: "Message payload required for signing." };
+                }
+
+                const origin = (message.payload as any)?.origin || (sender?.url ? new URL(sender.url).origin : 'Unknown');
+
+                // Prompt user to approve signing
+                const approved = await requestUserApproval({
+                    action: 'sign',
+                    origin,
+                    message: msgToSign,
+                });
+
+                if (!approved) {
+                    return { success: false, error: 'User rejected the signing request.' };
+                }
+
+                const session = getUnlockPassword();
+                if (!session) {
+                    return { success: false, error: "Wallet locked. Please unlock FistWallet extension first." };
                 }
 
                 const wallets = (await getStorage<Wallet[]>(STORAGE_KEYS.WALLETS)) || [];

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({
@@ -39,6 +39,7 @@ import ChainSelect from '@pages/Chains';
 import Wallets from '@pages/Wallets';
 import WalletManage from '@pages/Wallets/Manage';
 import AddWallet from '@pages/Wallets/AddWallet';
+import ConnectHardware from '@pages/Wallets/ConnectHardware';
 
 function App() {
     const { isInitialized, isLocked, initialize } = useWalletStore();
@@ -47,8 +48,21 @@ function App() {
         () => new URLSearchParams(window.location.search).get('view') === 'sidepanel',
         []
     );
+    const isExtensionPopup = useMemo(
+        () => typeof window !== 'undefined' && (window.innerWidth <= 480 || isSidePanel),
+        [isSidePanel]
+    );
+
     useEffect(() => {
         initialize();
+        const watchdog = setTimeout(() => {
+            const state = useWalletStore.getState();
+            if (state.isInitialized === null) {
+                console.warn('Wallet initialization timed out, falling back to onboarding');
+                useWalletStore.setState({ isInitialized: false, isLocked: false });
+            }
+        }, 2500);
+        return () => clearTimeout(watchdog);
     }, [initialize]);
     useEffect(() => {
         initializeSettings();
@@ -56,34 +70,39 @@ function App() {
     useEffect(() => {
         document.documentElement.dataset.theme = theme;
         document.documentElement.lang = language;
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+        }
     }, [theme, language]);
 
     // Show loading state while initializing
     if (isInitialized === null) {
         return (
-            <div className="min-h-screen w-full flex items-center justify-center bg-background">
-                <div className="w-[375px] h-[600px] flex items-center justify-center bg-background">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                </div>
+            <div className="h-full w-full min-h-[600px] flex items-center justify-center bg-[#070A12] text-white">
+                <div className="animate-spin rounded-full h-10 w-10 border-2 border-indigo-500/20 border-t-indigo-500"></div>
             </div>
         );
     }
 
     return (
         <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
+        <HashRouter>
             <div
                 className={cn(
-                    'w-full bg-background flex',
-                    isSidePanel ? 'h-full items-start justify-start' : 'min-h-screen items-center justify-center'
+                    'w-full bg-[#070A12] flex font-sans',
+                    isExtensionPopup ? 'h-full w-full' : 'min-h-screen items-center justify-center p-4'
                 )}
             >
                 <div
                     className={cn(
-                        'bg-background overflow-x-hidden overflow-y-auto scrollbar-thin border border-border',
-                        isSidePanel
-                            ? 'w-full h-full rounded-none'
-                            : 'w-[375px] h-[600px] rounded-[var(--radius)]'
+                        'bg-[#070A12] overflow-hidden',
+                        isExtensionPopup
+                            ? 'w-full h-full rounded-none border-0'
+                            : 'w-[375px] h-[600px] rounded-2xl border border-white/10 shadow-2xl'
                     )}
                 >
                     <Routes>
@@ -103,6 +122,7 @@ function App() {
                     {isInitialized && isLocked && (
                         <>
                             <Route path="/unlock" element={<Unlock />} />
+                            <Route path="/notification" element={<Notification />} />
                             <Route path="*" element={<Navigate to="/unlock" replace />} />
                         </>
                     )}
@@ -115,6 +135,7 @@ function App() {
                             <Route path="/wallets" element={<Wallets />} />
                             <Route path="/wallets/manage" element={<WalletManage />} />
                             <Route path="/add-wallet" element={<AddWallet />} />
+                            <Route path="/connect-hardware" element={<ConnectHardware />} />
                             <Route path="/backup-mnemonic" element={<BackupMnemonic />} />
                             <Route path="/verify-mnemonic" element={<VerifyMnemonic />} />
                             <Route path="/import-wallet" element={<ImportWallet />} />
@@ -134,7 +155,7 @@ function App() {
                 </div>
                 <Toaster />
             </div>
-        </BrowserRouter>
+        </HashRouter>
         </QueryClientProvider>
     );
 }

@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Ambient Glow -->
+    <radialGradient id="ai-glow" cx="50%" cy="44%" r="58%">
+      <stop offset="0%" stop-color="#4F46E5" stop-opacity="0.45"/>
+      <stop offset="45%" stop-color="#7C3AED" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Card Squircle Background -->
+    <linearGradient id="ai-card" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="50%" stop-color="#0B0F19"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+
+    <!-- Rim Light on Border -->
+    <linearGradient id="ai-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#4F46E5" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#38BDF8" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#C084FC" stop-opacity="0.45"/>
+    </linearGradient>
+
+    <!-- Knuckle Bevels -->
+    <linearGradient id="ai-k-bevel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="45%" stop-color="#E0F2FE"/>
+      <stop offset="100%" stop-color="#7DD3FC"/>
+    </linearGradient>
+
+    <linearGradient id="ai-k1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="45%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#312E81"/>
+    </linearGradient>
+
+    <linearGradient id="ai-k2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A5B4FC"/>
+      <stop offset="40%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#3730A3"/>
+    </linearGradient>
+
+    <linearGradient id="ai-k3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#581C87"/>
+    </linearGradient>
+
+    <linearGradient id="ai-k4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E879F9"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+
+    <linearGradient id="ai-thumb-latch" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="35%" stop-color="#8B5CF6"/>
+      <stop offset="70%" stop-color="#D946EF"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
+    </linearGradient>
+
+    <linearGradient id="ai-thumb-rim" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#C7D2FE"/>
+      <stop offset="50%" stop-color="#FDF4FF"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+
+    <linearGradient id="ai-shield-l" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#4338CA"/>
+      <stop offset="100%" stop-color="#312E81"/>
+    </linearGradient>
+
+    <linearGradient id="ai-shield-r" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338CA"/>
+      <stop offset="60%" stop-color="#312E81"/>
+      <stop offset="100%" stop-color="#1E1B4B"/>
+    </linearGradient>
+
+    <linearGradient id="ai-wrist" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#312E81"/>
+      <stop offset="50%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <linearGradient id="ai-core" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="30%" stop-color="#67E8F9"/>
+      <stop offset="70%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <filter id="ai-drop" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#020617" flood-opacity="0.85"/>
+    </filter>
+
+    <filter id="ai-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Light Reflection -->
+  <circle cx="256" cy="245" r="170" fill="url(#ai-glow)"/>
+
+  <!-- Squircle Base Frame -->
+  <rect x="36" y="36" width="440" height="440" rx="96" fill="url(#ai-card)" stroke="url(#ai-rim)" stroke-width="2.5" filter="url(#ai-drop)"/>
+
+  <!-- Subtle Web3 Cryptographic Grid lines -->
+  <g opacity="0.08" stroke="#818CF8" stroke-width="1">
+    <circle cx="256" cy="256" r="180" fill="none" stroke-dasharray="4,8"/>
+    <circle cx="256" cy="256" r="120" fill="none" stroke-dasharray="3,6"/>
+  </g>
+
+  <!-- ==================== HEROIC GAUNTLET FIST ==================== -->
+  <g filter="url(#ai-drop)">
+    <!-- Gauntlet Wrist -->
+    <path d="M 186,350 L 256,336 L 326,350 L 310,420 L 202,420 Z" fill="url(#ai-wrist)"/>
+    <line x1="256" y1="336" x2="256" y2="420" stroke="#6366F1" stroke-width="2" opacity="0.8"/>
+    <polygon points="166,328 186,350 202,420 176,380" fill="#0B0F19"/>
+    <polygon points="346,328 326,350 310,420 336,380" fill="#1E1B4B"/>
+
+    <!-- Shield Plate -->
+    <polygon points="186,238 256,216 256,336 186,350" fill="url(#ai-shield-l)"/>
+    <polygon points="256,216 326,238 326,350 256,336" fill="url(#ai-shield-r)"/>
+    <line x1="256" y1="216" x2="256" y2="336" stroke="#818CF8" stroke-width="1.8" opacity="0.6"/>
+    <path d="M 256,236 L 256,336 M 236,268 L 256,280 L 276,268 M 230,296 L 256,310 L 282,296" 
+          fill="none" stroke="#00F2FE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+
+    <!-- Knuckles -->
+    <!-- Index -->
+    <path d="M 186,238 L 168,198 L 194,166 L 218,180 L 220,230 Z" fill="url(#ai-k1)"/>
+    <polygon points="168,198 194,166 218,180 196,206" fill="url(#ai-k-bevel)"/>
+    <polyline points="168,198 194,166 218,180" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+
+    <!-- Middle (Apex) -->
+    <path d="M 220,230 L 218,180 L 248,136 L 278,154 L 264,224 Z" fill="url(#ai-k2)"/>
+    <polygon points="218,180 248,136 278,154 252,192" fill="url(#ai-k-bevel)"/>
+    <polyline points="218,180 248,136 278,154" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round"/>
+
+    <!-- Ring -->
+    <path d="M 264,224 L 278,154 L 310,146 L 334,174 L 304,232 Z" fill="url(#ai-k3)"/>
+    <polygon points="278,154 310,146 334,174 306,196" fill="url(#ai-k-bevel)"/>
+    <polyline points="278,154 310,146 334,174" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+
+    <!-- Pinky -->
+    <path d="M 304,232 L 334,174 L 364,184 L 374,218 L 326,238 Z" fill="url(#ai-k4)"/>
+    <polygon points="334,174 364,184 374,218 348,212" fill="url(#ai-k-bevel)"/>
+    <polyline points="334,174 364,184 374,218" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+    <polygon points="374,218 382,254 346,328 326,350 326,238" fill="#1E1B4B" opacity="0.9"/>
+
+    <!-- Thumb Latch -->
+    <path d="M 148,318 L 166,248 L 186,238 L 186,350 L 166,328 Z" fill="#312E81"/>
+    <path d="M 142,284 L 158,210 L 182,192 L 174,244 L 154,302 Z" fill="url(#ai-thumb-latch)"/>
+    <polyline points="142,284 158,210 182,192" fill="none" stroke="url(#ai-thumb-rim)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Cryptographic Vault Gem -->
+    <g filter="url(#ai-glow)">
+      <polygon points="256,204 274,220 256,236 238,220" fill="url(#ai-core)" stroke="#FFFFFF" stroke-width="1.8"/>
+      <circle cx="256" cy="220" r="2.8" fill="#FFFFFF"/>
+      <line x1="256" y1="196" x2="256" y2="244" stroke="#FFFFFF" stroke-width="1.2" opacity="0.85"/>
+      <line x1="232" y1="220" x2="280" y2="220" stroke="#FFFFFF" stroke-width="1.2" opacity="0.85"/>
+    </g>
+
+    <!-- Knuckle Channels -->
+    <line x1="218" y1="180" x2="220" y2="230" stroke="#090D16" stroke-width="2.5"/>
+    <line x1="278" y1="154" x2="264" y2="224" stroke="#090D16" stroke-width="2.5"/>
+    <line x1="334" y1="174" x2="304" y2="232" stroke="#090D16" stroke-width="2.5"/>
+  </g>
+</svg>

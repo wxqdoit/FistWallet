@@ -31,7 +31,7 @@ export function createWallet(params?: ICreateWallet): IWalletFields {
         ...params
     };
     const mnemonic = generateMnemonic(args.length);
-    const {privateKey, publicKey} = getPrivateKeyByMnemonic(mnemonic, args.path, args.addressType as FilecoinAddressType);
+    const {privateKey, publicKey} = getPrivateKeyByMnemonic(mnemonic, args.path, args.addressType as FilecoinAddressType, args.passphrase);
     const address = getAddressByPrivateKey(privateKey, args.addressType as FilecoinAddressType);
     return {
         mnemonic,
@@ -142,13 +142,14 @@ function getBLSAddress(privateKey: string | Uint8Array): string {
  */
 export function getPrivateKeyByMnemonic(
     mnemonic: string,
-    hdPath: string,
-    addressType: FilecoinAddressType = 'secp256k1'
+    hdPath: string = FILCOIN_DERIVATION_PATH,
+    addressType: FilecoinAddressType = 'secp256k1',
+    passphrase?: string
 ): { privateKey: string; publicKey: string } {
     if (!validateMnemonic(mnemonic)) {
         throw new InvalidMnemonicError();
     }
-    const seed = mnemonicToSeedSync(mnemonic);
+    const seed = mnemonicToSeedSync(mnemonic, passphrase);
 
     if (addressType === 'secp256k1') {
         // Use BIP32 for secp256k1

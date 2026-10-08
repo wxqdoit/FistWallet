@@ -11,16 +11,11 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    Button,
-    Card,
-    CardContent,
-    Input,
-    Label,
-    Textarea,
 } from '@/ui';
-import { ArrowLeftIcon, CopyIcon, KeyIcon, WarningCircleIcon } from '@phosphor-icons/react';
+import { ArrowLeftIcon, CopyIcon, KeyIcon, TrashIcon, CheckIcon } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { t } from '@utils/i18n';
+import { motion } from 'framer-motion';
 
 export default function WalletManage() {
     const navigate = useNavigate();
@@ -35,6 +30,9 @@ export default function WalletManage() {
     const [confirmError, setConfirmError] = useState('');
     const [isConfirming, setIsConfirming] = useState(false);
     const [pendingAction, setPendingAction] = useState<'mnemonic' | 'privateKey' | 'delete' | null>(null);
+    const [copiedMnemonic, setCopiedMnemonic] = useState(false);
+    const [copiedKey, setCopiedKey] = useState(false);
+
     const handleErrorDialogChange = (open: boolean) => {
         if (!open) {
             setError('');
@@ -157,185 +155,215 @@ export default function WalletManage() {
     };
 
     const getConfirmTitle = () => {
-        if (pendingAction === 'delete') return t(language, 'confirmDeletion');
-        if (pendingAction === 'privateKey') return t(language, 'confirmExport');
-        return t(language, 'confirmExport');
+        if (pendingAction === 'delete') return t(language, 'confirmDeleteWalletTitle');
+        if (pendingAction === 'privateKey') return t(language, 'exportPrivateKeyAuthTitle');
+        return t(language, 'viewMnemonicAuthTitle');
     };
 
     const getConfirmDescription = () => {
         if (pendingAction === 'delete') {
-            return t(language, 'confirmDeleteDescription');
+            return t(language, 'deleteWalletWarningText');
         }
         if (pendingAction === 'privateKey') {
-            return t(language, 'confirmPrivateKeyDescription', { network: currentNetwork.name });
+            return t(language, 'verifyPasswordForPrivateKeyText', { network: currentNetwork.name });
         }
-        return t(language, 'confirmRecoveryDescription');
+        return t(language, 'verifyPasswordForMnemonicText');
     };
 
     const getConfirmActionLabel = () => {
-        if (pendingAction === 'delete') return t(language, 'delete');
-        return t(language, 'confirm');
+        if (pendingAction === 'delete') return t(language, 'confirmDeleteBtnText');
+        return t(language, 'verifyAndShowBtnText');
     };
 
     const isDeleteAction = pendingAction === 'delete';
 
-    const handleCopy = async (value: string, label: string) => {
-        const toastId = toast.loading(t(language, 'copyingItem', { label: label.toLowerCase() }));
+    const handleCopy = async (value: string, isKey: boolean) => {
         try {
             await navigator.clipboard.writeText(value);
-            toast.success(t(language, 'copiedItem', { label }), { id: toastId });
+            if (isKey) {
+                setCopiedKey(true);
+                setTimeout(() => setCopiedKey(false), 2000);
+            } else {
+                setCopiedMnemonic(true);
+                setTimeout(() => setCopiedMnemonic(false), 2000);
+            }
+            toast.success(t(language, 'addressCopiedToClipboard'));
         } catch (err) {
             console.error(err);
-            toast.error(t(language, 'copyFailed', { label: label.toLowerCase() }), { id: toastId });
+            toast.error(t(language, 'addressCopyFailed'));
         }
     };
 
     return (
-        <div className="h-full flex flex-col bg-background">
-            {/* Header */}
-            <div className="p-4  flex items-center gap-3">
-                <Button
-                    variant="ghost"
-                    size="sm"
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans"
+        >
+            {/* Unified Sticky Header */}
+            <div className="px-4 py-3.5 flex items-center justify-between border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
+                <button
+                    type="button"
                     onClick={() => navigate(-1)}
-                    className="px-2 text-muted-foreground hover:text-foreground"
-                    disabled={isLoading}
+                    className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 hover:border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors"
                 >
-                    <ArrowLeftIcon size={16} />
-                    {t(language, 'manage')}
-                </Button>
+                    <ArrowLeftIcon size={16} weight="bold" />
+                </button>
+                <h1 className="text-sm font-semibold tracking-tight text-white">{t(language, 'securityAndExportTitle')}</h1>
+                <div className="w-8" />
             </div>
 
-            <div className="flex-1 overflow-y-auto scrollbar-thin p-4 flex flex-col gap-4">
+            <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-3">
                 {canExportMnemonic && (
-                    <Card>
-                        <CardContent className="p-4 space-y-3">
-                            <Label className="text-sm font-medium">{t(language, 'exportMnemonic')}</Label>
-                            <p className="text-xs text-muted-foreground">
-                                {t(language, 'exportMnemonicHint')}
+                    <div className="p-4 rounded-2xl bg-[#14161E] border border-white/10 space-y-3">
+                        <div>
+                            <p className="text-sm font-semibold text-white">{t(language, 'backupMnemonicHeading')}</p>
+                            <p className="text-xs text-white/40 mt-0.5">
+                                {t(language, 'backupMnemonicDetail')}
                             </p>
-                            <Button
-                                variant="secondary"
-                            onClick={() => openConfirmDialog('mnemonic')}
-                                disabled={isLoading}
-                                className="w-full justify-center"
-                            >
-                                <KeyIcon size={16} />
-                                {t(language, 'revealRecoveryPhrase')}
-                            </Button>
-                            {mnemonic && (
-                                <div className="space-y-2">
-                                    <Textarea readOnly value={mnemonic} className="font-mono text-xs min-h-[90px]" />
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="w-full justify-center"
-                                    onClick={() => handleCopy(mnemonic, t(language, 'recoveryPhraseLabel'))}
-                                    >
-                                        <CopyIcon size={14} />
-                                        {t(language, 'copy')}
-                                    </Button>
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                )}
+                        </div>
 
-                <Card>
-                    <CardContent className="p-4 space-y-3">
-                        <Label className="text-sm font-medium">{t(language, 'exportPrivateKey')}</Label>
-                        <p className="text-xs text-muted-foreground">
-                            {t(language, 'exportPrivateKeyHint', { network: currentNetwork.name })}
-                        </p>
-                        <Button
-                            variant="secondary"
-                            onClick={() => openConfirmDialog('privateKey')}
+                        <button
+                            type="button"
+                            onClick={() => openConfirmDialog('mnemonic')}
                             disabled={isLoading}
-                            className="w-full justify-center"
+                            className="w-full h-11 rounded-full bg-[#1F2330] hover:bg-[#252A3A] border border-white/10 text-white font-medium text-xs flex items-center justify-center gap-2 active:opacity-85 transition-opacity cursor-pointer"
                         >
-                            <KeyIcon size={16} />
-                            {t(language, 'revealPrivateKey')}
-                        </Button>
-                        {privateKey && (
-                            <div className="space-y-2">
-                                <Textarea readOnly value={privateKey} className="font-mono text-xs min-h-[90px]" />
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="w-full justify-center"
-                                    onClick={() => handleCopy(privateKey, t(language, 'privateKeyLabel'))}
+                            <KeyIcon size={15} className="text-indigo-400" />
+                            <span>{t(language, 'viewMnemonicBtnText')}</span>
+                        </button>
+
+                        {mnemonic && (
+                            <div className="space-y-2 pt-1">
+                                <div className="p-3.5 rounded-xl bg-[#0A0D14] border border-white/10 font-mono text-xs text-white/90 leading-relaxed select-all">
+                                    {mnemonic}
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => handleCopy(mnemonic, false)}
+                                    className="w-full h-9 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                                 >
-                                    <CopyIcon size={14} />
-                                    {t(language, 'copy')}
-                                </Button>
+                                    {copiedMnemonic ? <CheckIcon size={14} className="text-emerald-400" /> : <CopyIcon size={14} />}
+                                    <span>{copiedMnemonic ? t(language, 'copiedItem', { label: t(language, 'recoveryPhrase') }) : `${t(language, 'copy')} ${t(language, 'recoveryPhrase')}`}</span>
+                                </button>
                             </div>
                         )}
-                    </CardContent>
-                </Card>
+                    </div>
+                )}
 
-                <div className="mt-auto">
-                    <Button
-                        variant="destructive"
+                <div className="p-4 rounded-2xl bg-[#14161E] border border-white/10 space-y-3">
+                    <div>
+                        <p className="text-sm font-semibold text-white">{t(language, 'exportPrivateKeyHeading')}</p>
+                        <p className="text-xs text-white/40 mt-0.5">
+                            {t(language, 'exportPrivateKeyDetail', { network: currentNetwork.name })}
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => openConfirmDialog('privateKey')}
+                        disabled={isLoading}
+                        className="w-full h-11 rounded-full bg-[#1F2330] hover:bg-[#252A3A] border border-white/10 text-white font-medium text-xs flex items-center justify-center gap-2 active:opacity-85 transition-opacity cursor-pointer"
+                    >
+                        <KeyIcon size={15} className="text-indigo-400" />
+                        <span>{t(language, 'viewPrivateKeyBtnText')}</span>
+                    </button>
+
+                    {privateKey && (
+                        <div className="space-y-2 pt-1">
+                            <div className="p-3.5 rounded-xl bg-[#0A0D14] border border-white/10 font-mono text-xs text-white/90 break-all leading-relaxed select-all">
+                                {privateKey}
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => handleCopy(privateKey, true)}
+                                className="w-full h-9 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                            >
+                                {copiedKey ? <CheckIcon size={14} className="text-emerald-400" /> : <CopyIcon size={14} />}
+                                <span>{copiedKey ? t(language, 'copiedItem', { label: t(language, 'privateKey') }) : `${t(language, 'copy')} ${t(language, 'privateKey')}`}</span>
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                <div className="pt-2">
+                    <button
+                        type="button"
                         onClick={handleDelete}
                         disabled={isLoading}
-                        className="w-full justify-center"
+                        className="w-full h-11 rounded-full bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 text-rose-400 font-semibold text-xs flex items-center justify-center gap-2 active:opacity-85 transition-opacity cursor-pointer"
                     >
-                        <WarningCircleIcon size={16} />
-                        {t(language, 'deleteWallet')}
-                    </Button>
+                        <TrashIcon size={15} />
+                        <span>{t(language, 'deleteCurrentWalletBtn')}</span>
+                    </button>
                 </div>
             </div>
 
+            {/* Password Verification Modal */}
             <AlertDialog open={isConfirmDialogOpen} onOpenChange={handleConfirmDialogChange}>
-                <AlertDialogContent>
+                <AlertDialogContent className="rounded-3xl border border-white/10 bg-[#14161E] text-white p-5 shadow-2xl">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>{getConfirmTitle()}</AlertDialogTitle>
-                        <AlertDialogDescription>{getConfirmDescription()}</AlertDialogDescription>
+                        <AlertDialogTitle className="text-base font-semibold text-white">
+                            {getConfirmTitle()}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-xs text-white/50 leading-relaxed mt-1">
+                            {getConfirmDescription()}
+                        </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <div className="space-y-2">
-                        <Label htmlFor="confirm-password" className="text-sm font-medium">
-                            {t(language, 'passwordLabel')}
-                        </Label>
-                        <Input
-                            id="confirm-password"
+                    <div className="space-y-2 mt-4">
+                        <input
                             type="password"
                             value={confirmPassword}
                             onChange={(event) => {
                                 setConfirmPassword(event.target.value);
-                                if (confirmError) {
-                                    setConfirmError('');
-                                }
+                                if (confirmError) setConfirmError('');
                             }}
-                            placeholder={t(language, 'enterYourPassword')}
+                            placeholder={t(language, 'enterUnlockPasswordToApprove')}
                             autoFocus
                             disabled={isConfirming}
+                            className="w-full h-11 px-4 rounded-xl bg-[#0A0D14] border border-white/10 text-white placeholder:text-neutral-500 text-xs focus:outline-none focus:border-indigo-500/50 transition-colors"
                         />
-                        {confirmError && <p className="text-xs text-destructive">{confirmError}</p>}
+                        {confirmError && <p className="text-xs text-rose-400">{confirmError}</p>}
                     </div>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel disabled={isConfirming}>{t(language, 'cancel')}</AlertDialogCancel>
+                    <AlertDialogFooter className="mt-4 gap-2">
+                        <AlertDialogCancel
+                            disabled={isConfirming}
+                            className="rounded-full h-11 border-white/10 bg-[#1F2330] hover:bg-[#252A3A] text-white text-xs font-semibold cursor-pointer"
+                        >
+                            {t(language, 'cancel')}
+                        </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleConfirmClick}
                             disabled={isConfirming}
-                            className={isDeleteAction ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : undefined}
+                            className={`rounded-full h-11 text-xs font-bold cursor-pointer ${
+                                isDeleteAction
+                                    ? 'bg-rose-600 hover:bg-rose-500 text-white'
+                                    : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                            }`}
                         >
-                            {isConfirming ? t(language, 'confirming') : getConfirmActionLabel()}
+                            {isConfirming ? t(language, 'unlocking') : getConfirmActionLabel()}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
 
+            {/* Error Dialog */}
             <AlertDialog open={Boolean(error)} onOpenChange={handleErrorDialogChange}>
-                <AlertDialogContent>
+                <AlertDialogContent className="rounded-3xl border border-white/10 bg-[#14161E] text-white p-5 shadow-2xl">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>{t(language, 'walletActionFailed')}</AlertDialogTitle>
-                        <AlertDialogDescription>{error}</AlertDialogDescription>
+                        <AlertDialogTitle className="text-base font-semibold text-white">{t(language, 'walletActionFailed')}</AlertDialogTitle>
+                        <AlertDialogDescription className="text-xs text-white/50 mt-1">{error}</AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogAction>{t(language, 'ok')}</AlertDialogAction>
+                    <AlertDialogFooter className="mt-4">
+                        <AlertDialogAction className="rounded-full h-11 text-xs font-bold bg-indigo-600 text-white w-full cursor-pointer">
+                            {t(language, 'ok')}
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </motion.div>
     );
 }
+

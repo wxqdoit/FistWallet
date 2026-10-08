@@ -6,6 +6,7 @@
 import { SuiClient } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+import { decodeSuiPrivateKey } from '@mysten/sui/cryptography';
 import { ChainProvider } from '../provider/base';
 import {
     ChainConfig,
@@ -41,8 +42,13 @@ export class SuiProvider extends ChainProvider {
      * Get keypair from private key
      */
     private getKeypair(privateKey: string): Ed25519Keypair {
-        const pk = privateKey.startsWith('0x') ? privateKey.slice(2) : privateKey;
-        const secretKey = Buffer.from(pk, 'hex');
+        const pk = privateKey.trim();
+        if (pk.startsWith('suiprivkey')) {
+            const parsed = decodeSuiPrivateKey(pk);
+            return Ed25519Keypair.fromSecretKey(parsed.secretKey);
+        }
+        const clean = pk.startsWith('0x') || pk.startsWith('0X') ? pk.slice(2) : pk;
+        const secretKey = Buffer.from(clean, 'hex');
         return Ed25519Keypair.fromSecretKey(secretKey);
     }
 

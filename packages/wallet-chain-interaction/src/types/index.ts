@@ -382,3 +382,41 @@ export interface SwapQuoteResult {
     route: string[];
     calldata?: string;
 }
+
+/**
+ * Account Abstraction (ERC-4337) Bundler Gas Estimation
+ */
+export interface UserOperationGasEstimate {
+    preVerificationGas: string;
+    verificationGasLimit: string;
+    callGasLimit: string;
+    validAfter?: number;
+    validUntil?: number;
+}
+
+/**
+ * ERC-4337 UserOperation Execution Receipt
+ */
+export interface UserOperationReceipt {
+    userOpHash: string;
+    entryPoint: string;
+    sender: string;
+    nonce: string;
+    paymaster?: string;
+    actualGasCost: string;
+    actualGasUsed: string;
+    success: boolean;
+    reason?: string;
+    logs: Array<{ address: string; topics: string[]; data: string }>;
+}
+
+/**
+ * Paymaster Sponsorship Result
+ */
+export interface PaymasterSponsorResult {
+    paymasterAndData: string;
+    preVerificationGas?: string;
+    verificationGasLimit?: string;
+    callGasLimit?: string;
+}
+

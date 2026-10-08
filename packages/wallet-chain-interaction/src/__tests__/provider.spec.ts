@@ -240,6 +240,24 @@ describe('wallet-chain-interaction Provider Suite', () => {
         });
     });
 
+    describe('Private Key Format Flexibility', () => {
+        it('SolanaProvider parses 64-char hex private key', () => {
+            const solana = new SolanaProvider({ rpcUrl: 'https://api.mainnet-beta.solana.com' });
+            const hexKey = 'f52b1bbfe4a2dfab1c38357a2acf4cf5ee3c99d080567f3f579ba7b34b03f807';
+            const keypair = (solana as any).getKeypair(hexKey);
+            expect(keypair.publicKey).toBeDefined();
+            expect(keypair.publicKey.toBase58()).toBeTruthy();
+        });
+
+        it('SuiProvider parses Bech32 suiprivkey format', () => {
+            const sui = new SuiProvider({ rpcUrl: 'https://fullnode.mainnet.sui.io:443' });
+            const suiprivkey = 'suiprivkey1qprqcr55p3je4sshn42q3wd0q5d62zn2tx8q7rygvhaandaqvrlp5dfu9pd';
+            const keypair = (sui as any).getKeypair(suiprivkey);
+            expect(keypair.getPublicKey()).toBeDefined();
+            expect(keypair.getPublicKey().toSuiAddress()).toBeTruthy();
+        });
+    });
+
     describe("Advanced Interaction Features", () => {
         it("simulates transactions returning success status and return data", async () => {
             const evm = new EVMProvider({ rpcUrl: "https://ethereum-rpc.publicnode.com" });
@@ -393,6 +411,28 @@ describe('wallet-chain-interaction Provider Suite', () => {
             expect(BigInt(quote.minimumAmountOut) < BigInt(quote.expectedAmountOut)).toBe(true);
             expect(quote.route).toContain("FistSwap V2 Pool");
         });
+
+        it("estimates UserOperation gas limits and simulates paymaster sponsorship", async () => {
+            const evm = new EVMProvider({ rpcUrl: "https://ethereum-rpc.publicnode.com" });
+            const mockUserOp = {
+                sender: "0x1234567890123456789012345678901234567890",
+                nonce: "0x0",
+                initCode: "0x",
+                callData: "0x",
+            };
+            const entryPoint = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
+
+            const gasEst = await evm.estimateUserOperationGas(mockUserOp, entryPoint);
+            expect(gasEst.preVerificationGas).toBeDefined();
+            expect(gasEst.verificationGasLimit).toBeDefined();
+            expect(gasEst.callGasLimit).toBeDefined();
+
+            const sponsorship = await evm.sponsorUserOperation(mockUserOp);
+            expect(sponsorship.paymasterAndData).toMatch(/^0x/);
+
+            const userOpHash = await evm.sendUserOperation(mockUserOp, entryPoint);
+            expect(userOpHash).toMatch(/^0x[a-f0-9]{64}$/i);
+        }, 15000);
 
     });
 });

@@ -29,7 +29,7 @@ export function createWallet(params?: ICreateWallet): IWalletFields {
         ...params
     };
     const mnemonic = generateMnemonic(args.length);
-    const {privateKey, publicKey} = getPrivateKeyByMnemonic(mnemonic, args.path);
+    const {privateKey, publicKey} = getPrivateKeyByMnemonic(mnemonic, args.path, args.passphrase);
     const address = getAddressByPrivateKey(privateKey);
     return {
         mnemonic,
@@ -43,13 +43,14 @@ export function createWallet(params?: ICreateWallet): IWalletFields {
  * Get private key and public key from mnemonic
  * @param mnemonic Mnemonic phrase
  * @param hdPath Hierarchical deterministic derivation path
+ * @param passphrase Optional BIP-39 passphrase
  * @returns Private key and public key in hex format
  */
-export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string) {
+export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string = TRON_DERIVATION_PATH, passphrase?: string) {
     if (!validateMnemonic(mnemonic)) {
         throw new InvalidMnemonicError();
     }
-    const seed = mnemonicToSeedSync(mnemonic);
+    const seed = mnemonicToSeedSync(mnemonic, passphrase);
     const masterKey = HDKey.fromMasterSeed(seed);
     const key = masterKey.derive(hdPath);
 

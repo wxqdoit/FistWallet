@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  :root.dark,
+  :root[data-theme='dark'] {
     --background: 224 45% 6%;      /* #070A12 Ultra deep dark */
     --foreground: 210 40% 98%;
     --card: 224 35% 10%;           /* #0E1322 Elevated surface */
@@ -30,6 +32,7 @@
     color-scheme: dark;
   }
 
+  :root.light,
   :root[data-theme='light'] {
     --background: 210 40% 98%;     /* Crisp Alabaster */
     --foreground: 224 30% 12%;
@@ -85,14 +88,6 @@
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     @apply bg-white/20;
-  }
-
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400;
-  }
-
-  .text-gradient-subtle {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-white/90 to-white/60;
   }
 
   .glass-card {

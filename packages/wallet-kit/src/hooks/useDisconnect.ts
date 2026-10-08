@@ -11,19 +11,23 @@ export const useDisconnect = ()=>{
         if(account){
             const activeProvider = connectedProvider
                 ?? providers?.find((provider) => provider.info.rdns === account.walletRdns)
-            return {
-                disConnect: async () => {
-                    if (activeProvider) {
-                        await activeProvider.disconnect({ chainType: account.chainType });
-                    }
-                    setConnectedProvider(null)
-                    setAccount(null)
-                    closeModal()
+            const action = async () => {
+                if (activeProvider) {
+                    await activeProvider.disconnect({ chainType: account.chainType });
                 }
+                setConnectedProvider(null)
+                setAccount(null)
+                closeModal()
             }
-        }else {
             return {
-                disConnect:()=>{}
+                disconnect: action,
+                disConnect: action
+            }
+        } else {
+            const noop = () => {}
+            return {
+                disconnect: noop,
+                disConnect: noop
             }
         }
     },[account, connectedProvider, providers, closeModal, setAccount, setConnectedProvider])

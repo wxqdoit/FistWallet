@@ -8,28 +8,30 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { Slot } from '@radix-ui/react-slot';
-import { CaretDownIcon, CaretRightIcon, CaretUpIcon, CheckIcon } from '@phosphor-icons/react';
+import { CaretDownIcon, CaretUpIcon, CheckIcon } from '@phosphor-icons/react';
 import { Toaster as SonnerToaster } from 'sonner';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils';
 
 const buttonVariants = cva(
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:pointer-events-none disabled:opacity-50 active:opacity-85 cursor-pointer',
     {
         variants: {
             variant: {
-                default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-                secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-                destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-                outline: 'border border-input bg-transparent hover:bg-accent hover:text-accent-foreground',
-                ghost: 'hover:bg-accent hover:text-accent-foreground',
-                link: 'text-primary underline-offset-4 hover:underline',
+                default: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20',
+                primary: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20',
+                secondary: 'bg-[#14161E] text-white hover:bg-[#1A1D26] border border-white/10 hover:border-white/20',
+                destructive: 'bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400 font-semibold',
+                outline: 'border border-white/10 bg-transparent hover:bg-white/[0.05] text-white',
+                ghost: 'w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/70 hover:text-white transition-colors',
+                link: 'text-indigo-400 underline-offset-4 hover:underline',
             },
             size: {
-                default: 'h-10 px-4 py-2',
-                sm: 'h-9 px-3 rounded-md',
-                lg: 'h-11 px-8 rounded-md',
-                icon: 'h-10 w-10',
+                default: 'h-11 px-4 py-2 text-sm font-semibold',
+                sm: 'h-8 px-3 rounded-lg text-xs font-semibold',
+                lg: 'h-12 px-6 rounded-2xl text-base font-bold',
+                pill: 'h-12 px-6 rounded-full font-bold text-[15px]',
+                icon: 'w-8 h-8 rounded-full p-0 flex items-center justify-center',
             },
         },
         defaultVariants: {
@@ -59,7 +61,7 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
         <input
             type={type}
             className={cn(
-                'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+                'flex h-12 w-full rounded-xl border border-white/10 bg-[#14161E] px-4 py-2 text-sm text-foreground placeholder:text-neutral-500 transition-all focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50',
                 className
             )}
             ref={ref}
@@ -73,7 +75,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttribu
     ({ className, ...props }, ref) => (
         <textarea
             className={cn(
-                'flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+                'flex min-h-[96px] w-full rounded-xl border border-white/10 bg-[#14161E] p-3.5 text-sm text-foreground placeholder:text-neutral-500 transition-all focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 resize-none',
                 className
             )}
             ref={ref}
@@ -104,17 +106,17 @@ const Switch = React.forwardRef<
             onCheckedChange?.(!checked);
         }}
         className={cn(
-            'relative inline-flex h-6 w-11 items-center rounded-full border border-transparent transition-colors',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            'relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            checked ? 'bg-primary' : 'bg-muted',
+            checked ? 'bg-indigo-600 border border-indigo-500' : 'bg-[#1F2330] border border-white/10',
             className
         )}
         {...props}
     >
         <span
             className={cn(
-                'inline-block h-5 w-5 transform rounded-full bg-background shadow-sm transition-transform',
+                'inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform',
                 checked ? 'translate-x-5' : 'translate-x-0.5'
             )}
         />
@@ -138,7 +140,7 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
     ({ className, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn('rounded-xl border border-border/60 bg-card text-card-foreground shadow-sm', className)}
+            className={cn('rounded-2xl border border-white/10 bg-[#14161E]/90 text-card-foreground shadow-sm', className)}
             {...props}
         />
     )
@@ -147,47 +149,49 @@ Card.displayName = 'Card';
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
+        <div ref={ref} className={cn('flex flex-col space-y-1.5 p-5', className)} {...props} />
     )
 );
 CardHeader.displayName = 'CardHeader';
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
     ({ className, ...props }, ref) => (
-        <h3 ref={ref} className={cn('text-lg font-semibold leading-none tracking-tight', className)} {...props} />
+        <h3 ref={ref} className={cn('text-base font-bold leading-tight tracking-tight text-white', className)} {...props} />
     )
 );
 CardTitle.displayName = 'CardTitle';
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
     ({ className, ...props }, ref) => (
-        <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+        <p ref={ref} className={cn('text-xs text-muted-foreground', className)} {...props} />
     )
 );
 CardDescription.displayName = 'CardDescription';
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+        <div ref={ref} className={cn('p-5 pt-0', className)} {...props} />
     )
 );
 CardContent.displayName = 'CardContent';
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn('flex items-center p-6 pt-0', className)} {...props} />
+        <div ref={ref} className={cn('flex items-center p-5 pt-0', className)} {...props} />
     )
 );
 CardFooter.displayName = 'CardFooter';
 
 const badgeVariants = cva(
-    'inline-flex items-center rounded-full border border-transparent px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+    'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none',
     {
         variants: {
             variant: {
-                default: 'bg-primary text-primary-foreground',
-                secondary: 'bg-secondary text-secondary-foreground',
-                outline: 'text-foreground border-border/60',
+                default: 'bg-primary/20 text-indigo-300 border-primary/30',
+                secondary: 'bg-white/[0.06] text-muted-foreground border-white/10',
+                outline: 'text-foreground border-white/10 bg-transparent',
+                success: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+                destructive: 'bg-destructive/15 text-destructive border-destructive/30',
             },
         },
         defaultVariants: {
@@ -215,7 +219,7 @@ const AlertDialogOverlay = React.forwardRef<
     <AlertDialogPrimitive.Overlay
         ref={ref}
         className={cn(
-            'fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+            'fixed inset-0 z-50 bg-black/75 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
             className
         )}
         {...props}
@@ -232,7 +236,7 @@ const AlertDialogContent = React.forwardRef<
         <AlertDialogPrimitive.Content
             ref={ref}
             className={cn(
-                'fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-2rem)] max-w-[335px] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border border-border/60 bg-background p-6 shadow-lg',
+                'fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-2rem)] max-w-[340px] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-2xl border border-white/10 bg-[#14161E] p-6 shadow-2xl backdrop-blur-xl',
                 className
             )}
             {...props}
@@ -247,7 +251,7 @@ const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDiv
 AlertDialogHeader.displayName = 'AlertDialogHeader';
 
 const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)} {...props} />
+    <div className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end mt-2', className)} {...props} />
 );
 AlertDialogFooter.displayName = 'AlertDialogFooter';
 
@@ -257,7 +261,7 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <AlertDialogPrimitive.Title
         ref={ref}
-        className={cn('text-lg font-semibold', className)}
+        className={cn('text-lg font-bold text-white', className)}
         {...props}
     />
 ));
@@ -269,7 +273,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <AlertDialogPrimitive.Description
         ref={ref}
-        className={cn('text-sm text-muted-foreground', className)}
+        className={cn('text-xs text-muted-foreground leading-relaxed', className)}
         {...props}
     />
 ));
@@ -281,7 +285,7 @@ const AlertDialogAction = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <AlertDialogPrimitive.Action
         ref={ref}
-        className={cn(buttonVariants({ variant: 'default' }), className)}
+        className={cn(buttonVariants({ variant: 'default', size: 'pill' }), 'w-full', className)}
         {...props}
     />
 ));
@@ -293,7 +297,7 @@ const AlertDialogCancel = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <AlertDialogPrimitive.Cancel
         ref={ref}
-        className={cn(buttonVariants({ variant: 'outline' }), className)}
+        className={cn(buttonVariants({ variant: 'secondary', size: 'pill' }), 'w-full', className)}
         {...props}
     />
 ));
@@ -343,7 +347,7 @@ const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <TabsPrimitive.List
         ref={ref}
-        className={cn('inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground', className)}
+        className={cn('inline-flex h-9 items-center justify-center rounded-xl bg-[#14161E] border border-white/10 p-1 text-white/50 gap-1', className)}
         {...props}
     />
 ));
@@ -356,7 +360,7 @@ const TabsTrigger = React.forwardRef<
     <TabsPrimitive.Trigger
         ref={ref}
         className={cn(
-            'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm disabled:pointer-events-none disabled:opacity-50',
+            'inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1 text-xs font-semibold ring-offset-background transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-white/60 hover:text-white cursor-pointer',
             className
         )}
         {...props}
@@ -387,14 +391,14 @@ const SelectTrigger = React.forwardRef<
     <SelectPrimitive.Trigger
         ref={ref}
         className={cn(
-            'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'flex h-8 items-center justify-between gap-1.5 rounded-lg border border-white/10 bg-[#1F2330] px-2.5 py-1 text-xs font-medium text-white hover:bg-[#252A3A] transition-colors focus-visible:outline-none focus-visible:border-indigo-500/50 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',
             className
         )}
         {...props}
     >
         {children}
         <SelectPrimitive.Icon asChild>
-            <CaretRightIcon className="h-4 w-4 opacity-60" />
+            <CaretDownIcon className="h-3.5 w-3.5 text-white/50" />
         </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
 ));
@@ -408,7 +412,7 @@ const SelectContent = React.forwardRef<
         <SelectPrimitive.Content
             ref={ref}
             className={cn(
-                'relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-border/60 bg-popover text-popover-foreground shadow-md animate-in fade-in-80',
+                'relative z-50 min-w-[7rem] overflow-hidden rounded-xl border border-white/10 bg-[#14161E] text-white shadow-2xl backdrop-blur-xl animate-in fade-in-80',
                 position === 'popper' && 'translate-y-1',
                 className
             )}
@@ -416,14 +420,14 @@ const SelectContent = React.forwardRef<
             align="end"
             {...props}
         >
-            <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1">
-                <CaretUpIcon className="h-4 w-4" />
+            <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1 text-white/50">
+                <CaretUpIcon className="h-3.5 w-3.5" />
             </SelectPrimitive.ScrollUpButton>
-            <SelectPrimitive.Viewport className="p-1">
+            <SelectPrimitive.Viewport className="p-1.5 space-y-0.5">
                 {children}
             </SelectPrimitive.Viewport>
-            <SelectPrimitive.ScrollDownButton className="flex items-center justify-center py-1">
-                <CaretDownIcon className="h-4 w-4" />
+            <SelectPrimitive.ScrollDownButton className="flex items-center justify-center py-1 text-white/50">
+                <CaretDownIcon className="h-3.5 w-3.5" />
             </SelectPrimitive.ScrollDownButton>
         </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
@@ -436,7 +440,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <SelectPrimitive.Label
         ref={ref}
-        className={cn('px-2 py-1.5 text-xs font-medium text-muted-foreground', className)}
+        className={cn('px-2.5 py-1 text-[11px] font-semibold text-white/40 uppercase tracking-wider', className)}
         {...props}
     />
 ));
@@ -449,15 +453,15 @@ const SelectItem = React.forwardRef<
     <SelectPrimitive.Item
         ref={ref}
         className={cn(
-            'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+            'relative flex w-full cursor-pointer select-none items-center rounded-lg py-2 pl-3 pr-8 text-xs font-medium text-white/80 outline-none hover:bg-white/[0.08] hover:text-white focus:bg-indigo-600 focus:text-white data-[state=checked]:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors',
             className
         )}
         {...props}
     >
         <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-        <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+        <span className="absolute right-2.5 flex h-3.5 w-3.5 items-center justify-center">
             <SelectPrimitive.ItemIndicator>
-                <CheckIcon className="h-4 w-4" />
+                <CheckIcon className="h-3.5 w-3.5 text-indigo-400 group-focus:text-white" weight="bold" />
             </SelectPrimitive.ItemIndicator>
         </span>
     </SelectPrimitive.Item>
@@ -470,7 +474,7 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <SelectPrimitive.Separator
         ref={ref}
-        className={cn('-mx-1 my-1 h-px bg-muted', className)}
+        className={cn('-mx-1 my-1 h-px bg-white/10', className)}
         {...props}
     />
 ));
@@ -550,7 +554,7 @@ const GlassCard = React.forwardRef<
     <div
         ref={ref}
         className={cn(
-            'glass-card rounded-2xl p-4 transition-all duration-200',
+            'rounded-2xl border border-white/10 bg-[#14161E]/80 backdrop-blur-xl p-4 transition-all duration-200 shadow-md',
             className
         )}
         {...props}
@@ -561,12 +565,12 @@ GlassCard.displayName = 'GlassCard';
 const MotionButton = React.forwardRef<
     HTMLButtonElement,
     HTMLMotionProps<'button'> & VariantProps<typeof buttonVariants>
->(({ className, variant, size, whileHover = { scale: 1.02 }, whileTap = { scale: 0.96 }, ...props }, ref) => (
+>(({ className, variant, size, whileHover = { opacity: 0.92 }, whileTap = { opacity: 0.8 }, ...props }, ref) => (
     <motion.button
         ref={ref}
         whileHover={whileHover}
         whileTap={whileTap}
-        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        transition={{ duration: 0.15 }}
         className={cn(buttonVariants({ variant, size, className }))}
         {...props}
     />

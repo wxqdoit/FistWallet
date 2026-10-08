@@ -1,0 +1,359 @@
+<svg width="1240" height="660" viewBox="0 0 1240 660" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="375" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0E121A"/>
+      <stop offset="100%" stop-color="#090B0E"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="335" y2="140" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#19202E"/>
+      <stop offset="100%" stop-color="#111620"/>
+    </linearGradient>
+    <linearGradient id="primaryBtn" x1="0" y1="0" x2="335" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00E599"/>
+      <stop offset="100%" stop-color="#00B377"/>
+    </linearGradient>
+    <linearGradient id="ethGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#627EEA"/>
+      <stop offset="100%" stop-color="#4158B0"/>
+    </linearGradient>
+    <linearGradient id="usdtGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#26A17B"/>
+      <stop offset="100%" stop-color="#1A7056"/>
+    </linearGradient>
+    <linearGradient id="solGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9945FF"/>
+      <stop offset="100%" stop-color="#14F195"/>
+    </linearGradient>
+    <linearGradient id="btcGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F7931A"/>
+      <stop offset="100%" stop-color="#D67500"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-10" y="-10" width="355" height="160" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- ========================================== -->
+  <!-- SCREEN 1: WALLET HOME / ASSETS DASHBOARD   -->
+  <!-- ========================================== -->
+  <g id="Screen-1-Home-Dashboard" transform="translate(10, 10)">
+    <!-- Base Frame -->
+    <rect width="375" height="640" rx="24" fill="url(#bgGrad)"/>
+    <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+    <!-- Header Navigation -->
+    <g id="Header-Nav">
+      <!-- Network Selector Badge -->
+      <rect x="20" y="24" width="118" height="32" rx="16" fill="#181F2C" stroke="#2D3748" stroke-width="1"/>
+      <circle cx="34" cy="40" r="5" fill="#00E599"/>
+      <text x="45" y="44" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Ethereum</text>
+      <path d="M118 38 L123 43 L128 38" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+
+      <!-- Account Badge -->
+      <rect x="146" y="24" width="138" height="32" rx="16" fill="#181F2C" stroke="#2D3748" stroke-width="1"/>
+      <circle cx="160" cy="40" r="6" fill="#627EEA"/>
+      <text x="172" y="44" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="500">0x877...ff1a</text>
+      <!-- Copy Icon -->
+      <path d="M264 36 H272 V44 H264 Z" stroke="#8B949E" stroke-width="1.2" fill="none"/>
+      <path d="M261 39 H269 V47 H261 Z" stroke="#8B949E" stroke-width="1.2" fill="none"/>
+
+      <!-- Settings Icon -->
+      <circle cx="335" cy="40" r="16" fill="#181F2C" stroke="#2D3748" stroke-width="1"/>
+      <circle cx="335" cy="40" r="3" stroke="#8B949E" stroke-width="1.5" fill="none"/>
+      <circle cx="335" cy="33" r="1" fill="#8B949E"/>
+      <circle cx="335" cy="47" r="1" fill="#8B949E"/>
+      <circle cx="328" cy="40" r="1" fill="#8B949E"/>
+      <circle cx="342" cy="40" r="1" fill="#8B949E"/>
+    </g>
+
+    <!-- Main Balance Card -->
+    <g id="Balance-Card" transform="translate(20, 72)">
+      <rect width="335" height="136" rx="20" fill="url(#cardGrad)" stroke="#263143" stroke-width="1"/>
+      <text x="24" y="32" fill="#8B949E" font-family="Inter, sans-serif" font-size="13" font-weight="500">Total Net Worth</text>
+      <!-- Eye Icon for Hide Balance -->
+      <path d="M125 28 C130 24 136 24 141 28 C136 32 130 32 125 28 Z" stroke="#8B949E" stroke-width="1.2" fill="none"/>
+      <circle cx="133" cy="28" r="1.5" fill="#8B949E"/>
+
+      <text x="24" y="74" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.5">$28,495.80</text>
+      <!-- Change Pill -->
+      <rect x="24" y="90" width="158" height="26" rx="13" fill="#00E599" fill-opacity="0.12"/>
+      <path d="M34 103 L38 99 L42 103" stroke="#00E599" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="48" y="107" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">+$1,248.50 (+4.58%)</text>
+    </g>
+
+    <!-- Action Buttons -->
+    <g id="Action-Buttons" transform="translate(20, 224)">
+      <!-- Send -->
+      <g transform="translate(10, 0)">
+        <circle cx="28" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+        <path d="M28 32 V16 M28 16 L22 22 M28 16 L34 22" stroke="#00E599" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="28" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12" font-weight="500">Send</text>
+      </g>
+      <!-- Receive -->
+      <g transform="translate(95, 0)">
+        <circle cx="28" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+        <path d="M28 16 V32 M28 32 L22 26 M28 32 L34 26" stroke="#00E599" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="28" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12" font-weight="500">Receive</text>
+      </g>
+      <!-- Swap -->
+      <g transform="translate(180, 0)">
+        <circle cx="28" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+        <path d="M22 21 H34 M34 21 L30 17 M34 27 H22 M22 27 L26 31" stroke="#00E599" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="28" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12" font-weight="500">Swap</text>
+      </g>
+      <!-- History -->
+      <g transform="translate(265, 0)">
+        <circle cx="28" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+        <path d="M28 17 V25 L33 28 M38 25 A11 11 0 1 1 27 14" stroke="#00E599" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <text x="28" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12" font-weight="500">History</text>
+      </g>
+    </g>
+
+    <!-- Tabs Header -->
+    <g id="Asset-Tabs" transform="translate(20, 304)">
+      <text x="10" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Tokens (4)</text>
+      <rect x="10" y="28" width="70" height="3" rx="1.5" fill="#00E599"/>
+
+      <text x="120" y="20" fill="#8B949E" font-family="Inter, sans-serif" font-size="15" font-weight="500">NFTs (2)</text>
+      <text x="210" y="20" fill="#8B949E" font-family="Inter, sans-serif" font-size="15" font-weight="500">Activity</text>
+      <path d="M0 31 H335" stroke="#1F2633" stroke-width="1"/>
+    </g>
+
+    <!-- Token Asset List -->
+    <g id="Token-List" transform="translate(20, 345)">
+      <!-- Item 1: ETH -->
+      <g id="Item-ETH">
+        <rect width="335" height="58" rx="14" fill="#131924" stroke="#1F2837" stroke-width="1"/>
+        <!-- Token Icon -->
+        <circle cx="32" cy="29" r="18" fill="url(#ethGrad)"/>
+        <path d="M32 18 L38 28 L32 32 L26 28 Z M32 33 L38 29 L32 40 L26 29 Z" fill="#FFFFFF"/>
+        <!-- Names -->
+        <text x="60" y="26" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Ethereum</text>
+        <text x="60" y="42" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">4.25 ETH</text>
+        <!-- Values -->
+        <text x="315" y="26" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">$14,663.35</text>
+        <text x="315" y="42" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="500">+3.24%</text>
+      </g>
+
+      <!-- Item 2: USDT -->
+      <g id="Item-USDT" transform="translate(0, 66)">
+        <rect width="335" height="58" rx="14" fill="#131924" stroke="#1F2837" stroke-width="1"/>
+        <!-- Token Icon -->
+        <circle cx="32" cy="29" r="18" fill="url(#usdtGrad)"/>
+        <text x="32" y="34" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="bold">₮</text>
+        <!-- Names -->
+        <text x="60" y="26" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Tether USD</text>
+        <text x="60" y="42" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">8,500.00 USDT</text>
+        <!-- Values -->
+        <text x="315" y="26" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">$8,500.00</text>
+        <text x="315" y="42" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">1.00 USD</text>
+      </g>
+
+      <!-- Item 3: SOL -->
+      <g id="Item-SOL" transform="translate(0, 132)">
+        <rect width="335" height="58" rx="14" fill="#131924" stroke="#1F2837" stroke-width="1"/>
+        <!-- Token Icon -->
+        <circle cx="32" cy="29" r="18" fill="url(#solGrad)"/>
+        <path d="M26 24 H37 L39 22 H24 Z M24 29 H35 L37 27 H26 Z M26 34 H37 L39 32 H24 Z" fill="#FFFFFF"/>
+        <!-- Names -->
+        <text x="60" y="26" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Solana</text>
+        <text x="60" y="42" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">28.5 SOL</text>
+        <!-- Values -->
+        <text x="315" y="26" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">$4,235.10</text>
+        <text x="315" y="42" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="500">+6.81%</text>
+      </g>
+    </g>
+
+    <!-- Bottom Dock Navigation Bar -->
+    <g id="Bottom-Nav" transform="translate(0, 576)">
+      <rect width="375" height="64" fill="#0D1118" stroke="#1F2633" stroke-width="1"/>
+      <!-- Nav 1: Wallet (Active) -->
+      <g transform="translate(45, 14)">
+        <circle cx="12" cy="14" r="18" fill="#00E599" fill-opacity="0.12"/>
+        <path d="M6 10 H18 V18 H6 Z" stroke="#00E599" stroke-width="1.8" fill="none"/>
+        <circle cx="15" cy="14" r="1.5" fill="#00E599"/>
+        <text x="12" y="32" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="10" font-weight="600">Wallet</text>
+      </g>
+      <!-- Nav 2: Swap -->
+      <g transform="translate(135, 14)">
+        <path d="M6 12 H18 M18 12 L14 8 M18 16 H6 M6 16 L10 20" stroke="#8B949E" stroke-width="1.8" stroke-linecap="round"/>
+        <text x="12" y="32" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="10">Swap</text>
+      </g>
+      <!-- Nav 3: Browser / DApps -->
+      <g transform="translate(225, 14)">
+        <circle cx="12" cy="14" r="8" stroke="#8B949E" stroke-width="1.8" fill="none"/>
+        <path d="M6 14 C6 18 18 18 18 14 C18 10 6 10 6 14 Z" stroke="#8B949E" stroke-width="1.2" fill="none"/>
+        <text x="12" y="32" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="10">DApps</text>
+      </g>
+      <!-- Nav 4: Settings -->
+      <g transform="translate(315, 14)">
+        <circle cx="12" cy="14" r="7" stroke="#8B949E" stroke-width="1.8" fill="none"/>
+        <text x="12" y="32" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="10">Settings</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- SCREEN 2: SWAP / TOKEN EXCHANGE            -->
+  <!-- ========================================== -->
+  <g id="Screen-2-Swap-Exchange" transform="translate(430, 10)">
+    <!-- Base Frame -->
+    <rect width="375" height="640" rx="24" fill="url(#bgGrad)"/>
+    <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+    <!-- Header Navigation -->
+    <g id="Swap-Header" transform="translate(20, 24)">
+      <!-- Back Arrow -->
+      <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="17" font-weight="700">Swap</text>
+      <!-- Slippage Settings Button -->
+      <rect x="285" y="-4" width="50" height="28" rx="14" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+      <text x="310" y="14" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">0.5%</text>
+    </g>
+
+    <!-- Pay Section Card -->
+    <g id="Pay-Card" transform="translate(20, 72)">
+      <rect width="335" height="120" rx="18" fill="#141A25" stroke="#222C3C" stroke-width="1.5"/>
+      <text x="20" y="30" fill="#8B949E" font-family="Inter, sans-serif" font-size="12" font-weight="500">You Pay</text>
+      <text x="315" y="30" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Balance: 4.25 <tspan fill="#00E599" font-weight="600">Max</tspan></text>
+
+      <text x="20" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">1.5</text>
+      <text x="20" y="98" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">~$5,175.30</text>
+
+      <!-- Token Selector Pill -->
+      <rect x="215" y="52" width="105" height="40" rx="20" fill="#1E2636" stroke="#2E3A50" stroke-width="1"/>
+      <circle cx="235" cy="72" r="12" fill="url(#ethGrad)"/>
+      <path d="M235 65 L239 71 L235 74 L231 71 Z M235 75 L239 72 L235 79 L231 72 Z" fill="#FFFFFF"/>
+      <text x="254" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">ETH</text>
+      <path d="M294 70 L298 74 L302 70" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Center Floating Swap Button -->
+    <g id="Swap-Switch-Button" transform="translate(167, 182)">
+      <circle cx="20" cy="20" r="20" fill="#1F2838" stroke="#00E599" stroke-width="2"/>
+      <path d="M16 15 V25 M16 25 L12 21 M24 25 V15 M24 15 L28 19" stroke="#00E599" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Receive Section Card -->
+    <g id="Receive-Card" transform="translate(20, 212)">
+      <rect width="335" height="120" rx="18" fill="#141A25" stroke="#222C3C" stroke-width="1.5"/>
+      <text x="20" y="30" fill="#8B949E" font-family="Inter, sans-serif" font-size="12" font-weight="500">You Receive (Estimated)</text>
+      <text x="315" y="30" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Balance: 8,500.00</text>
+
+      <text x="20" y="76" fill="#00E599" font-family="Inter, sans-serif" font-size="32" font-weight="700">5,168.42</text>
+      <text x="20" y="98" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">~$5,168.42</text>
+
+      <!-- Token Selector Pill -->
+      <rect x="205" y="52" width="115" height="40" rx="20" fill="#1E2636" stroke="#2E3A50" stroke-width="1"/>
+      <circle cx="225" cy="72" r="12" fill="url(#usdtGrad)"/>
+      <text x="225" y="76" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="bold">₮</text>
+      <text x="244" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">USDT</text>
+      <path d="M298 70 L302 74 L306 70" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Swap Route & Details Card -->
+    <g id="Route-Details" transform="translate(20, 348)">
+      <rect width="335" height="154" rx="16" fill="#111620" stroke="#1D2433" stroke-width="1"/>
+
+      <text x="16" y="28" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Rate</text>
+      <text x="319" y="28" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="500">1 ETH = 3,445.61 USDT</text>
+
+      <text x="16" y="60" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Routing Protocol</text>
+      <text x="319" y="60" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="600">FistAggregator (Best)</text>
+
+      <text x="16" y="92" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Price Impact</text>
+      <text x="319" y="92" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="500">&lt; 0.01%</text>
+
+      <text x="16" y="124" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Estimated Gas</text>
+      <text x="319" y="124" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="500">~$3.42 (Standard)</text>
+
+      <path d="M16 40 H319 M16 72 H319 M16 104 H319" stroke="#1A212E" stroke-width="1"/>
+    </g>
+
+    <!-- Primary Action Button -->
+    <g id="Review-Swap-Button" transform="translate(20, 524)">
+      <rect width="335" height="52" rx="26" fill="url(#primaryBtn)"/>
+      <text x="167" y="32" text-anchor="middle" fill="#090B0E" font-family="Inter, sans-serif" font-size="16" font-weight="700">Review Swap</text>
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- SCREEN 3: DAPP APPROVAL NOTIFICATION POPUP -->
+  <!-- ========================================== -->
+  <g id="Screen-3-DApp-Approval" transform="translate(850, 10)">
+    <!-- Base Frame -->
+    <rect width="375" height="640" rx="24" fill="url(#bgGrad)"/>
+    <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+    <!-- DApp Identity Header -->
+    <g id="DApp-Header" transform="translate(20, 24)">
+      <rect width="335" height="88" rx="18" fill="#151C28" stroke="#242E40" stroke-width="1"/>
+      <!-- Uniswap Logo Placeholder -->
+      <circle cx="36" cy="44" r="22" fill="#FF007A" fill-opacity="0.15"/>
+      <path d="M30 38 C32 32 40 32 42 38 C43 45 30 52 36 54" stroke="#FF007A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <text x="70" y="38" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Uniswap Interface</text>
+      <!-- Security Verified Badge -->
+      <path d="M70 54 H186 V70 H70 Z" rx="8" fill="#00E599" fill-opacity="0.12"/>
+      <circle cx="80" cy="62" r="3" fill="#00E599"/>
+      <text x="88" y="66" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="600">https://app.uniswap.org</text>
+    </g>
+
+    <!-- Request Title & Banner -->
+    <g id="Request-Title" transform="translate(20, 126)">
+      <text x="0" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="700">Confirm Transaction</text>
+      <text x="0" y="38" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Sign and broadcast smart contract execution</text>
+    </g>
+
+    <!-- Simulation Check Badge (Feature from FistWallet checklist) -->
+    <g id="Simulation-Banner" transform="translate(20, 180)">
+      <rect width="335" height="44" rx="12" fill="#00E599" fill-opacity="0.1" stroke="#00E599" stroke-opacity="0.3" stroke-width="1"/>
+      <circle cx="24" cy="22" r="8" fill="#00E599"/>
+      <path d="M21 22 L23 24 L27 20" stroke="#090B0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="40" y="26" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="600">Simulation Success (Dry Run Passed)</text>
+    </g>
+
+    <!-- Transaction Details Card -->
+    <g id="Tx-Details-Card" transform="translate(20, 238)">
+      <rect width="335" height="206" rx="16" fill="#121822" stroke="#1E2736" stroke-width="1"/>
+
+      <text x="16" y="28" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Action</text>
+      <text x="319" y="28" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">exactInputSingle (Swap)</text>
+
+      <text x="16" y="62" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Interact Contract</text>
+      <text x="319" y="62" text-anchor="end" fill="#627EEA" font-family="Inter, sans-serif" font-size="13" font-weight="500">UniversalRouter (0x68b3...6942)</text>
+
+      <text x="16" y="96" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Spend Amount</text>
+      <text x="319" y="96" text-anchor="end" fill="#FF5252" font-family="Inter, sans-serif" font-size="13" font-weight="700">-1.50 ETH ($5,175.30)</text>
+
+      <text x="16" y="130" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Receive Amount</text>
+      <text x="319" y="130" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="700">+5,168.42 USDT</text>
+
+      <text x="16" y="164" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Max Network Fee (Gas)</text>
+      <text x="319" y="164" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="500">0.0018 ETH (~$6.21)</text>
+
+      <path d="M16 42 H319 M16 76 H319 M16 110 H319 M16 144 H319" stroke="#18202E" stroke-width="1"/>
+    </g>
+
+    <!-- Security Check Pill -->
+    <g id="Security-Pill" transform="translate(20, 460)">
+      <rect width="335" height="38" rx="10" fill="#161E2C" stroke="#253245" stroke-width="1"/>
+      <circle cx="24" cy="19" r="6" fill="#00E599" fill-opacity="0.2"/>
+      <circle cx="24" cy="19" r="2.5" fill="#00E599"/>
+      <text x="40" y="23" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">FistShield: <tspan fill="#C9D1D9" font-weight="600">Verified Router · High Liquidity</tspan></text>
+    </g>
+
+    <!-- Dual Actions (Reject / Confirm) -->
+    <g id="Approval-Buttons" transform="translate(20, 524)">
+      <!-- Reject Button -->
+      <rect width="158" height="52" rx="26" fill="#1C2433" stroke="#2E3B50" stroke-width="1"/>
+      <text x="79" y="32" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="15" font-weight="600">Reject</text>
+
+      <!-- Confirm Button -->
+      <g transform="translate(177, 0)">
+        <rect width="158" height="52" rx="26" fill="url(#primaryBtn)"/>
+        <text x="79" y="32" text-anchor="middle" fill="#090B0E" font-family="Inter, sans-serif" font-size="15" font-weight="700">Confirm &amp; Sign</text>
+      </g>
+    </g>
+  </g>
+</svg>

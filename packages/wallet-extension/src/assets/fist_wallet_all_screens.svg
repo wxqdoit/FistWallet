@@ -1,0 +1,900 @@
+<svg width="1760" height="2360" viewBox="0 0 1760 2360" fill="none" xmlns="http://www.w3.org/2000/svg"><defs>
+  <linearGradient id="bgDark" x1="0" y1="0" x2="375" y2="640" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#0B0E17"/>
+    <stop offset="100%" stop-color="#05070C"/>
+  </linearGradient>
+  <linearGradient id="indigoBtn" x1="0" y1="0" x2="335" y2="48" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#6366F1"/>
+    <stop offset="100%" stop-color="#4F46E5"/>
+  </linearGradient>
+  <linearGradient id="greenBtn" x1="0" y1="0" x2="335" y2="48" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#00E599"/>
+    <stop offset="100%" stop-color="#00B377"/>
+  </linearGradient>
+  <linearGradient id="cardGrad" x1="0" y1="0" x2="335" y2="140" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#161C28"/>
+    <stop offset="100%" stop-color="#10141E"/>
+  </linearGradient>
+  <linearGradient id="logoGrad" x1="0" y1="0" x2="84" y2="84" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#818CF8"/>
+    <stop offset="100%" stop-color="#4F46E5"/>
+  </linearGradient>
+  <linearGradient id="ethGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#627EEA"/>
+    <stop offset="100%" stop-color="#3D52A0"/>
+  </linearGradient>
+  <linearGradient id="usdtGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#26A17B"/>
+    <stop offset="100%" stop-color="#166B50"/>
+  </linearGradient>
+  <linearGradient id="solGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#9945FF"/>
+    <stop offset="100%" stop-color="#14F195"/>
+  </linearGradient>
+  <linearGradient id="btcGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#F7931A"/>
+    <stop offset="100%" stop-color="#D67500"/>
+  </linearGradient>
+</defs>
+<g id="Master-Board-Header" transform="translate(40, 40)">
+  <text x="0" y="32" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.5">FistWallet Extension — Complete Design System</text>
+  <text x="0" y="56" fill="#8B949E" font-family="Inter, sans-serif" font-size="14" font-weight="500">12 Production-Ready Screens: Onboarding, Core Portfolio, Transfers, Trading, Management &amp; DApp Approvals</text>
+</g>
+
+<g id="Row-1-Section-Title" transform="translate(40, 120)">
+  <rect x="0" y="-14" width="8" height="24" rx="4" fill="#6366F1"/>
+  <text x="18" y="4" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="700">01 / Onboarding &amp; Authentication Flow</text>
+</g>
+
+<g id="Screen-01-Welcome" transform="translate(40, 140)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Logo -->
+  <g transform="translate(145, 120)">
+    <rect width="84" height="84" rx="24" fill="url(#logoGrad)"/>
+    <!-- Pixel Fist Symbol -->
+    <path d="M26 28 H46 V38 H58 V56 H26 Z" fill="#FFFFFF"/>
+    <rect x="32" y="34" width="8" height="8" rx="2" fill="#4F46E5"/>
+    <rect x="44" y="42" width="8" height="8" rx="2" fill="#4F46E5"/>
+  </g>
+
+  <!-- Headline -->
+  <text x="187" y="248" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="24" font-weight="800">Hold Your Digital Future</text>
+  <text x="187" y="274" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="13" font-weight="500">Multi-Chain Web3 Wallet for EVM, Solana &amp; BTC</text>
+
+  <!-- Feature Highlights -->
+  <g transform="translate(30, 320)">
+    <rect width="315" height="136" rx="18" fill="#121622" stroke="#1F2837" stroke-width="1"/>
+    
+    <circle cx="28" cy="30" r="10" fill="#00E599" fill-opacity="0.15"/>
+    <path d="M25 30 L27 32 L31 28" stroke="#00E599" stroke-width="2" stroke-linecap="round"/>
+    <text x="48" y="34" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="600">Enterprise Hardware Grade Security</text>
+
+    <circle cx="28" cy="68" r="10" fill="#6366F1" fill-opacity="0.15"/>
+    <path d="M25 68 L27 70 L31 66" stroke="#818CF8" stroke-width="2" stroke-linecap="round"/>
+    <text x="48" y="72" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="600">Instant Cross-Chain Aggregated Swaps</text>
+
+    <circle cx="28" cy="106" r="10" fill="#F7931A" fill-opacity="0.15"/>
+    <path d="M25 106 L27 108 L31 104" stroke="#F7931A" stroke-width="2" stroke-linecap="round"/>
+    <text x="48" y="110" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="600">Built-in Transaction Simulation (Dry-Run)</text>
+  </g>
+
+  <!-- CTA Buttons -->
+  <g transform="translate(20, 500)">
+    <rect width="335" height="48" rx="24" fill="url(#indigoBtn)"/>
+    <text x="167" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Create Brand New Wallet</text>
+
+    <rect y="60" width="335" height="48" rx="24" fill="#151A26" stroke="#2D3748" stroke-width="1"/>
+    <text x="167" y="89" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="15" font-weight="600">I Already Have a Wallet</text>
+  </g>
+</g>
+
+<g id="Screen-02-Backup-Mnemonic" transform="translate(463, 140)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Nav Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Backup Secret Phrase</text>
+  </g>
+
+  <!-- Warning Banner -->
+  <g transform="translate(20, 68)">
+    <rect width="335" height="64" rx="14" fill="#FF8800" fill-opacity="0.1" stroke="#FF8800" stroke-opacity="0.3" stroke-width="1"/>
+    <circle cx="28" cy="32" r="10" fill="#FF8800"/>
+    <text x="28" y="36" text-anchor="middle" fill="#000" font-family="Inter, sans-serif" font-size="12" font-weight="bold">!</text>
+    <text x="48" y="28" fill="#FF8800" font-family="Inter, sans-serif" font-size="12" font-weight="700">Never Share Your Phrase</text>
+    <text x="48" y="46" fill="#D1D5DB" font-family="Inter, sans-serif" font-size="11">Anyone with this phrase can steal all your funds.</text>
+  </g>
+
+  <!-- 12-Word Mnemonic Grid -->
+  <g transform="translate(20, 146)">
+    <rect width="335" height="236" rx="18" fill="#131722" stroke="#222C3C" stroke-width="1"/>
+
+    <rect x="14" y="16" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="63" y="40" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">1. galaxy</text>
+    
+    <rect x="118" y="16" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="167" y="40" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">2. harvest</text>
+    
+    <rect x="222" y="16" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="271" y="40" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">3. venture</text>
+    
+    <rect x="14" y="66" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="63" y="90" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">4. crystal</text>
+    
+    <rect x="118" y="66" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="167" y="90" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">5. matrix</text>
+    
+    <rect x="222" y="66" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="271" y="90" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">6. helmet</text>
+    
+    <rect x="14" y="116" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="63" y="140" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">7. puzzle</text>
+    
+    <rect x="118" y="116" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="167" y="140" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">8. velvet</text>
+    
+    <rect x="222" y="116" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="271" y="140" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">9. dynamic</text>
+    
+    <rect x="14" y="166" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="63" y="190" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">10. rocket</text>
+    
+    <rect x="118" y="166" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="167" y="190" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">11. whisper</text>
+    
+    <rect x="222" y="166" width="98" height="38" rx="10" fill="#1A202E" stroke="#2E384C" stroke-width="1"/>
+    <text x="271" y="190" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">12. trophy</text>
+    
+  </g>
+
+  <!-- Copy All Button -->
+  <g transform="translate(130, 396)">
+    <rect width="115" height="32" rx="16" fill="#1B2230" stroke="#2D384D" stroke-width="1"/>
+    <text x="57" y="20" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Copy Phrase</text>
+  </g>
+
+  <!-- Security Checklist -->
+  <g transform="translate(28, 442)">
+    <circle cx="10" cy="14" r="6" fill="#00E599"/>
+    <text x="24" y="18" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Written down on physical paper or metal plate</text>
+    <circle cx="10" cy="40" r="6" fill="#00E599"/>
+    <text x="24" y="44" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Stored in a secure, private safe location</text>
+  </g>
+
+  <!-- Next Step Button -->
+  <g transform="translate(20, 560)">
+    <rect width="335" height="48" rx="24" fill="url(#indigoBtn)"/>
+    <text x="167" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">I Have Saved It Securely</text>
+  </g>
+</g>
+
+<g id="Screen-03-Verify-Mnemonic" transform="translate(886, 140)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Nav Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Confirm Secret Phrase</text>
+  </g>
+
+  <text x="24" y="80" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Select words in correct order</text>
+  <text x="24" y="100" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Tap words in sequence to verify backup</text>
+
+  <!-- Verification Target Box -->
+  <g transform="translate(20, 120)">
+    <rect width="335" height="160" rx="16" fill="#121622" stroke="#252F40" stroke-width="1.5"/>
+    <!-- Selected Chips -->
+    <rect x="12" y="14" width="76" height="32" rx="16" fill="#4F46E5"/>
+    <text x="50" y="34" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">1. galaxy</text>
+    <rect x="94" y="14" width="78" height="32" rx="16" fill="#4F46E5"/>
+    <text x="133" y="34" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">2. harvest</text>
+    <rect x="178" y="14" width="80" height="32" rx="16" fill="#4F46E5"/>
+    <text x="218" y="34" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">3. venture</text>
+    
+    <text x="167" y="100" text-anchor="middle" fill="#4B5563" font-family="Inter, sans-serif" font-size="13">4. Tap next word...</text>
+  </g>
+
+  <!-- Shuffled Word Chips Selection -->
+  <g transform="translate(20, 304)">
+    <text x="4" y="14" fill="#8B949E" font-family="Inter, sans-serif" font-size="12" font-weight="600">AVAILABLE WORDS</text>
+
+    <rect x="0" y="30" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="52" y="54" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">helmet</text>
+    
+    <rect x="115" y="30" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="167" y="54" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">crystal</text>
+    
+    <rect x="230" y="30" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="282" y="54" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">trophy</text>
+    
+    <rect x="0" y="78" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="52" y="102" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">puzzle</text>
+    
+    <rect x="115" y="78" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="167" y="102" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">rocket</text>
+    
+    <rect x="230" y="78" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="282" y="102" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">matrix</text>
+    
+    <rect x="0" y="126" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="52" y="150" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">whisper</text>
+    
+    <rect x="115" y="126" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="167" y="150" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">dynamic</text>
+    
+    <rect x="230" y="126" width="105" height="38" rx="12" fill="#19202E" stroke="#2D384D" stroke-width="1"/>
+    <text x="282" y="150" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="13" font-weight="500">velvet</text>
+    
+  </g>
+
+  <!-- Finish Button -->
+  <g transform="translate(20, 560)">
+    <rect width="335" height="48" rx="24" fill="url(#greenBtn)"/>
+    <text x="167" y="29" text-anchor="middle" fill="#090B0E" font-family="Inter, sans-serif" font-size="15" font-weight="700">Confirm &amp; Enter Wallet</text>
+  </g>
+</g>
+
+<g id="Screen-04-Unlock" transform="translate(1309, 140)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Logo & Title -->
+  <g transform="translate(152, 110)">
+    <rect width="72" height="72" rx="20" fill="url(#logoGrad)"/>
+    <path d="M22 24 H38 V32 H48 V48 H22 Z" fill="#FFFFFF"/>
+  </g>
+
+  <text x="187" y="224" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="22" font-weight="800">Welcome Back</text>
+  <text x="187" y="248" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">FistWallet is currently locked</text>
+
+  <!-- Password Input -->
+  <g transform="translate(24, 290)">
+    <text x="2" y="16" fill="#8B949E" font-family="Inter, sans-serif" font-size="13" font-weight="500">Enter Password</text>
+    <rect y="28" width="327" height="50" rx="14" fill="#141824" stroke="#2D384D" stroke-width="1.5"/>
+    <!-- Password Dots -->
+    <circle cx="28" cy="53" r="4" fill="#FFFFFF"/>
+    <circle cx="44" cy="53" r="4" fill="#FFFFFF"/>
+    <circle cx="60" cy="53" r="4" fill="#FFFFFF"/>
+    <circle cx="76" cy="53" r="4" fill="#FFFFFF"/>
+    <circle cx="92" cy="53" r="4" fill="#FFFFFF"/>
+    <circle cx="108" cy="53" r="4" fill="#FFFFFF"/>
+    <!-- Eye Icon -->
+    <path d="M298 53 C302 49 308 49 312 53 C308 57 302 57 298 53 Z" stroke="#8B949E" stroke-width="1.5" fill="none"/>
+    <circle cx="305" cy="53" r="1.5" fill="#8B949E"/>
+  </g>
+
+  <!-- Unlock Button -->
+  <g transform="translate(24, 400)">
+    <rect width="327" height="48" rx="24" fill="url(#indigoBtn)"/>
+    <text x="163" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Unlock Wallet</text>
+  </g>
+
+  <!-- Forgot Password Hint -->
+  <text x="187" y="480" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="13" font-weight="600">Forgot Password? Restore via Phrase</text>
+</g>
+
+<g id="Row-2-Section-Title" transform="translate(40, 850)">
+  <rect x="0" y="-14" width="8" height="24" rx="4" fill="#00E599"/>
+  <text x="18" y="4" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="700">02 / Core Assets, Send, Receive &amp; Activity</text>
+</g>
+
+<g id="Screen-05-Dashboard" transform="translate(40, 880)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Header Nav -->
+  <g transform="translate(20, 24)">
+    <rect width="115" height="32" rx="16" fill="#181F2C" stroke="#2D3748" stroke-width="1"/>
+    <circle cx="16" cy="16" r="5" fill="#00E599"/>
+    <text x="27" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Ethereum</text>
+
+    <rect x="135" width="145" height="32" rx="16" fill="#181F2C" stroke="#2D3748" stroke-width="1"/>
+    <circle cx="150" cy="16" r="5" fill="#627EEA"/>
+    <text x="162" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="500">0x877...ff1a</text>
+
+    <circle cx="318" cy="16" r="16" fill="#181F2C" stroke="#2D3748" stroke-width="1"/>
+    <circle cx="318" cy="16" r="3" stroke="#8B949E" stroke-width="1.5" fill="none"/>
+  </g>
+
+  <!-- Total Net Worth Card -->
+  <g transform="translate(20, 72)">
+    <rect width="335" height="136" rx="20" fill="url(#cardGrad)" stroke="#263143" stroke-width="1"/>
+    <text x="24" y="32" fill="#8B949E" font-family="Inter, sans-serif" font-size="13" font-weight="500">Total Net Worth</text>
+    <text x="24" y="74" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="34" font-weight="700">$28,495.80</text>
+    <rect x="24" y="90" width="158" height="26" rx="13" fill="#00E599" fill-opacity="0.12"/>
+    <text x="103" y="107" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">+$1,248.50 (+4.58%)</text>
+  </g>
+
+  <!-- Quick Action 4-Col -->
+  <g transform="translate(20, 224)">
+    <circle cx="38" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+    <path d="M38 32 V16 M38 16 L32 22 M38 16 L44 22" stroke="#00E599" stroke-width="2" stroke-linecap="round"/>
+    <text x="38" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12">Send</text>
+
+    <circle cx="123" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+    <path d="M123 16 V32 M123 32 L117 26 M123 32 L129 26" stroke="#00E599" stroke-width="2" stroke-linecap="round"/>
+    <text x="123" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12">Receive</text>
+
+    <circle cx="208" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+    <path d="M202 21 H214 M214 21 L210 17 M214 27 H202 M202 27 L206 31" stroke="#00E599" stroke-width="2" stroke-linecap="round"/>
+    <text x="208" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12">Swap</text>
+
+    <circle cx="293" cy="24" r="24" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+    <path d="M293 17 V25 L298 28" stroke="#00E599" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="293" cy="24" r="10" stroke="#00E599" stroke-width="1.5" fill="none"/>
+    <text x="293" y="62" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="12">History</text>
+  </g>
+
+  <!-- Tokens List Header -->
+  <g transform="translate(20, 304)">
+    <text x="10" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Tokens (4)</text>
+    <rect x="10" y="28" width="70" height="3" rx="1.5" fill="#00E599"/>
+    <text x="120" y="20" fill="#8B949E" font-family="Inter, sans-serif" font-size="15" font-weight="500">NFTs (2)</text>
+    <text x="210" y="20" fill="#8B949E" font-family="Inter, sans-serif" font-size="15" font-weight="500">Activity</text>
+  </g>
+
+  <!-- Token Rows -->
+  <g transform="translate(20, 345)">
+    <!-- ETH -->
+    <rect width="335" height="54" rx="14" fill="#131924" stroke="#1F2837" stroke-width="1"/>
+    <circle cx="28" cy="27" r="16" fill="url(#ethGrad)"/>
+    <text x="56" y="25" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Ethereum</text>
+    <text x="56" y="41" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">4.25 ETH</text>
+    <text x="315" y="25" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">$14,663.35</text>
+    <text x="315" y="41" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12">+3.24%</text>
+
+    <!-- USDT -->
+    <g transform="translate(0, 62)">
+      <rect width="335" height="54" rx="14" fill="#131924" stroke="#1F2837" stroke-width="1"/>
+      <circle cx="28" cy="27" r="16" fill="url(#usdtGrad)"/>
+      <text x="56" y="25" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Tether USD</text>
+      <text x="56" y="41" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">8,500.00 USDT</text>
+      <text x="315" y="25" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">$8,500.00</text>
+      <text x="315" y="41" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">1.00 USD</text>
+    </g>
+
+    <!-- SOL -->
+    <g transform="translate(0, 124)">
+      <rect width="335" height="54" rx="14" fill="#131924" stroke="#1F2837" stroke-width="1"/>
+      <circle cx="28" cy="27" r="16" fill="url(#solGrad)"/>
+      <text x="56" y="25" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Solana</text>
+      <text x="56" y="41" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">28.5 SOL</text>
+      <text x="315" y="25" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">$4,235.10</text>
+      <text x="315" y="41" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12">+6.81%</text>
+    </g>
+  </g>
+
+  <!-- Bottom Nav -->
+  <g transform="translate(0, 576)">
+    <rect width="375" height="64" fill="#0D1118" stroke="#1F2633" stroke-width="1"/>
+    <text x="60" y="38" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">Wallet</text>
+    <text x="145" y="38" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="11">Swap</text>
+    <text x="230" y="38" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="11">DApps</text>
+    <text x="315" y="38" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="11">Settings</text>
+  </g>
+</g>
+
+<g id="Screen-06-Send" transform="translate(463, 880)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Nav Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Send Assets</text>
+  </g>
+
+  <!-- Recipient Address Input -->
+  <g transform="translate(20, 70)">
+    <text x="2" y="16" fill="#8B949E" font-family="Inter, sans-serif" font-size="12" font-weight="600">RECIPIENT ADDRESS</text>
+    <rect y="26" width="335" height="52" rx="14" fill="#131722" stroke="#263144" stroke-width="1.5"/>
+    <text x="16" y="58" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="500">0x3f5CE5FBFe3E9af3971d...7055</text>
+    <!-- Address Book & Paste Icons -->
+    <rect x="250" y="38" width="32" height="28" rx="8" fill="#1C2333"/>
+    <text x="266" y="56" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="11" font-weight="bold">PASTE</text>
+    <circle cx="305" cy="52" r="14" fill="#1C2333"/>
+  </g>
+
+  <!-- Security Check Verified Tag -->
+  <g transform="translate(22, 160)">
+    <rect width="331" height="32" rx="8" fill="#00E599" fill-opacity="0.1"/>
+    <circle cx="16" cy="16" r="4" fill="#00E599"/>
+    <text x="28" y="20" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="600">Security Check Passed: Valid Ethereum Address</text>
+  </g>
+
+  <!-- Asset & Amount Card -->
+  <g transform="translate(20, 204)">
+    <rect width="335" height="136" rx="18" fill="#131722" stroke="#263144" stroke-width="1.5"/>
+    
+    <!-- Token Pill -->
+    <rect x="16" y="18" width="118" height="36" rx="18" fill="#1D2434" stroke="#2E3C54" stroke-width="1"/>
+    <circle cx="34" cy="36" r="11" fill="url(#ethGrad)"/>
+    <text x="52" y="40" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">ETH</text>
+    <path d="M96 34 L100 38 L104 34" stroke="#8B949E" stroke-width="1.5"/>
+
+    <text x="319" y="40" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Avail: 4.25 ETH</text>
+
+    <!-- Amount Input -->
+    <text x="16" y="94" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="34" font-weight="700">0.85</text>
+    <text x="16" y="118" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">~$2,932.67 USD</text>
+    <!-- Max Button -->
+    <rect x="270" y="80" width="48" height="28" rx="14" fill="#6366F1" fill-opacity="0.15"/>
+    <text x="294" y="98" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="700">MAX</text>
+  </g>
+
+  <!-- Gas Fee Selector -->
+  <g transform="translate(20, 356)">
+    <text x="2" y="16" fill="#8B949E" font-family="Inter, sans-serif" font-size="12" font-weight="600">NETWORK SPEED (EIP-1559)</text>
+    <g transform="translate(0, 26)">
+      <!-- Slow -->
+      <rect width="105" height="52" rx="12" fill="#131722" stroke="#222C3C" stroke-width="1"/>
+      <text x="52" y="24" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Slow</text>
+      <text x="52" y="42" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">$1.80</text>
+      <!-- Standard (Active) -->
+      <g transform="translate(115, 0)">
+        <rect width="105" height="52" rx="12" fill="#182333" stroke="#00E599" stroke-width="1.5"/>
+        <text x="52" y="24" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">Standard</text>
+        <text x="52" y="42" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">$2.45</text>
+      </g>
+      <!-- Fast -->
+      <g transform="translate(230, 0)">
+        <rect width="105" height="52" rx="12" fill="#131722" stroke="#222C3C" stroke-width="1"/>
+        <text x="52" y="24" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Fast</text>
+        <text x="52" y="42" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">$3.10</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Send CTA Button -->
+  <g transform="translate(20, 560)">
+    <rect width="335" height="48" rx="24" fill="url(#greenBtn)"/>
+    <text x="167" y="29" text-anchor="middle" fill="#090B0E" font-family="Inter, sans-serif" font-size="15" font-weight="700">Next: Confirm Transfer</text>
+  </g>
+</g>
+
+<g id="Screen-07-Receive" transform="translate(886, 880)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Nav Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Receive Assets</text>
+  </g>
+
+  <!-- Network Indicator -->
+  <g transform="translate(122, 68)">
+    <rect width="130" height="32" rx="16" fill="#181F2C" stroke="#2D3748" stroke-width="1"/>
+    <circle cx="16" cy="16" r="5" fill="#00E599"/>
+    <text x="28" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Ethereum Mainnet</text>
+  </g>
+
+  <!-- QR Code Container Card -->
+  <g transform="translate(42, 120)">
+    <rect width="290" height="290" rx="24" fill="#FFFFFF"/>
+    <!-- QR Code Graphic Mock -->
+    <rect x="25" y="25" width="240" height="240" rx="12" fill="#F8FAFC"/>
+    <!-- Position Markers -->
+    <rect x="40" y="40" width="60" height="60" rx="8" fill="#090B0E"/>
+    <rect x="48" y="48" width="44" height="44" rx="4" fill="#FFFFFF"/>
+    <rect x="56" y="56" width="28" height="28" rx="2" fill="#090B0E"/>
+
+    <rect x="190" y="40" width="60" height="60" rx="8" fill="#090B0E"/>
+    <rect x="198" y="48" width="44" height="44" rx="4" fill="#FFFFFF"/>
+    <rect x="206" y="56" width="28" height="28" rx="2" fill="#090B0E"/>
+
+    <rect x="40" y="190" width="60" height="60" rx="8" fill="#090B0E"/>
+    <rect x="48" y="198" width="44" height="44" rx="4" fill="#FFFFFF"/>
+    <rect x="56" y="206" width="28" height="28" rx="2" fill="#090B0E"/>
+
+    <!-- Matrix Pixels -->
+    <rect x="120" y="45" width="16" height="16" fill="#090B0E"/>
+    <rect x="150" y="60" width="18" height="18" fill="#090B0E"/>
+    <rect x="120" y="120" width="50" height="50" rx="10" fill="url(#logoGrad)"/>
+    <text x="145" y="152" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="20" font-weight="bold">F</text>
+  </g>
+
+  <!-- Address Box & Copy -->
+  <g transform="translate(20, 430)">
+    <rect width="335" height="56" rx="16" fill="#141824" stroke="#253245" stroke-width="1.5"/>
+    <text x="16" y="26" fill="#8B949E" font-family="Inter, sans-serif" font-size="11" font-weight="600">YOUR ETHEREUM ADDRESS</text>
+    <text x="16" y="44" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">0x877Fee6851B0a04E99c28B524E55...</text>
+    <!-- Copy Pill -->
+    <rect x="265" y="14" width="56" height="28" rx="14" fill="#00E599" fill-opacity="0.15"/>
+    <text x="293" y="32" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">COPY</text>
+  </g>
+
+  <!-- Network Loss Warning -->
+  <g transform="translate(20, 500)">
+    <rect width="335" height="48" rx="12" fill="#161B26" stroke="#232C3E" stroke-width="1"/>
+    <circle cx="24" cy="24" r="8" fill="#FF8800" fill-opacity="0.2"/>
+    <text x="24" y="28" text-anchor="middle" fill="#FF8800" font-family="Inter, sans-serif" font-size="11" font-weight="bold">!</text>
+    <text x="40" y="24" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="11">Only send ETH &amp; ERC-20 tokens to this address.</text>
+    <text x="40" y="38" fill="#8B949E" font-family="Inter, sans-serif" font-size="10">Sending non-EVM tokens may result in permanent loss.</text>
+  </g>
+
+  <!-- Share Button -->
+  <g transform="translate(20, 566)">
+    <rect width="335" height="46" rx="23" fill="#1A2232" stroke="#2D3A50" stroke-width="1"/>
+    <text x="167" y="28" text-anchor="middle" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="14" font-weight="600">Share QR / Address</text>
+  </g>
+</g>
+
+<g id="Screen-08-Activity" transform="translate(1309, 880)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Nav Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Activity History</text>
+    <circle cx="320" cy="8" r="14" fill="#18202C"/>
+    <!-- Refresh Icon -->
+    <path d="M317 4 A4 4 0 1 1 323 11 M324 11 L324 7" stroke="#8B949E" stroke-width="1.2" fill="none"/>
+  </g>
+
+  <!-- Filter Pills -->
+  <g transform="translate(20, 68)">
+    <rect width="52" height="28" rx="14" fill="#00E599"/>
+    <text x="26" y="18" text-anchor="middle" fill="#000" font-family="Inter, sans-serif" font-size="12" font-weight="700">All</text>
+
+    <rect x="60" width="60" height="28" rx="14" fill="#161C28" stroke="#242F42" stroke-width="1"/>
+    <text x="90" y="18" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Sends</text>
+
+    <rect x="128" width="72" height="28" rx="14" fill="#161C28" stroke="#242F42" stroke-width="1"/>
+    <text x="164" y="18" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Receives</text>
+
+    <rect x="208" width="60" height="28" rx="14" fill="#161C28" stroke="#242F42" stroke-width="1"/>
+    <text x="238" y="18" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Swaps</text>
+  </g>
+
+  <!-- Activity List -->
+  <g transform="translate(20, 114)">
+    <text x="0" y="14" fill="#8B949E" font-family="Inter, sans-serif" font-size="11" font-weight="600">OCTOBER 2026</text>
+
+    <!-- Item 1: Swap Confirmed -->
+    <g transform="translate(0, 26)">
+      <rect width="335" height="68" rx="16" fill="#131824" stroke="#202A3B" stroke-width="1"/>
+      <circle cx="34" cy="34" r="18" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M28 32 H40 M40 32 L36 28 M36 36 H28 M28 36 L32 40" stroke="#00E599" stroke-width="2" stroke-linecap="round"/>
+      <text x="64" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Swap ETH to USDT</text>
+      <text x="64" y="46" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Oct 5, 22:30 · Confirmed</text>
+      <text x="315" y="28" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="14" font-weight="700">+5,168 USDT</text>
+      <text x="315" y="46" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">-1.50 ETH</text>
+    </g>
+
+    <!-- Item 2: Send Confirmed -->
+    <g transform="translate(0, 102)">
+      <rect width="335" height="68" rx="16" fill="#131824" stroke="#202A3B" stroke-width="1"/>
+      <circle cx="34" cy="34" r="18" fill="#FF5252" fill-opacity="0.15"/>
+      <path d="M34 42 V26 M34 26 L28 32 M34 26 L40 32" stroke="#FF5252" stroke-width="2" stroke-linecap="round"/>
+      <text x="64" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Send Ethereum</text>
+      <text x="64" y="46" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">To: 0x3f5c...7055</text>
+      <text x="315" y="28" text-anchor="end" fill="#FF5252" font-family="Inter, sans-serif" font-size="14" font-weight="700">-0.85 ETH</text>
+      <text x="315" y="46" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">-$2,932.67</text>
+    </g>
+
+    <!-- Item 3: Receive Confirmed -->
+    <g transform="translate(0, 178)">
+      <rect width="335" height="68" rx="16" fill="#131824" stroke="#202A3B" stroke-width="1"/>
+      <circle cx="34" cy="34" r="18" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M34 26 V42 M34 42 L28 36 M34 42 L40 36" stroke="#00E599" stroke-width="2" stroke-linecap="round"/>
+      <text x="64" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Receive Solana</text>
+      <text x="64" y="46" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">From: 7k9m...9x2L</text>
+      <text x="315" y="28" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="14" font-weight="700">+28.50 SOL</text>
+      <text x="315" y="46" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">+$4,235.10</text>
+    </g>
+
+    <!-- Item 4: DApp Interaction Pending -->
+    <g transform="translate(0, 254)">
+      <rect width="335" height="68" rx="16" fill="#131824" stroke="#202A3B" stroke-width="1"/>
+      <circle cx="34" cy="34" r="18" fill="#FFB800" fill-opacity="0.15"/>
+      <circle cx="34" cy="34" r="7" stroke="#FFB800" stroke-width="1.8" fill="none"/>
+      <path d="M34 30 V34 L37 36" stroke="#FFB800" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="64" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="600">Uniswap Router Contract</text>
+      <text x="64" y="46" fill="#FFB800" font-family="Inter, sans-serif" font-size="12">Pending (12/24 blocks)</text>
+      <text x="315" y="28" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="14" font-weight="600">exactInput</text>
+      <text x="315" y="46" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Gas: $4.10</text>
+    </g>
+  </g>
+
+  <!-- Bottom Nav -->
+  <g transform="translate(0, 576)">
+    <rect width="375" height="64" fill="#0D1118" stroke="#1F2633" stroke-width="1"/>
+    <text x="60" y="38" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="11">Wallet</text>
+    <text x="145" y="38" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="11">Swap</text>
+    <text x="230" y="38" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="11">DApps</text>
+    <text x="315" y="38" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">History</text>
+  </g>
+</g>
+
+<g id="Row-3-Section-Title" transform="translate(40, 1590)">
+  <rect x="0" y="-14" width="8" height="24" rx="4" fill="#F7931A"/>
+  <text x="18" y="4" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="700">03 / Swap, Account &amp; Chain Management, Settings &amp; DApp Approval</text>
+</g>
+
+<g id="Screen-09-Swap" transform="translate(40, 1620)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="17" font-weight="700">Swap</text>
+    <rect x="285" y="-4" width="50" height="28" rx="14" fill="#18202C" stroke="#2D3748" stroke-width="1"/>
+    <text x="310" y="14" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">0.5%</text>
+  </g>
+
+  <!-- Pay Card -->
+  <g transform="translate(20, 72)">
+    <rect width="335" height="120" rx="18" fill="#141A25" stroke="#222C3C" stroke-width="1.5"/>
+    <text x="20" y="30" fill="#8B949E" font-family="Inter, sans-serif" font-size="12" font-weight="500">You Pay</text>
+    <text x="315" y="30" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Balance: 4.25 <tspan fill="#00E599" font-weight="600">Max</tspan></text>
+    <text x="20" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="700">1.5</text>
+    <text x="20" y="98" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">~$5,175.30</text>
+    <!-- ETH selector -->
+    <rect x="215" y="52" width="105" height="40" rx="20" fill="#1E2636" stroke="#2E3A50" stroke-width="1"/>
+    <circle cx="235" cy="72" r="12" fill="url(#ethGrad)"/>
+    <text x="254" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">ETH</text>
+    <path d="M294 70 L298 74 L302 70" stroke="#8B949E" stroke-width="1.5"/>
+  </g>
+
+  <!-- Swap Switch -->
+  <g transform="translate(167, 182)">
+    <circle cx="20" cy="20" r="20" fill="#1F2838" stroke="#00E599" stroke-width="2"/>
+    <path d="M16 15 V25 M16 25 L12 21 M24 25 V15 M24 15 L28 19" stroke="#00E599" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Receive Card -->
+  <g transform="translate(20, 212)">
+    <rect width="335" height="120" rx="18" fill="#141A25" stroke="#222C3C" stroke-width="1.5"/>
+    <text x="20" y="30" fill="#8B949E" font-family="Inter, sans-serif" font-size="12" font-weight="500">You Receive (Estimated)</text>
+    <text x="315" y="30" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Balance: 8,500.00</text>
+    <text x="20" y="76" fill="#00E599" font-family="Inter, sans-serif" font-size="32" font-weight="700">5,168.42</text>
+    <text x="20" y="98" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">~$5,168.42</text>
+    <rect x="205" y="52" width="115" height="40" rx="20" fill="#1E2636" stroke="#2E3A50" stroke-width="1"/>
+    <circle cx="225" cy="72" r="12" fill="url(#usdtGrad)"/>
+    <text x="225" y="76" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="bold">₮</text>
+    <text x="244" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">USDT</text>
+    <path d="M298 70 L302 74 L306 70" stroke="#8B949E" stroke-width="1.5"/>
+  </g>
+
+  <!-- Route Details -->
+  <g transform="translate(20, 348)">
+    <rect width="335" height="154" rx="16" fill="#111620" stroke="#1D2433" stroke-width="1"/>
+    <text x="16" y="28" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Rate</text>
+    <text x="319" y="28" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="500">1 ETH = 3,445.61 USDT</text>
+    <text x="16" y="60" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Routing Protocol</text>
+    <text x="319" y="60" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="600">FistAggregator (Best)</text>
+    <text x="16" y="92" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Price Impact</text>
+    <text x="319" y="92" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="13">&lt; 0.01%</text>
+    <text x="16" y="124" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">Estimated Gas</text>
+    <text x="319" y="124" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13">~$3.42 (Standard)</text>
+  </g>
+
+  <!-- CTA -->
+  <g transform="translate(20, 524)">
+    <rect width="335" height="52" rx="26" fill="url(#greenBtn)"/>
+    <text x="167" y="32" text-anchor="middle" fill="#090B0E" font-family="Inter, sans-serif" font-size="16" font-weight="700">Review Swap</text>
+  </g>
+</g>
+
+<g id="Screen-10-Wallets-Chains" transform="translate(463, 1620)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Nav Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Select Account &amp; Network</text>
+  </g>
+
+  <!-- Network Quick Tabs -->
+  <g transform="translate(20, 68)">
+    <rect width="80" height="32" rx="16" fill="#6366F1"/>
+    <text x="40" y="20" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">EVM</text>
+
+    <rect x="88" width="80" height="32" rx="16" fill="#151A26" stroke="#252F42" stroke-width="1"/>
+    <text x="128" y="20" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Solana</text>
+
+    <rect x="176" width="80" height="32" rx="16" fill="#151A26" stroke="#252F42" stroke-width="1"/>
+    <text x="216" y="20" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Bitcoin</text>
+
+    <rect x="264" width="70" height="32" rx="16" fill="#151A26" stroke="#252F42" stroke-width="1"/>
+    <text x="299" y="20" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">All</text>
+  </g>
+
+  <!-- Accounts List -->
+  <g transform="translate(20, 118)">
+    <text x="2" y="14" fill="#8B949E" font-family="Inter, sans-serif" font-size="11" font-weight="600">MY WALLET ACCOUNTS (HD DERIVED)</text>
+
+    <!-- Account 1 (Active) -->
+    <g transform="translate(0, 26)">
+      <rect width="335" height="74" rx="16" fill="#161E2E" stroke="#6366F1" stroke-width="1.5"/>
+      <circle cx="34" cy="37" r="18" fill="url(#logoGrad)"/>
+      <text x="34" y="42" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="bold">1</text>
+      <text x="64" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Account 1 (Primary)</text>
+      <text x="64" y="48" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">0x877Fee...955bfff1a</text>
+      <text x="315" y="30" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">$28,495.80</text>
+      <circle cx="308" cy="46" r="7" fill="#00E599"/>
+      <path d="M305 46 L307 48 L311 44" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Account 2 -->
+    <g transform="translate(0, 110)">
+      <rect width="335" height="74" rx="16" fill="#131722" stroke="#202A3B" stroke-width="1"/>
+      <circle cx="34" cy="37" r="18" fill="#20293A"/>
+      <text x="34" y="42" text-anchor="middle" fill="#8B949E" font-family="Inter, sans-serif" font-size="14" font-weight="bold">2</text>
+      <text x="64" y="30" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="14" font-weight="600">Trading / DApp Vault</text>
+      <text x="64" y="48" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">0x12a9B...8842c901</text>
+      <text x="315" y="30" text-anchor="end" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="14" font-weight="600">$4,120.50</text>
+    </g>
+
+    <!-- Account 3 (Hardware / Cold) -->
+    <g transform="translate(0, 194)">
+      <rect width="335" height="74" rx="16" fill="#131722" stroke="#202A3B" stroke-width="1"/>
+      <circle cx="34" cy="37" r="18" fill="#20293A"/>
+      <text x="34" y="42" text-anchor="middle" fill="#F7931A" font-family="Inter, sans-serif" font-size="12" font-weight="bold">HW</text>
+      <text x="64" y="30" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="14" font-weight="600">Ledger Nano S Plus</text>
+      <text x="64" y="48" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">0x442C...91aB02</text>
+      <text x="315" y="30" text-anchor="end" fill="#E6EDF3" font-family="Inter, sans-serif" font-size="14" font-weight="600">$105,240.00</text>
+    </g>
+  </g>
+
+  <!-- Add Wallet Actions -->
+  <g transform="translate(20, 480)">
+    <rect width="335" height="48" rx="16" fill="#18202E" stroke="#2D3A50" stroke-width="1"/>
+    <circle cx="28" cy="24" r="12" fill="#6366F1" fill-opacity="0.2"/>
+    <text x="28" y="28" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="16" font-weight="bold">+</text>
+    <text x="50" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Create Next HD Account</text>
+
+    <g transform="translate(0, 56)">
+      <rect width="335" height="48" rx="16" fill="#18202E" stroke="#2D3A50" stroke-width="1"/>
+      <circle cx="28" cy="24" r="12" fill="#00E599" fill-opacity="0.2"/>
+      <path d="M28 17 V31 M21 24 H35" stroke="#00E599" stroke-width="1.8"/>
+      <text x="50" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Connect Hardware / Import Key</text>
+    </g>
+  </g>
+</g>
+
+<g id="Screen-11-Settings" transform="translate(886, 1620)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- Nav Header -->
+  <g transform="translate(20, 24)">
+    <path d="M6 14 L0 8 L6 2" stroke="#C9D1D9" stroke-width="2" stroke-linecap="round"/>
+    <text x="167" y="14" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700">Settings</text>
+  </g>
+
+  <!-- Preferences List -->
+  <g transform="translate(20, 68)">
+    <text x="4" y="14" fill="#8B949E" font-family="Inter, sans-serif" font-size="11" font-weight="600">PREFERENCES</text>
+
+    <rect y="24" width="335" height="154" rx="16" fill="#131824" stroke="#202A3C" stroke-width="1"/>
+    
+    <!-- Language -->
+    <text x="18" y="56" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">Language</text>
+    <text x="295" y="56" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">English / 中文</text>
+    <path d="M308 51 L313 56 L308 61" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- Fiat Currency -->
+    <text x="18" y="106" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">Base Currency</text>
+    <text x="295" y="106" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">USD ($)</text>
+    <path d="M308 101 L313 106 L308 111" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- Auto Lock Timer -->
+    <text x="18" y="156" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">Auto-Lock Timer</text>
+    <text x="295" y="156" text-anchor="end" fill="#8B949E" font-family="Inter, sans-serif" font-size="13">15 Minutes</text>
+    <path d="M308 151 L313 156 L308 161" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+
+    <path d="M18 78 H317 M18 128 H317" stroke="#1C2433" stroke-width="1"/>
+  </g>
+
+  <!-- Security & Management -->
+  <g transform="translate(20, 260)">
+    <text x="4" y="14" fill="#8B949E" font-family="Inter, sans-serif" font-size="11" font-weight="600">SECURITY &amp; CONNECTIVITY</text>
+
+    <rect y="24" width="335" height="154" rx="16" fill="#131824" stroke="#202A3C" stroke-width="1"/>
+
+    <!-- Address Book -->
+    <text x="18" y="56" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">Address Book (Contacts)</text>
+    <text x="295" y="56" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">6 Saved</text>
+    <path d="M308 51 L313 56 L308 61" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- Connected Sites -->
+    <text x="18" y="106" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">Connected DApps</text>
+    <text x="295" y="106" text-anchor="end" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="600">3 Active</text>
+    <path d="M308 101 L313 106 L308 111" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- Change Password -->
+    <text x="18" y="156" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">Change Password</text>
+    <path d="M308 151 L313 156 L308 161" stroke="#8B949E" stroke-width="1.5" stroke-linecap="round"/>
+
+    <path d="M18 78 H317 M18 128 H317" stroke="#1C2433" stroke-width="1"/>
+  </g>
+
+  <!-- Lock Now Button -->
+  <g transform="translate(20, 500)">
+    <rect width="335" height="48" rx="24" fill="#1F283A" stroke="#2D3A50" stroke-width="1"/>
+    <text x="167" y="29" text-anchor="middle" fill="#FF5252" font-family="Inter, sans-serif" font-size="14" font-weight="700">Lock FistWallet Now</text>
+  </g>
+
+  <!-- Version Footer -->
+  <text x="187" y="580" text-anchor="middle" fill="#4B5563" font-family="Inter, sans-serif" font-size="12">FistWallet Extension v1.2.0 (Build 2026.10)</text>
+</g>
+
+<g id="Screen-12-Notification-Approval" transform="translate(1309, 1620)">
+  <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+  <rect width="375" height="640" rx="24" stroke="#252D3D" stroke-width="1.5"/>
+
+  <!-- DApp Identity Header -->
+  <g transform="translate(20, 24)">
+    <rect width="335" height="84" rx="18" fill="#151C28" stroke="#242E40" stroke-width="1"/>
+    <circle cx="36" cy="42" r="22" fill="#FF007A" fill-opacity="0.15"/>
+    <path d="M30 36 C32 30 40 30 42 36 C43 43 30 50 36 52" stroke="#FF007A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <text x="70" y="36" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Uniswap Interface</text>
+    <rect x="70" y="48" width="135" height="20" rx="10" fill="#00E599" fill-opacity="0.12"/>
+    <circle cx="80" cy="58" r="3" fill="#00E599"/>
+    <text x="88" y="62" fill="#00E599" font-family="Inter, sans-serif" font-size="10" font-weight="600">https://app.uniswap.org</text>
+  </g>
+
+  <!-- Title & Subtitle -->
+  <g transform="translate(20, 122)">
+    <text x="0" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="17" font-weight="700">Confirm Transaction</text>
+    <text x="0" y="38" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Sign and broadcast smart contract execution</text>
+  </g>
+
+  <!-- Simulation Dry-Run Badge -->
+  <g transform="translate(20, 172)">
+    <rect width="335" height="42" rx="12" fill="#00E599" fill-opacity="0.1" stroke="#00E599" stroke-opacity="0.3" stroke-width="1"/>
+    <circle cx="24" cy="21" r="8" fill="#00E599"/>
+    <path d="M21 21 L23 23 L27 19" stroke="#090B0E" stroke-width="2" stroke-linecap="round"/>
+    <text x="40" y="25" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">Simulation Success (Dry Run Passed)</text>
+  </g>
+
+  <!-- Transaction Details -->
+  <g transform="translate(20, 226)">
+    <rect width="335" height="210" rx="16" fill="#121822" stroke="#1E2736" stroke-width="1"/>
+    <text x="16" y="28" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Action</text>
+    <text x="319" y="28" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">exactInputSingle (Swap)</text>
+
+    <text x="16" y="62" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Interact Contract</text>
+    <text x="319" y="62" text-anchor="end" fill="#627EEA" font-family="Inter, sans-serif" font-size="12" font-weight="500">UniversalRouter (0x68b3...6942)</text>
+
+    <text x="16" y="96" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Spend Amount</text>
+    <text x="319" y="96" text-anchor="end" fill="#FF5252" font-family="Inter, sans-serif" font-size="13" font-weight="700">-1.50 ETH ($5,175.30)</text>
+
+    <text x="16" y="130" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Receive Amount</text>
+    <text x="319" y="130" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="700">+5,168.42 USDT</text>
+
+    <text x="16" y="164" fill="#8B949E" font-family="Inter, sans-serif" font-size="12">Max Network Fee (Gas)</text>
+    <text x="319" y="164" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="500">0.0018 ETH (~$6.21)</text>
+
+    <path d="M16 42 H319 M16 76 H319 M16 110 H319 M16 144 H319" stroke="#18202E" stroke-width="1"/>
+  </g>
+
+  <!-- Security Check -->
+  <g transform="translate(20, 452)">
+    <rect width="335" height="36" rx="10" fill="#161E2C" stroke="#253245" stroke-width="1"/>
+    <circle cx="24" cy="18" r="5" fill="#00E599"/>
+    <text x="38" y="22" fill="#8B949E" font-family="Inter, sans-serif" font-size="11">FistShield: <tspan fill="#C9D1D9" font-weight="600">Verified Router · High Liquidity</tspan></text>
+  </g>
+
+  <!-- Reject & Confirm Buttons -->
+  <g transform="translate(20, 524)">
+    <rect width="158" height="52" rx="26" fill="#1C2433" stroke="#2E3B50" stroke-width="1"/>
+    <text x="79" y="32" text-anchor="middle" fill="#C9D1D9" font-family="Inter, sans-serif" font-size="15" font-weight="600">Reject</text>
+
+    <g transform="translate(177, 0)">
+      <rect width="158" height="52" rx="26" fill="url(#greenBtn)"/>
+      <text x="79" y="32" text-anchor="middle" fill="#090B0E" font-family="Inter, sans-serif" font-size="15" font-weight="700">Confirm &amp; Sign</text>
+    </g>
+  </g>
+</g>
+</svg>

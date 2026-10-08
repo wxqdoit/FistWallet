@@ -1,40 +1,49 @@
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { useSettingsStore } from '@store/settings';
-import { Button, Card, CardContent } from '@/ui';
-import { ArrowLeftIcon, CheckIcon, PlusIcon, WrenchIcon } from '@phosphor-icons/react';
-import { cn } from '@/utils';
 import { t } from '@utils/i18n';
+import { ArrowLeftIcon, CheckIcon, PlusIcon, WrenchIcon, WalletIcon } from '@phosphor-icons/react';
+import { motion } from 'framer-motion';
 
 export default function Wallets() {
     const navigate = useNavigate();
     const { wallets, currentWalletId, switchWallet } = useWalletStore();
     const { language } = useSettingsStore();
+
     const handleSelectWallet = (walletId: string) => {
         switchWallet(walletId);
         navigate('/');
     };
 
     return (
-        <div className="h-full flex flex-col bg-background">
-            {/* Header */}
-            <div className="p-4  flex items-center gap-3">
-                <Button
-                    variant="ghost"
-                    size="sm"
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans"
+        >
+            {/* Unified Sticky Header */}
+            <div className="px-4 py-3.5 flex items-center justify-between border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
+                <button
+                    type="button"
                     onClick={() => navigate(-1)}
-                    className=" px-2 text-muted-foreground hover:text-foreground"
+                    className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 hover:border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors"
                 >
-                    <ArrowLeftIcon size={16} />
-                    {t(language, 'back')}
-                </Button>
+                    <ArrowLeftIcon size={16} weight="bold" />
+                </button>
+                <h1 className="text-sm font-semibold tracking-tight text-white">{t(language, 'walletListTitle')}</h1>
+                <div className="w-8" />
             </div>
 
             {/* Wallet list */}
             <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-3">
                 {wallets.length === 0 ? (
-                    <div className="text-center text-sm text-muted-foreground py-10">
-                        {t(language, 'noWalletsFound')}
+                    <div className="text-center py-20 text-white/50 space-y-3">
+                        <div className="w-14 h-14 mx-auto rounded-full bg-[#14161E] border border-white/5 flex items-center justify-center text-white/30">
+                            <WalletIcon size={32} />
+                        </div>
+                        <p className="text-sm font-semibold text-white/70">{t(language, 'walletNotFound')}</p>
                     </div>
                 ) : (
                     wallets.map((wallet, index) => {
@@ -48,60 +57,68 @@ export default function Wallets() {
                             : `Wallet ${index + 1}`;
 
                         return (
-                            <Card
+                            <div
                                 key={wallet.id}
-                                className={cn(
-                                    'cursor-pointer transition-colors',
-                                    isSelected ? 'border-primary/60 bg-primary/5' : 'hover:border-border'
-                                )}
                                 onClick={() => handleSelectWallet(wallet.id)}
+                                className={`p-4 rounded-2xl border transition-colors active:opacity-85 cursor-pointer flex items-center justify-between ${
+                                    isSelected
+                                        ? 'border-indigo-500/60 bg-[#14161E] shadow-lg shadow-indigo-500/5'
+                                        : 'border-white/5 bg-[#14161E] hover:border-white/15'
+                                }`}
                             >
-                                <CardContent className="p-4 flex items-center gap-3">
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium font-mono">{addressLabel}</p>
-                                        <div className="flex items-center gap-2">
-                                            <p className="uppercase text-xs text-muted-foreground">
-                                                {wallet.type === 'mnemonic'
-                                                    ? t(language, 'recoveryPhraseLabel')
-                                                    : t(language, 'privateKeyLabel')}
-                                            </p>
-                                            {primaryAccount && (
-                                                <p className="text-xs text-muted-foreground">
-                                                    {primaryAccount.name}
-                                                </p>
-                                            )}
-                                        </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-2xl bg-[#1F2330] border border-white/10 flex items-center justify-center text-indigo-400 font-bold text-sm">
+                                        W{index + 1}
                                     </div>
-                                    {isSelected && <CheckIcon size={18} className="text-primary" />}
-                                </CardContent>
-                            </Card>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <p className="text-sm font-semibold text-white">
+                                                {primaryAccount?.name || `Wallet ${index + 1}`}
+                                            </p>
+                                            <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-white/[0.06] text-white/60 border border-white/5">
+                                                {wallet.type === 'mnemonic' ? t(language, 'walletMnemonicType') : t(language, 'walletPrivateKeyType')}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs font-mono text-white/40 mt-0.5">
+                                            {addressLabel}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {isSelected && (
+                                    <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                                        <CheckIcon size={14} weight="bold" />
+                                    </div>
+                                )}
+                            </div>
                         );
                     })
                 )}
             </div>
 
-            {/* Actions */}
-            <div className="p-4">
-                <div className="flex gap-2">
-                <Button
-                    variant="secondary"
-                    className="flex-1 justify-center"
-                    onClick={() => navigate('/wallets/manage')}
-                    disabled={wallets.length === 0}
-                >
-                    <WrenchIcon size={16} />
-                    {t(language, 'manage')}
-                </Button>
-                <Button
-                    variant="default"
-                    className="flex-1 justify-center"
-                    onClick={() => navigate('/add-wallet')}
-                >
-                    <PlusIcon size={16} />
-                    {t(language, 'addWallet')}
-                </Button>
+            {/* Bottom Actions */}
+            <div className="p-4 border-t border-white/5 bg-[#070A12]/90 backdrop-blur-md">
+                <div className="flex gap-3">
+                    <button
+                        type="button"
+                        onClick={() => navigate('/wallets/manage')}
+                        disabled={wallets.length === 0}
+                        className="flex-1 h-12 rounded-full font-semibold text-[14px] bg-[#14161E] hover:bg-[#1A1D26] border border-white/10 text-white active:opacity-85 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                    >
+                        <WrenchIcon size={16} />
+                        <span>{t(language, 'manageWalletsBtn')}</span>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/add-wallet')}
+                        className="flex-1 h-12 rounded-full font-bold text-[14px] bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 active:opacity-85 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <PlusIcon size={16} weight="bold" />
+                        <span>{t(language, 'addNewWalletBtn')}</span>
+                    </button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
+

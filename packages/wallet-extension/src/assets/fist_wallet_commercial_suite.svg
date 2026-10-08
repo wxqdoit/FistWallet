@@ -1,0 +1,2055 @@
+<svg width="1760" height="3180" viewBox="0 0 1760 3180" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+
+  <!-- Screen Background Gradient -->
+  <linearGradient id="bgDark" x1="0" y1="0" x2="375" y2="640" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#0B0F19"/>
+    <stop offset="40%" stop-color="#080C14"/>
+    <stop offset="100%" stop-color="#04060A"/>
+  </linearGradient>
+
+  <linearGradient id="frameBorder" x1="0" y1="0" x2="375" y2="640" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#303A4D" stop-opacity="0.9"/>
+    <stop offset="50%" stop-color="#1B2230" stop-opacity="0.6"/>
+    <stop offset="100%" stop-color="#0F141E" stop-opacity="0.9"/>
+  </linearGradient>
+
+  <!-- Card Surface Gradients & Glows -->
+  <linearGradient id="cardGrad" x1="0" y1="0" x2="335" y2="140" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#141824"/>
+    <stop offset="100%" stop-color="#0C101A"/>
+  </linearGradient>
+
+  <linearGradient id="cardGradElevated" x1="0" y1="0" x2="335" y2="140" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#1B2232"/>
+    <stop offset="100%" stop-color="#111622"/>
+  </linearGradient>
+
+  <linearGradient id="cardBorderGlow" x1="0" y1="0" x2="335" y2="140" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#4B5A75" stop-opacity="0.8"/>
+    <stop offset="40%" stop-color="#2D3748" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#151C28" stop-opacity="0.2"/>
+  </linearGradient>
+
+  <linearGradient id="activeBorderGlow" x1="0" y1="0" x2="335" y2="100" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#6366F1" stop-opacity="0.9"/>
+    <stop offset="100%" stop-color="#4F46E5" stop-opacity="0.4"/>
+  </linearGradient>
+
+  <linearGradient id="greenBorderGlow" x1="0" y1="0" x2="335" y2="100" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#00F5A0" stop-opacity="0.9"/>
+    <stop offset="100%" stop-color="#00C47F" stop-opacity="0.3"/>
+  </linearGradient>
+
+  <!-- Button Gradients -->
+  <linearGradient id="primaryGreenBtn" x1="0" y1="0" x2="335" y2="50" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#00F5A0"/>
+    <stop offset="100%" stop-color="#00C47F"/>
+  </linearGradient>
+
+  <linearGradient id="indigoBtn" x1="0" y1="0" x2="335" y2="50" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#6366F1"/>
+    <stop offset="100%" stop-color="#4F46E5"/>
+  </linearGradient>
+
+  <linearGradient id="secondaryBtnGrad" x1="0" y1="0" x2="335" y2="50" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#1C2333"/>
+    <stop offset="100%" stop-color="#121724"/>
+  </linearGradient>
+
+  <linearGradient id="dangerBtn" x1="0" y1="0" x2="160" y2="50" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#FF5252"/>
+    <stop offset="100%" stop-color="#D32F2F"/>
+  </linearGradient>
+
+  <!-- Radial Blooms -->
+  <radialGradient id="indigoBloom" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#6366F1" stop-opacity="0.25"/>
+    <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+  </radialGradient>
+
+  <radialGradient id="greenBloom" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#00F5A0" stop-opacity="0.2"/>
+    <stop offset="100%" stop-color="#00F5A0" stop-opacity="0"/>
+  </radialGradient>
+
+  <!-- Crypto Logos Gradients -->
+  <linearGradient id="ethGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#627EEA"/>
+    <stop offset="100%" stop-color="#3B4F99"/>
+  </linearGradient>
+  <linearGradient id="usdtGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#26A17B"/>
+    <stop offset="100%" stop-color="#166B50"/>
+  </linearGradient>
+  <linearGradient id="solGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#9945FF"/>
+    <stop offset="100%" stop-color="#14F195"/>
+  </linearGradient>
+  <linearGradient id="btcGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#F7931A"/>
+    <stop offset="100%" stop-color="#D67500"/>
+  </linearGradient>
+  <linearGradient id="arbGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#28A0F0"/>
+    <stop offset="100%" stop-color="#0E5B99"/>
+  </linearGradient>
+  <linearGradient id="fistLogoGrad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#818CF8"/>
+    <stop offset="100%" stop-color="#4F46E5"/>
+  </linearGradient>
+
+  <!-- Drop Shadows -->
+  <filter id="btnGlowGreen" x="-20%" y="-20%" width="140%" height="160%">
+    <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#00E599" flood-opacity="0.3"/>
+  </filter>
+  <filter id="btnGlowIndigo" x="-20%" y="-20%" width="140%" height="160%">
+    <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#6366F1" flood-opacity="0.35"/>
+  </filter>
+  <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="130%">
+    <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.55"/>
+  </filter>
+  <filter id="subtleShadow" x="-5%" y="-5%" width="110%" height="120%">
+    <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.4"/>
+  </filter>
+
+</defs>
+
+<g id="Master-System-Header" transform="translate(40, 40)">
+  <rect width="1680" height="72" rx="20" fill="#0D121D" stroke="#253247" stroke-width="1.5"/>
+  <!-- Status dot & Glow -->
+  <circle cx="36" cy="36" r="16" fill="#00F5A0" fill-opacity="0.12"/>
+  <circle cx="36" cy="36" r="6" fill="#00F5A0"/>
+  <text x="64" y="43" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="22" font-weight="800" letter-spacing="-0.5">FistWallet Extension — Commercial Flagship UI Suite</text>
+  <text x="640" y="42" fill="#94A3B8" font-family="Inter, sans-serif" font-size="14" font-weight="500">16 Full-Fidelity Production Screens · 4 Complete User Journeys · Glassmorphic Obsidian System · Native Vector Hierarchy</text>
+  <rect x="1540" y="20" width="116" height="32" rx="16" fill="#00F5A0" fill-opacity="0.12" stroke="#00F5A0" stroke-opacity="0.3"/>
+  <text x="1598" y="41" text-anchor="middle" fill="#00F5A0" font-family="Inter, sans-serif" font-size="13" font-weight="700">PROD v1.2.0</text>
+</g>
+
+
+    <g transform="translate(40, 140)">
+      <rect width="1680" height="42" rx="12" fill="#111624" stroke="#202A3D" stroke-width="1"/>
+      <rect x="12" y="10" width="24" height="22" rx="6" fill="#6366F1" fill-opacity="0.2"/>
+      <text x="24" y="26" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="800">01</text>
+      <text x="46" y="27" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">ONBOARDING & IDENTITY SECURITY</text>
+      <text x="380" y="26" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">Welcome, Create Password with 4-Tier Strength, 12-Word Seed Backup, Biometrics Unlock</text>
+    </g>
+    
+
+    <g transform="translate(40, 860)">
+      <rect width="1680" height="42" rx="12" fill="#111624" stroke="#202A3D" stroke-width="1"/>
+      <rect x="12" y="10" width="24" height="22" rx="6" fill="#6366F1" fill-opacity="0.2"/>
+      <text x="24" y="26" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="800">02</text>
+      <text x="46" y="27" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">CORE PORTFOLIO & ASSET TRANSFERS</text>
+      <text x="380" y="26" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">Asset Overview with Real-Time PnL, EIP-1559 Send Engine, High-Density QR Receive, History Activity</text>
+    </g>
+    
+
+    <g transform="translate(40, 1580)">
+      <rect width="1680" height="42" rx="12" fill="#111624" stroke="#202A3D" stroke-width="1"/>
+      <rect x="12" y="10" width="24" height="22" rx="6" fill="#6366F1" fill-opacity="0.2"/>
+      <text x="24" y="26" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="800">03</text>
+      <text x="46" y="27" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">TRADING AGGREGATOR & SYSTEM MANAGEMENT</text>
+      <text x="380" y="26" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">Multi-DEX Swap Engine with Route Splitting, Multi-Chain HD Wallets, RPC Latency Network Selector, Settings</text>
+    </g>
+    
+
+    <g transform="translate(40, 2300)">
+      <rect width="1680" height="42" rx="12" fill="#111624" stroke="#202A3D" stroke-width="1"/>
+      <rect x="12" y="10" width="24" height="22" rx="6" fill="#6366F1" fill-opacity="0.2"/>
+      <text x="24" y="26" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="800">04</text>
+      <text x="46" y="27" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">DAPP NOTIFICATIONS & TRANSACTION SIGNING</text>
+      <text x="380" y="26" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">Domain Origin Verification, Contract Pre-Execution Dry Run, EIP-712 Structured Data, Token Spending Cap</text>
+    </g>
+    
+
+    <!-- ============================================== -->
+    <!-- Frame: 01-Welcome -->
+    <!-- ============================================== -->
+    <g id="01-Welcome" transform="translate(40, 180)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">01 · WELCOME & ONBOARDING</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+  <!-- Radial Violet Light Bloom -->
+  <circle cx="187" cy="180" r="140" fill="url(#indigoBloom)"/>
+
+  <!-- Top Brand Tag -->
+  <g transform="translate(20, 24)">
+    <rect width="90" height="26" rx="13" fill="#141A28" stroke="#2B374E" stroke-width="1"/>
+    <circle cx="12" cy="13" r="4" fill="#00E599"/>
+    <text x="24" y="17" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="11" font-weight="700">FIST SECURE</text>
+  </g>
+
+  <!-- 3D Fist Emblem & Orbital Rings -->
+  <g transform="translate(187, 180)">
+    <circle cx="0" cy="0" r="58" fill="#121624" stroke="#2D384E" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="48" fill="url(#fistLogoGrad)"/>
+    <!-- Orbital Rings -->
+    <ellipse cx="0" cy="0" rx="72" ry="24" stroke="#818CF8" stroke-opacity="0.3" stroke-width="1.5" stroke-dasharray="4 4" transform="rotate(-25)"/>
+    <!-- Center Fist Icon -->
+    <g transform="translate(-16, -16)">
+      <path d="M6 10 C6 7.8 7.8 6 10 6 C12.2 6 14 7.8 14 10 V14 M14 8 C14 5.8 15.8 4 18 4 C20.2 4 22 5.8 22 8 V14 M22 9 C22 6.8 23.8 5 26 5 C28.2 5 30 6.8 30 9 V18 C30 24.6 24.6 30 18 30 H14 C8.5 30 4 25.5 4 20 V15 C4 12.8 5.8 11 8 11 H10" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+
+  <!-- Headline & Subtext -->
+  <text x="187" y="278" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="24" font-weight="800" letter-spacing="-0.5">Hold Your Future</text>
+  <text x="187" y="302" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">Enterprise Non-Custodial Vault for EVM, Sol &amp; BTC</text>
+
+  <!-- 3 Feature Chips Cards -->
+  <g transform="translate(20, 332)">
+    <g transform="translate(0, 0)">
+      <rect width="335" height="42" rx="12" fill="#111624" stroke="#202A3D" stroke-width="1"/>
+      <circle cx="22" cy="21" r="10" fill="#00E599" fill-opacity="0.12"/>
+      <path d="M18 21 L21 24 L26 18" stroke="#00E599" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="42" y="25" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="600">Native Multi-Chain Routing (EVM + SVM + UTXO)</text>
+    </g>
+    <g transform="translate(0, 48)">
+      <rect width="335" height="42" rx="12" fill="#111624" stroke="#202A3D" stroke-width="1"/>
+      <circle cx="22" cy="21" r="10" fill="#6366F1" fill-opacity="0.15"/>
+      <path d="M22 15 L17 18 V23 C17 25 19 27 22 28 C25 27 27 25 27 23 V18 Z" stroke="#818CF8" stroke-width="1.6" fill="none"/>
+      <text x="42" y="25" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="600">Built-in Pre-Execution Simulation (Zero Phishing)</text>
+    </g>
+    <g transform="translate(0, 96)">
+      <rect width="335" height="42" rx="12" fill="#111624" stroke="#202A3D" stroke-width="1"/>
+      <circle cx="22" cy="21" r="10" fill="#F59E0B" fill-opacity="0.15"/>
+      <rect x="18" y="17" width="8" height="8" rx="2" stroke="#FBBF24" stroke-width="1.5" fill="none"/>
+      <text x="42" y="25" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="600">Hardware Cold Storage Ready (Ledger &amp; Trezor)</text>
+    </g>
+  </g>
+
+  <!-- CTA Buttons -->
+  <g transform="translate(20, 500)">
+    <!-- Primary Button -->
+    <g filter="url(#btnGlowIndigo)">
+      <rect width="335" height="48" rx="14" fill="url(#indigoBtn)"/>
+      <rect width="335" height="48" rx="14" stroke="#A5B4FC" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="167" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Create Brand New Wallet</text>
+    </g>
+    <!-- Secondary Button -->
+    <g transform="translate(0, 58)">
+      <rect width="335" height="46" rx="14" fill="url(#secondaryBtnGrad)" stroke="#2B364C" stroke-width="1.2"/>
+      <text x="167" y="28" text-anchor="middle" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="14" font-weight="600">I Already Have a Seed Phrase</text>
+    </g>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 02-CreatePassword -->
+    <!-- ============================================== -->
+    <g id="02-CreatePassword" transform="translate(463, 180)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">02 · SET ACCESS PASSWORD</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Set Password</text>
+    
+</g>
+
+  <text x="20" y="86" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="20" font-weight="800">Lock Your Vault</text>
+  <text x="20" y="108" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">This password protects your private keys on this browser.</text>
+
+  <!-- New Password Field -->
+  <g transform="translate(20, 136)">
+    <text x="0" y="0" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="700">NEW PASSWORD</text>
+    <rect y="10" width="335" height="46" rx="12" fill="#101522" stroke="#253147" stroke-width="1.2"/>
+    <text x="16" y="38" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">••••••••••••••••</text>
+    <!-- Eye Icon -->
+    <g transform="translate(300, 24)" stroke="#94A3B8" stroke-width="1.5" fill="none">
+      <path d="M1 8 C4 3 12 3 15 8 C12 13 4 13 1 8 Z"/>
+      <circle cx="8" cy="8" r="2.5"/>
+    </g>
+  </g>
+
+  <!-- 4-Tier Strength Bar -->
+  <g transform="translate(20, 214)">
+    <rect x="0" y="0" width="78" height="5" rx="2.5" fill="#00E599"/>
+    <rect x="85" y="0" width="78" height="5" rx="2.5" fill="#00E599"/>
+    <rect x="170" y="0" width="78" height="5" rx="2.5" fill="#00E599"/>
+    <rect x="255" y="0" width="80" height="5" rx="2.5" fill="#00E599"/>
+    <text x="0" y="24" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">Strong Password</text>
+    <text x="335" y="24" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="500">Entropy: 84 bits</text>
+  </g>
+
+  <!-- Confirm Password Field -->
+  <g transform="translate(20, 260)">
+    <text x="0" y="0" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="700">CONFIRM PASSWORD</text>
+    <rect y="10" width="335" height="46" rx="12" fill="#101522" stroke="#00E599" stroke-width="1.2"/>
+    <text x="16" y="38" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="500">••••••••••••••••</text>
+    <!-- Check Icon -->
+    <g transform="translate(302, 25)" stroke="#00E599" stroke-width="2" fill="none">
+      <path d="M2 6 L6 10 L14 2"/>
+    </g>
+  </g>
+
+  <!-- Password Requirements Checklist -->
+  <g transform="translate(20, 350)">
+    <g transform="translate(0, 0)">
+      <circle cx="8" cy="8" r="7" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M5 8 L7 10 L11 6" stroke="#00E599" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <text x="22" y="12" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="500">At least 8 alphanumeric characters</text>
+    </g>
+    <g transform="translate(0, 24)">
+      <circle cx="8" cy="8" r="7" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M5 8 L7 10 L11 6" stroke="#00E599" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <text x="22" y="12" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="500">Contains at least 1 symbol (@, #, $, %, !)</text>
+    </g>
+    <g transform="translate(0, 48)">
+      <circle cx="8" cy="8" r="7" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M5 8 L7 10 L11 6" stroke="#00E599" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <text x="22" y="12" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="500">Passwords match perfectly</text>
+    </g>
+  </g>
+
+  <!-- Biometrics Toggle Option Card -->
+  <g transform="translate(20, 444)">
+    <rect width="335" height="52" rx="14" fill="#121726" stroke="#253248" stroke-width="1"/>
+    <!-- Fingerprint Icon -->
+    <g transform="translate(14, 14)" stroke="#6366F1" stroke-width="1.5" fill="none">
+      <path d="M12 2 C7 2 3 6 3 11 C3 14 4.5 17 6 19 M12 6 C9 6 6 8.5 6 12 C6 17 8 20 10 22 M12 10 C11 10 10 11 10 13 M18 19 C19.5 17 21 14 21 11 C21 6 17 2 12 2"/>
+    </g>
+    <text x="46" y="24" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">Enable Touch ID Quick Unlock</text>
+    <text x="46" y="40" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="500">Unlock instantly without typing password</text>
+    <!-- Switch ON -->
+    <rect x="282" y="14" width="40" height="24" rx="12" fill="#6366F1"/>
+    <circle cx="310" cy="26" r="9" fill="#FFFFFF"/>
+  </g>
+
+  <!-- CTA -->
+  <g transform="translate(20, 560)">
+    <g filter="url(#btnGlowIndigo)">
+      <rect width="335" height="48" rx="14" fill="url(#indigoBtn)"/>
+      <rect width="335" height="48" rx="14" stroke="#A5B4FC" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="167" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Continue to Secret Phrase</text>
+    </g>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 03-BackupMnemonic -->
+    <!-- ============================================== -->
+    <g id="03-BackupMnemonic" transform="translate(886, 180)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">03 · BACKUP SECRET RECOVERY PHRASE</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Secret Recovery Phrase</text>
+    
+</g>
+
+  <!-- Alert Banner -->
+  <g transform="translate(20, 72)">
+    <rect width="335" height="50" rx="12" fill="#78350F" fill-opacity="0.25" stroke="#F59E0B" stroke-opacity="0.4" stroke-width="1"/>
+    <circle cx="24" cy="25" r="10" fill="#F59E0B" fill-opacity="0.2"/>
+    <text x="24" y="29" text-anchor="middle" fill="#FBBF24" font-family="Inter, sans-serif" font-size="12" font-weight="800">!</text>
+    <text x="44" y="22" fill="#FEF3C7" font-family="Inter, sans-serif" font-size="12" font-weight="700">Never share your secret phrase</text>
+    <text x="44" y="38" fill="#FDE68A" font-family="Inter, sans-serif" font-size="11" font-weight="500">Anyone with these words can steal all your assets.</text>
+  </g>
+
+  <!-- 12 Words Grid Card -->
+  <g transform="translate(20, 136)">
+    <rect width="335" height="252" rx="16" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+    <!-- Top inner specular -->
+    <line x1="16" y1="1" x2="319" y2="1" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+
+
+    <g transform="translate(14, 16)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">01</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">galaxy</text>
+    </g>
+    
+
+    <g transform="translate(119, 16)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">02</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">harvest</text>
+    </g>
+    
+
+    <g transform="translate(224, 16)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">03</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">venture</text>
+    </g>
+    
+
+    <g transform="translate(14, 70)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">04</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">crystal</text>
+    </g>
+    
+
+    <g transform="translate(119, 70)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">05</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">matrix</text>
+    </g>
+    
+
+    <g transform="translate(224, 70)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">06</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">helmet</text>
+    </g>
+    
+
+    <g transform="translate(14, 124)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">07</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">puzzle</text>
+    </g>
+    
+
+    <g transform="translate(119, 124)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">08</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">velvet</text>
+    </g>
+    
+
+    <g transform="translate(224, 124)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">09</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">dynamic</text>
+    </g>
+    
+
+    <g transform="translate(14, 178)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">10</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">rocket</text>
+    </g>
+    
+
+    <g transform="translate(119, 178)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">11</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">whisper</text>
+    </g>
+    
+
+    <g transform="translate(224, 178)">
+      <rect width="98" height="46" rx="10" fill="#161C2C" stroke="#2B3850" stroke-width="1"/>
+      <text x="12" y="28" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="700">12</text>
+      <text x="32" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">trophy</text>
+    </g>
+    
+
+  </g>
+
+  <!-- Copy All Words Button -->
+  <g transform="translate(20, 402)">
+    <rect width="335" height="42" rx="12" fill="#141A28" stroke="#28344C" stroke-width="1"/>
+    <g transform="translate(100, 12)" stroke="#818CF8" stroke-width="1.5" fill="none">
+      <rect x="4" y="2" width="10" height="12" rx="2"/>
+      <path d="M2 5 H1 V17 H11 V16"/>
+    </g>
+    <text x="175" y="26" text-anchor="middle" fill="#A5B4FC" font-family="Inter, sans-serif" font-size="13" font-weight="700">Copy Words to Clipboard</text>
+  </g>
+
+  <!-- Security Checkbox Callouts -->
+  <g transform="translate(20, 460)">
+    <circle cx="10" cy="10" r="9" fill="#00E599" fill-opacity="0.15"/>
+    <path d="M6 10 L9 13 L14 7" stroke="#00E599" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <text x="28" y="14" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="500">I have written these 12 words down on physical paper</text>
+
+    <g transform="translate(0, 28)">
+      <circle cx="10" cy="10" r="9" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M6 10 L9 13 L14 7" stroke="#00E599" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+      <text x="28" y="14" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="500">I understand FistWallet cannot recover lost phrases</text>
+    </g>
+  </g>
+
+  <!-- CTA -->
+  <g transform="translate(20, 560)">
+    <g filter="url(#btnGlowIndigo)">
+      <rect width="335" height="48" rx="14" fill="url(#indigoBtn)"/>
+      <rect width="335" height="48" rx="14" stroke="#A5B4FC" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="167" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">I Have Saved It Securely</text>
+    </g>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 04-Unlock -->
+    <!-- ============================================== -->
+    <g id="04-Unlock" transform="translate(1309, 180)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">04 · APP UNLOCK SCREEN</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+  <!-- Radial Violet Light Bloom -->
+  <circle cx="187" cy="170" r="130" fill="url(#indigoBloom)"/>
+
+  <!-- Top Extension Status Tag -->
+  <g transform="translate(142, 28)">
+    <rect width="90" height="26" rx="13" fill="#141A28" stroke="#2B374E" stroke-width="1"/>
+    <circle cx="14" cy="13" r="4" fill="#F59E0B"/>
+    <text x="26" y="17" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="11" font-weight="700">LOCKED</text>
+  </g>
+
+  <!-- Fist Crest with Glowing Ring -->
+  <g transform="translate(187, 160)">
+    <circle cx="0" cy="0" r="48" fill="#121624" stroke="#2D384E" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="40" fill="url(#fistLogoGrad)"/>
+    <!-- Center Lock / Fist Emblem -->
+    <g transform="translate(-12, -12)" stroke="#FFFFFF" stroke-width="2" fill="none">
+      <rect x="3" y="10" width="18" height="13" rx="3"/>
+      <path d="M6 10 V7 C6 3.7 8.7 1 12 1 C15.3 1 18 3.7 18 7 V10"/>
+      <circle cx="12" cy="16.5" r="2" fill="#FFFFFF"/>
+    </g>
+  </g>
+
+  <text x="187" y="244" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="22" font-weight="800">Welcome Back</text>
+  <text x="187" y="268" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">Vault: Account 1 (0x71C...39F1)</text>
+
+  <!-- Masked PIN Dots Input Card -->
+  <g transform="translate(20, 308)">
+    <rect width="335" height="56" rx="14" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+    <g transform="translate(75, 28)">
+      <circle cx="0" cy="0" r="7" fill="#6366F1"/>
+      <circle cx="36" cy="0" r="7" fill="#6366F1"/>
+      <circle cx="72" cy="0" r="7" fill="#6366F1"/>
+      <circle cx="108" cy="0" r="7" fill="#6366F1"/>
+      <circle cx="144" cy="0" r="7" fill="#253248"/>
+      <circle cx="180" cy="0" r="7" fill="#253248"/>
+    </g>
+  </g>
+
+  <!-- Unlock Button -->
+  <g transform="translate(20, 396)">
+    <g filter="url(#btnGlowIndigo)">
+      <rect width="335" height="48" rx="14" fill="url(#indigoBtn)"/>
+      <rect width="335" height="48" rx="14" stroke="#A5B4FC" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="167" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="700">Unlock Wallet</text>
+    </g>
+  </g>
+
+  <!-- Touch ID Quick Auth Button -->
+  <g transform="translate(20, 464)">
+    <rect width="335" height="48" rx="14" fill="url(#secondaryBtnGrad)" stroke="#2B364C" stroke-width="1.2"/>
+    <g transform="translate(100, 14)" stroke="#818CF8" stroke-width="1.6" fill="none">
+      <path d="M10 2 C6 2 2 5 2 9 C2 12 3.5 15 5 17 M10 5 C8 5 5 7 5 10 C5 14 7 17 9 19 M10 8 C9 8 8 9 8 11 M15 16 C16.5 14 18 12 18 9 C18 5 15 2 10 2"/>
+    </g>
+    <text x="180" y="30" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="14" font-weight="600">Unlock with Touch ID</text>
+  </g>
+
+  <!-- Reset / Restore Link -->
+  <text x="187" y="560" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Forgot Password? <tspan fill="#818CF8">Restore via Seed Phrase</tspan></text>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 05-Dashboard -->
+    <!-- ============================================== -->
+    <g id="05-Dashboard" transform="translate(40, 900)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">05 · ASSET DASHBOARD</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <!-- Extension Top Header -->
+    <g transform="translate(16, 16)">
+      <!-- Account Selector Pill -->
+      <rect x="0" y="0" width="138" height="32" rx="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+      <circle cx="16" cy="16" r="8" fill="#6366F1"/>
+      <circle cx="16" cy="16" r="4" fill="#A5B4FC"/>
+      <text x="32" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">Account 1</text>
+      <path d="M120 14 L124 18 L128 14" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+      <!-- Network Selector Pill -->
+      <rect x="146" y="0" width="124" height="32" rx="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+      <circle cx="160" cy="16" r="4" fill="#00E599"/>
+      <text x="172" y="20" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="600">Ethereum</text>
+      <path d="M252 14 L256 18 L260 14" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+      <!-- Lock & Quick Action Icons -->
+      <g transform="translate(278, 0)">
+        <circle cx="16" cy="16" r="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+        <rect x="11" y="14" width="10" height="9" rx="2" stroke="#94A3B8" stroke-width="1.4" fill="none"/>
+        <path d="M13 14 V12 C13 10.3 14.3 9 16 9 C17.7 9 19 10.3 19 12 V14" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      </g>
+      <g transform="translate(314, 0)">
+        <circle cx="16" cy="16" r="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+        <!-- Expand to tab icon -->
+        <path d="M12 20 L20 12 M20 12 H14 M20 12 V18" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </g>
+    </g>
+    
+
+  <!-- Portfolio Total Balance Card -->
+  <g transform="translate(20, 64)" filter="url(#cardShadow)">
+    <rect width="335" height="126" rx="18" fill="url(#cardGrad)"/>
+    <rect width="335" height="126" rx="18" stroke="url(#cardBorderGlow)" stroke-width="1.2"/>
+    <!-- Inner specular highlight -->
+    <line x1="16" y1="1" x2="319" y2="1" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="1"/>
+
+    <text x="20" y="30" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600" letter-spacing="0.4">TOTAL NET WORTH</text>
+    <text x="20" y="68" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="32" font-weight="800" letter-spacing="-1">$28,495.80</text>
+
+    <!-- 24h PnL Badge -->
+    <rect x="20" y="86" width="154" height="26" rx="13" fill="#00E599" fill-opacity="0.12" stroke="#00E599" stroke-opacity="0.3"/>
+    <path d="M30 99 L34 95 L38 99 M34 95 V104" stroke="#00E599" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="44" y="103" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">+$1,248.50 (+4.58%)</text>
+  </g>
+
+  <!-- 4 Quick Action Circular Buttons -->
+  <g transform="translate(20, 204)">
+
+
+    <g transform="translate(0, 0)">
+      <circle cx="38" cy="24" r="24" fill="#131826" stroke="#253248" stroke-width="1.2"/>
+      <circle cx="38" cy="24" r="18" fill="#1B2234"/>
+      <path d="M7 17 L17 7 M17 7 H10 M17 7 V14" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="38" y="62" text-anchor="middle" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="600">Send</text>
+    </g>
+    
+
+    <g transform="translate(0, 0)">
+      <circle cx="123" cy="24" r="24" fill="#131826" stroke="#253248" stroke-width="1.2"/>
+      <circle cx="123" cy="24" r="18" fill="#1B2234"/>
+      <path d="M17 7 L7 17 M7 17 H14 M7 17 V10" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="123" y="62" text-anchor="middle" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="600">Receive</text>
+    </g>
+    
+
+    <g transform="translate(0, 0)">
+      <circle cx="208" cy="24" r="24" fill="#131826" stroke="#253248" stroke-width="1.2"/>
+      <circle cx="208" cy="24" r="18" fill="#1B2234"/>
+      <path d="M6 9 H18 M18 9 L14 5 M18 15 H6 M6 15 L10 19" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="208" y="62" text-anchor="middle" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="600">Swap</text>
+    </g>
+    
+
+    <g transform="translate(0, 0)">
+      <circle cx="293" cy="24" r="24" fill="#131826" stroke="#253248" stroke-width="1.2"/>
+      <circle cx="293" cy="24" r="18" fill="#1B2234"/>
+      <path d="M12 6 V12 L16 14 M12 3 A9 9 0 1 1 12 21 A9 9 0 1 1 12 3" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="293" y="62" text-anchor="middle" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="12" font-weight="600">History</text>
+    </g>
+    
+
+  </g>
+
+  <!-- Asset Tabs -->
+  <g transform="translate(20, 286)">
+    <text x="0" y="0" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Tokens (4)</text>
+    <rect x="0" y="8" width="68" height="3" rx="1.5" fill="#00F5A0"/>
+    <text x="96" y="0" fill="#64748B" font-family="Inter, sans-serif" font-size="14" font-weight="600">NFTs (2)</text>
+    <text x="176" y="0" fill="#64748B" font-family="Inter, sans-serif" font-size="14" font-weight="600">DeFi Vaults (3)</text>
+  </g>
+
+  <!-- Token Assets List -->
+  <g transform="translate(20, 310)">
+
+
+    <g transform="translate(0, 0)">
+      <rect width="335" height="54" rx="12" fill="#101522" stroke="#1F283C" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="27" r="18" fill="url(#ethGrad)"/>
+          <!-- 3D Isometric Diamond Facets -->
+          <path d="M28 14 L35.5 27.5 L28 32 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M28 14 L20.5 27.5 L28 32 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M28 33 L35.5 28.5 L28 41 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M28 33 L20.5 28.5 L28 41 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M28 32 L35.5 27.5 L28 24 Z" fill="#FFFFFF" fill-opacity="0.45"/>
+          <path d="M28 32 L20.5 27.5 L28 24 Z" fill="#FFFFFF" fill-opacity="0.3"/>
+        </g>
+        
+
+      <text x="56" y="24" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Ethereum</text>
+      <text x="56" y="42" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">4.25 ETH</text>
+      <text x="320" y="24" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">$14,663.35</text>
+      <text x="320" y="42" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">+2.8%</text>
+    </g>
+    
+
+    <g transform="translate(0, 62)">
+      <rect width="335" height="54" rx="12" fill="#101522" stroke="#1F283C" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="27" r="18" fill="url(#usdtGrad)"/>
+          <path d="M20 20 H36 V24 H30.5 V35 H25.5 V24 H20 Z" fill="#FFFFFF"/>
+          <ellipse cx="28" cy="28" rx="8" ry="3" stroke="#FFFFFF" stroke-width="1.4" fill="none"/>
+        </g>
+        
+
+      <text x="56" y="24" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Tether USD</text>
+      <text x="56" y="42" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">8,500.00 USDT</text>
+      <text x="320" y="24" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">$8,500.00</text>
+      <text x="320" y="42" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">+0.01%</text>
+    </g>
+    
+
+    <g transform="translate(0, 124)">
+      <rect width="335" height="54" rx="12" fill="#101522" stroke="#1F283C" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="27" r="18" fill="url(#solGrad)"/>
+          <g transform="translate(20, 21)" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round">
+            <path d="M0 0 L13 0 L16 3 L3 3 Z" fill="#FFFFFF" stroke="none"/>
+            <path d="M16 5 L3 5 L0 8 L13 8 Z" fill="#FFFFFF" stroke="none"/>
+            <path d="M0 10 L13 10 L16 13 L3 13 Z" fill="#FFFFFF" stroke="none"/>
+          </g>
+        </g>
+        
+
+      <text x="56" y="24" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Solana</text>
+      <text x="56" y="42" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">28.50 SOL</text>
+      <text x="320" y="24" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">$4,235.10</text>
+      <text x="320" y="42" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">+6.4%</text>
+    </g>
+    
+
+    <g transform="translate(0, 186)">
+      <rect width="335" height="54" rx="12" fill="#101522" stroke="#1F283C" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="27" r="18" fill="url(#btcGrad)"/>
+          <text x="28" y="33" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="900">₿</text>
+        </g>
+        
+
+      <text x="56" y="24" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Bitcoin (WBTC)</text>
+      <text x="56" y="42" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">0.015 BTC</text>
+      <text x="320" y="24" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">$1,097.35</text>
+      <text x="320" y="42" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">+1.2%</text>
+    </g>
+    
+
+  </g>
+
+
+    <g transform="translate(0, 568)">
+      <rect width="375" height="72" fill="#0A0E18" stroke="#1D263B" stroke-width="1"/>
+      <!-- Top highlight -->
+      <line x1="0" y1="1" x2="375" y2="1" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/>
+    
+
+        <g>
+          <rect x="25" y="10" width="44" height="28" rx="14" fill="#00F5A0" fill-opacity="0.12"/>
+          <path d="M6 8 H20 V18 H6 Z M16 13 H18" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="47" y="52" text-anchor="middle" fill="#00F5A0" font-family="Inter, sans-serif" font-size="10" font-weight="700">Wallet</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M6 10 H18 M18 10 L14 6 M18 16 H6 M6 16 L10 20" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="137" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Swap</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 5 A7 7 0 1 1 12 19 A7 7 0 1 1 12 5 M5 12 H19" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="227" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">DApps</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 7 A5 5 0 1 1 12 17 A5 5 0 1 1 12 7" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="317" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Settings</text>
+        </g>
+        
+</g>
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 06-Send -->
+    <!-- ============================================== -->
+    <g id="06-Send" transform="translate(463, 900)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">06 · SEND TRANSFER</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Send Assets</text>
+    
+
+        <g transform="translate(305, 0)">
+          <circle cx="17" cy="17" r="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+          <path d="M12 12 L22 22 M22 12 L12 22" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/>
+        </g>
+        
+</g>
+
+  <!-- Recipient Address Input Card -->
+  <g transform="translate(20, 66)">
+    <text x="0" y="0" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">RECIPIENT ADDRESS / ENS</text>
+    <rect y="8" width="335" height="52" rx="12" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+    <text x="14" y="38" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">vitalik.eth</text>
+    <!-- ENS Verified Chip -->
+    <rect x="180" y="20" width="94" height="26" rx="13" fill="#00E599" fill-opacity="0.12" stroke="#00E599" stroke-opacity="0.3"/>
+    <path d="M190 33 L193 36 L198 30" stroke="#00E599" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <text x="202" y="37" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">ENS Verified</text>
+    <!-- Address Book Icon -->
+    <g transform="translate(296, 22)" stroke="#94A3B8" stroke-width="1.5" fill="none">
+      <rect x="2" y="2" width="14" height="16" rx="2"/>
+      <path d="M6 6 H12 M6 10 H12 M6 14 H9"/>
+    </g>
+    <!-- Full resolved address hint -->
+    <text x="2" y="78" fill="#64748B" font-family="Inter, sans-serif" font-size="11" font-weight="500">Resolved: 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045</text>
+  </g>
+
+  <!-- Asset & Amount Input Card -->
+  <g transform="translate(20, 164)">
+    <text x="0" y="0" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">TRANSFER AMOUNT</text>
+    <rect y="8" width="335" height="96" rx="16" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+    <!-- Token selector pill -->
+    <g transform="translate(14, 22)">
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="14" cy="14" r="12" fill="url(#ethGrad)"/>
+          <!-- 3D Isometric Diamond Facets -->
+          <path d="M14 1 L21.5 14.5 L14 19 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M14 1 L6.5 14.5 L14 19 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M14 20 L21.5 15.5 L14 28 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M14 20 L6.5 15.5 L14 28 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M14 19 L21.5 14.5 L14 11 Z" fill="#FFFFFF" fill-opacity="0.45"/>
+          <path d="M14 19 L6.5 14.5 L14 11 Z" fill="#FFFFFF" fill-opacity="0.3"/>
+        </g>
+        
+
+      <text x="34" y="19" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">ETH</text>
+      <path d="M68 15 L72 19 L76 15" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    </g>
+    <text x="320" y="40" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Avail: 4.25 ETH</text>
+
+    <!-- Big Input Amount -->
+    <text x="14" y="82" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="28" font-weight="800">0.85</text>
+    <!-- MAX Button -->
+    <rect x="272" y="60" width="48" height="26" rx="8" fill="#6366F1" fill-opacity="0.15" stroke="#6366F1" stroke-opacity="0.4"/>
+    <text x="296" y="77" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="11" font-weight="700">MAX</text>
+    <!-- Fiat conversion -->
+    <text x="2" y="122" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">≈ $2,932.67 USD</text>
+  </g>
+
+  <!-- Gas Fee Selector (EIP-1559) -->
+  <g transform="translate(20, 314)">
+    <text x="0" y="0" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">NETWORK SPEED &amp; GAS (EIP-1559)</text>
+
+    <!-- Slow -->
+    <g transform="translate(0, 10)">
+      <rect width="104" height="66" rx="12" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <text x="12" y="24" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Slow</text>
+      <text x="12" y="44" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">$1.80</text>
+      <text x="12" y="58" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">12 Gwei</text>
+    </g>
+
+    <!-- Standard (Selected) -->
+    <g transform="translate(114, 10)">
+      <rect width="106" height="66" rx="12" fill="#141E32" stroke="#00F5A0" stroke-width="1.5"/>
+      <text x="12" y="24" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">Standard</text>
+      <text x="12" y="44" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">$2.45</text>
+      <text x="12" y="58" fill="#00E599" font-family="Inter, sans-serif" font-size="10" font-weight="600">16 Gwei</text>
+    </g>
+
+    <!-- Fast -->
+    <g transform="translate(230, 10)">
+      <rect width="105" height="66" rx="12" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <text x="12" y="24" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Fast</text>
+      <text x="12" y="44" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">$3.10</text>
+      <text x="12" y="58" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">22 Gwei</text>
+    </g>
+  </g>
+
+  <!-- Total Summary Card -->
+  <g transform="translate(20, 420)">
+    <rect width="335" height="52" rx="12" fill="#121726" stroke="#253248" stroke-width="1"/>
+    <text x="16" y="32" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="600">Total with Gas</text>
+    <text x="320" y="32" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="15" font-weight="800">0.8507 ETH ($2,935.12)</text>
+  </g>
+
+  <!-- CTA -->
+  <g transform="translate(20, 560)">
+    <g filter="url(#btnGlowGreen)">
+      <rect width="335" height="48" rx="14" fill="url(#primaryGreenBtn)"/>
+      <rect width="335" height="48" rx="14" stroke="#A7F3D0" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="167" y="29" text-anchor="middle" fill="#042F2E" font-family="Inter, sans-serif" font-size="15" font-weight="800">Review &amp; Send Transfer</text>
+    </g>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 07-Receive -->
+    <!-- ============================================== -->
+    <g id="07-Receive" transform="translate(886, 900)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">07 · RECEIVE QR CODE</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Receive Assets</text>
+    
+</g>
+
+  <!-- Network Selector Pill -->
+  <g transform="translate(105, 66)">
+    <rect width="165" height="32" rx="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#00E599"/>
+    <text x="28" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">Ethereum (ERC-20)</text>
+    <path d="M148 14 L152 18 L156 14" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- High-Density Vector QR Card -->
+  <g transform="translate(57, 114)" filter="url(#cardShadow)">
+    <rect width="260" height="260" rx="20" fill="#FFFFFF"/>
+    <!-- Corner Markers -->
+    <rect x="24" y="24" width="56" height="56" rx="8" fill="#000000"/>
+    <rect x="34" y="34" width="36" height="36" rx="4" fill="#FFFFFF"/>
+    <rect x="42" y="42" width="20" height="20" rx="2" fill="#000000"/>
+
+    <rect x="180" y="24" width="56" height="56" rx="8" fill="#000000"/>
+    <rect x="190" y="34" width="36" height="36" rx="4" fill="#FFFFFF"/>
+    <rect x="198" y="42" width="20" height="20" rx="2" fill="#000000"/>
+
+    <rect x="24" y="180" width="56" height="56" rx="8" fill="#000000"/>
+    <rect x="34" y="190" width="36" height="36" rx="4" fill="#FFFFFF"/>
+    <rect x="42" y="198" width="20" height="20" rx="2" fill="#000000"/>
+
+    <!-- High Density Vector Bits -->
+    <g fill="#000000">
+      <rect x="94" y="26" width="10" height="10"/>
+      <rect x="110" y="26" width="10" height="10"/>
+      <rect x="136" y="26" width="10" height="10"/>
+      <rect x="152" y="26" width="10" height="10"/>
+      <rect x="94" y="42" width="10" height="10"/>
+      <rect x="126" y="42" width="10" height="10"/>
+      <rect x="146" y="42" width="10" height="10"/>
+      <rect x="100" y="58" width="10" height="10"/>
+      <rect x="116" y="58" width="10" height="10"/>
+      <rect x="136" y="58" width="10" height="10"/>
+
+      <rect x="26" y="94" width="10" height="10"/>
+      <rect x="46" y="94" width="10" height="10"/>
+      <rect x="74" y="94" width="10" height="10"/>
+      <rect x="180" y="94" width="10" height="10"/>
+      <rect x="206" y="94" width="10" height="10"/>
+      <rect x="222" y="94" width="10" height="10"/>
+
+      <rect x="26" y="114" width="10" height="10"/>
+      <rect x="58" y="114" width="10" height="10"/>
+      <rect x="74" y="114" width="10" height="10"/>
+      <rect x="180" y="114" width="10" height="10"/>
+      <rect x="214" y="114" width="10" height="10"/>
+
+      <rect x="26" y="138" width="10" height="10"/>
+      <rect x="46" y="138" width="10" height="10"/>
+      <rect x="74" y="138" width="10" height="10"/>
+      <rect x="180" y="138" width="10" height="10"/>
+      <rect x="206" y="138" width="10" height="10"/>
+
+      <rect x="94" y="180" width="10" height="10"/>
+      <rect x="126" y="180" width="10" height="10"/>
+      <rect x="152" y="180" width="10" height="10"/>
+      <rect x="180" y="180" width="10" height="10"/>
+      <rect x="214" y="180" width="10" height="10"/>
+
+      <rect x="100" y="206" width="10" height="10"/>
+      <rect x="126" y="206" width="10" height="10"/>
+      <rect x="146" y="206" width="10" height="10"/>
+      <rect x="180" y="206" width="10" height="10"/>
+      <rect x="222" y="206" width="10" height="10"/>
+    </g>
+
+    <!-- Center Fist Logo Badge -->
+    <rect x="106" y="106" width="48" height="48" rx="12" fill="#111624" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="130" cy="130" r="16" fill="url(#fistLogoGrad)"/>
+    <text x="130" y="135" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="900">F</text>
+  </g>
+
+  <!-- Address Display & Copy Box -->
+  <g transform="translate(20, 396)">
+    <rect width="335" height="52" rx="12" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+    <text x="16" y="32" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="600">0x71C...39F180ad4E59c288524E55...</text>
+    <!-- Copy Button -->
+    <g transform="translate(272, 12)">
+      <rect width="52" height="28" rx="8" fill="#6366F1" fill-opacity="0.15" stroke="#6366F1" stroke-opacity="0.4"/>
+      <text x="26" y="18" text-anchor="middle" fill="#818CF8" font-family="Inter, sans-serif" font-size="11" font-weight="700">COPY</text>
+    </g>
+  </g>
+
+  <!-- Security Warning Notice -->
+  <g transform="translate(20, 464)">
+    <rect width="335" height="50" rx="12" fill="#78350F" fill-opacity="0.2" stroke="#F59E0B" stroke-opacity="0.3" stroke-width="1"/>
+    <circle cx="20" cy="25" r="9" fill="#F59E0B" fill-opacity="0.2"/>
+    <text x="20" y="29" text-anchor="middle" fill="#FBBF24" font-family="Inter, sans-serif" font-size="11" font-weight="800">!</text>
+    <text x="38" y="22" fill="#FEF3C7" font-family="Inter, sans-serif" font-size="11" font-weight="600">Only send ETH &amp; ERC-20 tokens to this address.</text>
+    <text x="38" y="38" fill="#FDE68A" font-family="Inter, sans-serif" font-size="10" font-weight="500">Sending Solana or Bitcoin here will result in permanent loss.</text>
+  </g>
+
+  <!-- Share Button -->
+  <g transform="translate(20, 560)">
+    <rect width="335" height="48" rx="14" fill="url(#secondaryBtnGrad)" stroke="#2B364C" stroke-width="1.2"/>
+    <text x="167" y="29" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="14" font-weight="700">Share QR / Address</text>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 08-Activity -->
+    <!-- ============================================== -->
+    <g id="08-Activity" transform="translate(1309, 900)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">08 · TRANSACTION ACTIVITY</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Activity History</text>
+    
+</g>
+
+  <!-- Filter Pills -->
+  <g transform="translate(20, 66)">
+    <!-- All (Active) -->
+    <rect x="0" y="0" width="58" height="28" rx="14" fill="#00E599" fill-opacity="0.15" stroke="#00E599" stroke-opacity="0.4"/>
+    <text x="29" y="18" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">All</text>
+    <!-- Sends -->
+    <rect x="66" y="0" width="68" height="28" rx="14" fill="#131826" stroke="#253248" stroke-width="1"/>
+    <text x="100" y="18" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Sends</text>
+    <!-- Receives -->
+    <rect x="142" y="0" width="80" height="28" rx="14" fill="#131826" stroke="#253248" stroke-width="1"/>
+    <text x="182" y="18" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Receives</text>
+    <!-- Swaps -->
+    <rect x="230" y="0" width="68" height="28" rx="14" fill="#131826" stroke="#253248" stroke-width="1"/>
+    <text x="264" y="18" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Swaps</text>
+  </g>
+
+  <!-- Activity List -->
+  <g transform="translate(20, 114)">
+    <text x="0" y="0" fill="#64748B" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">OCTOBER 2026</text>
+
+    <!-- Item 1: Swap Confirmed -->
+    <g transform="translate(0, 12)">
+      <rect width="335" height="74" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <circle cx="28" cy="37" r="18" fill="#10B981" fill-opacity="0.15"/>
+      <path d="M22 34 H34 M34 34 L30 30 M34 40 H22 M22 40 L26 44" stroke="#00E599" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      <text x="56" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">SWAP ETH to USDT</text>
+      <text x="56" y="50" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Oct 5, 22:30 · Confirmed</text>
+      <text x="320" y="30" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="14" font-weight="700">+ 5,168 USDT</text>
+      <text x="320" y="50" text-anchor="end" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">-1.5 ETH</text>
+    </g>
+
+    <!-- Item 2: Send Ethereum Confirmed -->
+    <g transform="translate(0, 96)">
+      <rect width="335" height="74" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <circle cx="28" cy="37" r="18" fill="#EF4444" fill-opacity="0.15"/>
+      <path d="M23 42 L33 32 M33 32 H26 M33 32 V39" stroke="#FF5252" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      <text x="56" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Send Ethereum</text>
+      <text x="56" y="50" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">To: vitalik.eth · Confirmed</text>
+      <text x="320" y="30" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">-0.85 ETH</text>
+      <text x="320" y="50" text-anchor="end" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">-$2,932.67</text>
+    </g>
+
+    <!-- Item 3: Receive Solana Confirmed -->
+    <g transform="translate(0, 180)">
+      <rect width="335" height="74" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <circle cx="28" cy="37" r="18" fill="#10B981" fill-opacity="0.15"/>
+      <path d="M33 32 L23 42 M23 42 H30 M23 42 V35" stroke="#00E599" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      <text x="56" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Receive Solana</text>
+      <text x="56" y="50" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">From: 7UdM...8k2L</text>
+      <text x="320" y="30" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="14" font-weight="700">+ 28.50 SOL</text>
+      <text x="320" y="50" text-anchor="end" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">+$4,235.10</text>
+    </g>
+
+    <!-- Item 4: Pending Contract Interaction -->
+    <g transform="translate(0, 264)">
+      <rect width="335" height="74" rx="14" fill="#141926" stroke="#F59E0B" stroke-opacity="0.6" stroke-width="1.2"/>
+      <circle cx="28" cy="37" r="18" fill="#F59E0B" fill-opacity="0.15"/>
+      <path d="M22 37 H34 M28 31 V43" stroke="#FBBF24" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      <text x="56" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Uniswap UniversalRouter</text>
+      <text x="56" y="50" fill="#FBBF24" font-family="Inter, sans-serif" font-size="12" font-weight="600">Pending (12/24 blocks) ⏳</text>
+      <text x="320" y="30" text-anchor="end" fill="#FBBF24" font-family="Inter, sans-serif" font-size="13" font-weight="700">exactInput</text>
+      <text x="320" y="50" text-anchor="end" fill="#64748B" font-family="Inter, sans-serif" font-size="11" font-weight="500">Gas: $4.10</text>
+    </g>
+  </g>
+
+
+    <g transform="translate(0, 568)">
+      <rect width="375" height="72" fill="#0A0E18" stroke="#1D263B" stroke-width="1"/>
+      <!-- Top highlight -->
+      <line x1="0" y1="1" x2="375" y2="1" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/>
+    
+
+        <g>
+          <rect x="25" y="10" width="44" height="28" rx="14" fill="#00F5A0" fill-opacity="0.12"/>
+          <path d="M6 8 H20 V18 H6 Z M16 13 H18" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="47" y="52" text-anchor="middle" fill="#00F5A0" font-family="Inter, sans-serif" font-size="10" font-weight="700">Wallet</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M6 10 H18 M18 10 L14 6 M18 16 H6 M6 16 L10 20" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="137" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Swap</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 5 A7 7 0 1 1 12 19 A7 7 0 1 1 12 5 M5 12 H19" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="227" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">DApps</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 7 A5 5 0 1 1 12 17 A5 5 0 1 1 12 7" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="317" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Settings</text>
+        </g>
+        
+</g>
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 09-Swap -->
+    <!-- ============================================== -->
+    <g id="09-Swap" transform="translate(40, 1620)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">09 · TOKEN SWAP AGGREGATOR</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <!-- Extension Top Header -->
+    <g transform="translate(16, 16)">
+      <!-- Account Selector Pill -->
+      <rect x="0" y="0" width="138" height="32" rx="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+      <circle cx="16" cy="16" r="8" fill="#6366F1"/>
+      <circle cx="16" cy="16" r="4" fill="#A5B4FC"/>
+      <text x="32" y="20" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">Account 1</text>
+      <path d="M120 14 L124 18 L128 14" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+      <!-- Network Selector Pill -->
+      <rect x="146" y="0" width="124" height="32" rx="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+      <circle cx="160" cy="16" r="4" fill="#00E599"/>
+      <text x="172" y="20" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="600">Ethereum</text>
+      <path d="M252 14 L256 18 L260 14" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+      <!-- Lock & Quick Action Icons -->
+      <g transform="translate(278, 0)">
+        <circle cx="16" cy="16" r="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+        <rect x="11" y="14" width="10" height="9" rx="2" stroke="#94A3B8" stroke-width="1.4" fill="none"/>
+        <path d="M13 14 V12 C13 10.3 14.3 9 16 9 C17.7 9 19 10.3 19 12 V14" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      </g>
+      <g transform="translate(314, 0)">
+        <circle cx="16" cy="16" r="16" fill="#141926" stroke="#263147" stroke-width="1"/>
+        <!-- Expand to tab icon -->
+        <path d="M12 20 L20 12 M20 12 H14 M20 12 V18" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </g>
+    </g>
+    
+
+  <!-- Swap Header & Slippage -->
+  <g transform="translate(20, 66)">
+    <text x="0" y="18" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="800">Token Swap</text>
+    <!-- Slippage Pill -->
+    <rect x="250" y="0" width="85" height="28" rx="14" fill="#131826" stroke="#253248" stroke-width="1"/>
+    <text x="282" y="18" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="600">0.5% ⚙</text>
+  </g>
+
+  <!-- Container for You Pay & You Receive -->
+  <g transform="translate(20, 108)">
+    <!-- Pay Card -->
+    <rect width="335" height="98" rx="16" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+    <text x="16" y="26" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700">YOU PAY</text>
+    <text x="320" y="26" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="500">Balance: 4.25 <tspan fill="#818CF8" font-weight="700">MAX</tspan></text>
+    <text x="16" y="64" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="28" font-weight="800">1.5</text>
+    <text x="16" y="86" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">≈ $5,175.30</text>
+
+    <!-- Pay Token Pill -->
+    <g transform="translate(230, 42)">
+      <rect width="90" height="34" rx="17" fill="#161C2C" stroke="#2C374E" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="17" cy="17" r="12" fill="url(#ethGrad)"/>
+          <!-- 3D Isometric Diamond Facets -->
+          <path d="M17 4 L24.5 17.5 L17 22 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M17 4 L9.5 17.5 L17 22 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M17 23 L24.5 18.5 L17 31 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M17 23 L9.5 18.5 L17 31 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M17 22 L24.5 17.5 L17 14 Z" fill="#FFFFFF" fill-opacity="0.45"/>
+          <path d="M17 22 L9.5 17.5 L17 14 Z" fill="#FFFFFF" fill-opacity="0.3"/>
+        </g>
+        
+
+      <text x="36" y="22" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">ETH</text>
+      <path d="M72 17 L76 21 L80 17" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    </g>
+
+    <!-- Floating Reversal Button -->
+    <g transform="translate(148, 82)">
+      <circle cx="20" cy="20" r="20" fill="#131928" stroke="#00F5A0" stroke-width="1.5"/>
+      <path d="M15 17 L25 17 M25 17 L21 13 M25 23 L15 23 M15 23 L19 27" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+
+    <!-- Receive Card -->
+    <g transform="translate(0, 106)">
+      <rect width="335" height="98" rx="16" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+      <text x="16" y="26" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700">YOU RECEIVE (ESTIMATED)</text>
+      <text x="320" y="26" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="500">Balance: 8,500.00</text>
+      <text x="16" y="64" fill="#00E599" font-family="Inter, sans-serif" font-size="28" font-weight="800">5,168.42</text>
+      <text x="16" y="86" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">≈ $5,168.42 (-0.13%)</text>
+
+      <!-- Receive Token Pill -->
+      <g transform="translate(220, 42)">
+        <rect width="100" height="34" rx="17" fill="#161C2C" stroke="#2C374E" stroke-width="1"/>
+      
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="17" cy="17" r="12" fill="url(#usdtGrad)"/>
+          <path d="M9 10 H25 V14 H19.5 V25 H14.5 V14 H9 Z" fill="#FFFFFF"/>
+          <ellipse cx="17" cy="18" rx="8" ry="3" stroke="#FFFFFF" stroke-width="1.4" fill="none"/>
+        </g>
+        
+
+        <text x="36" y="22" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">USDT</text>
+        <path d="M82 17 L86 21 L90 17" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Route & Rates Details Card -->
+  <g transform="translate(20, 332)">
+    <rect width="335" height="114" rx="14" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+    <g transform="translate(16, 24)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Rate</text>
+      <text x="303" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">1 ETH = 3,445.61 USDT</text>
+    </g>
+    <g transform="translate(16, 50)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Routing Protocol</text>
+      <text x="303" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">FistAggregator (Best)</text>
+    </g>
+    <g transform="translate(16, 76)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Price Impact</text>
+      <text x="303" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">&lt; 0.01%</text>
+    </g>
+    <g transform="translate(16, 100)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Estimated Gas</text>
+      <text x="303" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">~$3.42 (Standard)</text>
+    </g>
+  </g>
+
+  <!-- CTA -->
+  <g transform="translate(20, 470)">
+    <g filter="url(#btnGlowGreen)">
+      <rect width="335" height="48" rx="14" fill="url(#primaryGreenBtn)"/>
+      <rect width="335" height="48" rx="14" stroke="#A7F3D0" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="167" y="29" text-anchor="middle" fill="#042F2E" font-family="Inter, sans-serif" font-size="15" font-weight="800">Review Swap Order</text>
+    </g>
+  </g>
+
+
+    <g transform="translate(0, 568)">
+      <rect width="375" height="72" fill="#0A0E18" stroke="#1D263B" stroke-width="1"/>
+      <!-- Top highlight -->
+      <line x1="0" y1="1" x2="375" y2="1" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/>
+    
+
+        <g>
+          
+          <path d="M6 8 H20 V18 H6 Z M16 13 H18" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="47" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Wallet</text>
+        </g>
+        
+
+        <g>
+          <rect x="115" y="10" width="44" height="28" rx="14" fill="#00F5A0" fill-opacity="0.12"/>
+          <path d="M6 10 H18 M18 10 L14 6 M18 16 H6 M6 16 L10 20" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="137" y="52" text-anchor="middle" fill="#00F5A0" font-family="Inter, sans-serif" font-size="10" font-weight="700">Swap</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 5 A7 7 0 1 1 12 19 A7 7 0 1 1 12 5 M5 12 H19" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="227" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">DApps</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 7 A5 5 0 1 1 12 17 A5 5 0 1 1 12 7" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="317" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Settings</text>
+        </g>
+        
+</g>
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 10-Wallets -->
+    <!-- ============================================== -->
+    <g id="10-Wallets" transform="translate(463, 1620)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">10 · MULTI-WALLET DRAWER</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Manage Accounts</text>
+    
+</g>
+
+  <!-- Multi-Chain Family Selector -->
+  <g transform="translate(20, 66)">
+    <rect width="335" height="34" rx="10" fill="#101522" stroke="#253248" stroke-width="1"/>
+    <!-- EVM (Active) -->
+    <rect x="2" y="2" width="108" height="30" rx="8" fill="#6366F1"/>
+    <text x="56" y="21" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">EVM</text>
+    <!-- Solana -->
+    <text x="167" y="21" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Solana</text>
+    <!-- Bitcoin -->
+    <text x="278" y="21" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Bitcoin</text>
+  </g>
+
+  <!-- Account Cards List -->
+  <g transform="translate(20, 116)">
+    <text x="0" y="0" fill="#64748B" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">EVM WALLET ACCOUNTS (HD DERIVED)</text>
+
+    <!-- Account 1 (Active) -->
+    <g transform="translate(0, 12)">
+      <rect width="335" height="74" rx="14" fill="#141E32" stroke="#00F5A0" stroke-width="1.5"/>
+      <circle cx="28" cy="37" r="16" fill="#6366F1"/>
+      <text x="28" y="42" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="800">1</text>
+      <text x="56" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Account 1 (Primary)</text>
+      <text x="56" y="50" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">0x887Fee...8539ff1a</text>
+      <text x="303" y="30" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="800">$28,495.80</text>
+      <circle cx="318" cy="37" r="8" fill="#00E599"/>
+      <path d="M315 37 L317 39 L321 35" stroke="#042F2E" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    </g>
+
+    <!-- Account 2 -->
+    <g transform="translate(0, 96)">
+      <rect width="335" height="74" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <circle cx="28" cy="37" r="16" fill="#3B82F6"/>
+      <text x="28" y="42" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="800">2</text>
+      <text x="56" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Trading / DApp Vault</text>
+      <text x="56" y="50" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">0x442C00...8842bc01</text>
+      <text x="320" y="42" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">$4,120.50</text>
+    </g>
+
+    <!-- Hardware Cold Account -->
+    <g transform="translate(0, 180)">
+      <rect width="335" height="74" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <rect x="14" y="23" width="28" height="28" rx="8" fill="#F59E0B" fill-opacity="0.15"/>
+      <rect x="20" y="29" width="16" height="16" rx="3" stroke="#FBBF24" stroke-width="1.5" fill="none"/>
+      <text x="56" y="30" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Ledger Nano S Plus</text>
+      <text x="56" y="50" fill="#FBBF24" font-family="Inter, sans-serif" font-size="11" font-weight="600">Cold Hardware Storage</text>
+      <text x="320" y="42" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">$105,240.00</text>
+    </g>
+  </g>
+
+  <!-- Add & Connect Action Buttons -->
+  <g transform="translate(20, 430)">
+    <g>
+      <rect width="335" height="46" rx="12" fill="#141A28" stroke="#263147" stroke-width="1"/>
+      <circle cx="28" cy="23" r="10" fill="#6366F1" fill-opacity="0.2"/>
+      <path d="M28 17 V29 M22 23 H34" stroke="#818CF8" stroke-width="2" stroke-linecap="round"/>
+      <text x="48" y="28" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="13" font-weight="700">Create Next HD Account</text>
+    </g>
+
+    <g transform="translate(0, 56)">
+      <rect width="335" height="46" rx="12" fill="#141A28" stroke="#263147" stroke-width="1"/>
+      <circle cx="28" cy="23" r="10" fill="#F59E0B" fill-opacity="0.2"/>
+      <path d="M22 23 H34 M28 17 V29" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/>
+      <text x="48" y="28" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="13" font-weight="700">Connect Hardware / Import Key</text>
+    </g>
+  </g>
+
+
+    <g transform="translate(0, 568)">
+      <rect width="375" height="72" fill="#0A0E18" stroke="#1D263B" stroke-width="1"/>
+      <!-- Top highlight -->
+      <line x1="0" y1="1" x2="375" y2="1" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/>
+    
+
+        <g>
+          <rect x="25" y="10" width="44" height="28" rx="14" fill="#00F5A0" fill-opacity="0.12"/>
+          <path d="M6 8 H20 V18 H6 Z M16 13 H18" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="47" y="52" text-anchor="middle" fill="#00F5A0" font-family="Inter, sans-serif" font-size="10" font-weight="700">Wallet</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M6 10 H18 M18 10 L14 6 M18 16 H6 M6 16 L10 20" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="137" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Swap</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 5 A7 7 0 1 1 12 19 A7 7 0 1 1 12 5 M5 12 H19" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="227" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">DApps</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 7 A5 5 0 1 1 12 17 A5 5 0 1 1 12 7" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="317" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Settings</text>
+        </g>
+        
+</g>
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 11-Chains -->
+    <!-- ============================================== -->
+    <g id="11-Chains" transform="translate(886, 1620)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">11 · NETWORK SELECTOR</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Select Network</text>
+    
+</g>
+
+  <!-- Search Input Bar -->
+  <g transform="translate(20, 66)">
+    <rect width="335" height="44" rx="12" fill="#101522" stroke="#253248" stroke-width="1"/>
+    <circle cx="22" cy="22" r="6" stroke="#94A3B8" stroke-width="1.5" fill="none"/>
+    <path d="M26 26 L32 32" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="40" y="26" fill="#64748B" font-family="Inter, sans-serif" font-size="13" font-weight="500">Search networks or Chain ID...</text>
+  </g>
+
+  <!-- Networks List -->
+  <g transform="translate(20, 126)">
+    <!-- Ethereum (Active) -->
+    <g transform="translate(0, 0)">
+      <rect width="335" height="64" rx="14" fill="#141E32" stroke="#00F5A0" stroke-width="1.5"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="32" r="16" fill="url(#ethGrad)"/>
+          <!-- 3D Isometric Diamond Facets -->
+          <path d="M28 19 L35.5 32.5 L28 37 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M28 19 L20.5 32.5 L28 37 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M28 38 L35.5 33.5 L28 46 Z" fill="#FFFFFF" fill-opacity="0.95"/>
+          <path d="M28 38 L20.5 33.5 L28 46 Z" fill="#FFFFFF" fill-opacity="0.7"/>
+          <path d="M28 37 L35.5 32.5 L28 29 Z" fill="#FFFFFF" fill-opacity="0.45"/>
+          <path d="M28 37 L20.5 32.5 L28 29 Z" fill="#FFFFFF" fill-opacity="0.3"/>
+        </g>
+        
+
+      <text x="56" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Ethereum Mainnet</text>
+      <text x="56" y="48" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Chain ID: 1 · ETH</text>
+      <!-- Latency Chip -->
+      <rect x="238" y="22" width="56" height="22" rx="11" fill="#00E599" fill-opacity="0.12"/>
+      <circle cx="248" cy="33" r="3" fill="#00E599"/>
+      <text x="256" y="37" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">12ms</text>
+      <!-- Checkmark -->
+      <circle cx="316" cy="32" r="8" fill="#00E599"/>
+      <path d="M313 32 L315 34 L319 30" stroke="#042F2E" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    </g>
+
+    <!-- Arbitrum -->
+    <g transform="translate(0, 74)">
+      <rect width="335" height="64" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="32" r="16" fill="url(#arbGrad)"/>
+          <path d="M28 22 L36 40 H31 L28 33 L25 40 H20 Z" fill="#FFFFFF"/>
+        </g>
+        
+
+      <text x="56" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Arbitrum One</text>
+      <text x="56" y="48" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Chain ID: 42161 · L2 Fast</text>
+      <rect x="260" y="22" width="56" height="22" rx="11" fill="#00E599" fill-opacity="0.12"/>
+      <circle cx="270" cy="33" r="3" fill="#00E599"/>
+      <text x="278" y="37" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">24ms</text>
+    </g>
+
+    <!-- Solana -->
+    <g transform="translate(0, 148)">
+      <rect width="335" height="64" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="32" r="16" fill="url(#solGrad)"/>
+          <g transform="translate(20, 26)" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round">
+            <path d="M0 0 L13 0 L16 3 L3 3 Z" fill="#FFFFFF" stroke="none"/>
+            <path d="M16 5 L3 5 L0 8 L13 8 Z" fill="#FFFFFF" stroke="none"/>
+            <path d="M0 10 L13 10 L16 13 L3 13 Z" fill="#FFFFFF" stroke="none"/>
+          </g>
+        </g>
+        
+
+      <text x="56" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Solana Mainnet-Beta</text>
+      <text x="56" y="48" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">SVM High-Speed · SOL</text>
+      <rect x="260" y="22" width="56" height="22" rx="11" fill="#00E599" fill-opacity="0.12"/>
+      <circle cx="270" cy="33" r="3" fill="#00E599"/>
+      <text x="278" y="37" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">45ms</text>
+    </g>
+
+    <!-- Bitcoin -->
+    <g transform="translate(0, 222)">
+      <rect width="335" height="64" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+    
+
+        <g filter="url(#subtleShadow)">
+          <circle cx="28" cy="32" r="16" fill="url(#btcGrad)"/>
+          <text x="28" y="38" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="900">₿</text>
+        </g>
+        
+
+      <text x="56" y="28" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="700">Bitcoin Network</text>
+      <text x="56" y="48" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">UTXO / Native SegWit · BTC</text>
+      <rect x="252" y="22" width="64" height="22" rx="11" fill="#F59E0B" fill-opacity="0.12"/>
+      <circle cx="262" cy="33" r="3" fill="#F59E0B"/>
+      <text x="270" y="37" fill="#FBBF24" font-family="Inter, sans-serif" font-size="11" font-weight="700">120ms</text>
+    </g>
+  </g>
+
+  <!-- Add Custom RPC CTA -->
+  <g transform="translate(20, 560)">
+    <rect width="335" height="48" rx="14" fill="url(#secondaryBtnGrad)" stroke="#2B364C" stroke-width="1.2"/>
+    <text x="167" y="29" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="14" font-weight="700">+ Add Custom Network (RPC)</text>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 12-Settings -->
+    <!-- ============================================== -->
+    <g id="12-Settings" transform="translate(1309, 1620)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">12 · SYSTEM SETTINGS</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+    <g transform="translate(18, 18)">
+    
+
+        <rect width="34" height="34" rx="17" fill="#131826" stroke="#253147" stroke-width="1"/>
+        <path d="M19 22 L13 17 L19 12" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        
+
+      <text x="170" y="23" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3">Settings</text>
+    
+</g>
+
+  <g transform="translate(20, 66)">
+    <text x="0" y="0" fill="#64748B" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">GENERAL PREFERENCES</text>
+
+    <g transform="translate(0, 10)">
+      <rect width="335" height="48" rx="12" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+      <text x="16" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Language</text>
+      <text x="319" y="29" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">English / 中文 ›</text>
+    </g>
+
+    <g transform="translate(0, 66)">
+      <rect width="335" height="48" rx="12" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+      <text x="16" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Base Currency</text>
+      <text x="319" y="29" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">USD ($) ›</text>
+    </g>
+
+    <g transform="translate(0, 122)">
+      <rect width="335" height="48" rx="12" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+      <text x="16" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Auto-Lock Timer</text>
+      <text x="319" y="29" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">15 Minutes ›</text>
+    </g>
+  </g>
+
+  <g transform="translate(20, 260)">
+    <text x="0" y="0" fill="#64748B" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">SECURITY &amp; CONNECTIVITY</text>
+
+    <g transform="translate(0, 10)">
+      <rect width="335" height="48" rx="12" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+      <text x="16" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Address Book (Contacts)</text>
+      <text x="319" y="29" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="700">6 Saved ›</text>
+    </g>
+
+    <g transform="translate(0, 66)">
+      <rect width="335" height="48" rx="12" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+      <text x="16" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Connected DApps</text>
+      <text x="319" y="29" text-anchor="end" fill="#818CF8" font-family="Inter, sans-serif" font-size="13" font-weight="700">3 Active ›</text>
+    </g>
+
+    <g transform="translate(0, 122)">
+      <rect width="335" height="48" rx="12" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+      <text x="16" y="29" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="600">Change Password</text>
+      <text x="319" y="29" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="13" font-weight="500">›</text>
+    </g>
+  </g>
+
+  <!-- Emergency Lock Vault CTA -->
+  <g transform="translate(20, 480)">
+    <rect width="335" height="48" rx="14" fill="#7F1D1D" fill-opacity="0.25" stroke="#EF4444" stroke-opacity="0.5" stroke-width="1.2"/>
+    <text x="167" y="29" text-anchor="middle" fill="#F87171" font-family="Inter, sans-serif" font-size="14" font-weight="700">Lock FistWallet Now</text>
+  </g>
+
+  <!-- Version Footer -->
+  <text x="187" y="556" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="12" font-weight="500">FistWallet Extension v1.2.0 (Build 2026.10)</text>
+
+
+    <g transform="translate(0, 568)">
+      <rect width="375" height="72" fill="#0A0E18" stroke="#1D263B" stroke-width="1"/>
+      <!-- Top highlight -->
+      <line x1="0" y1="1" x2="375" y2="1" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/>
+    
+
+        <g>
+          
+          <path d="M6 8 H20 V18 H6 Z M16 13 H18" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="47" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Wallet</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M6 10 H18 M18 10 L14 6 M18 16 H6 M6 16 L10 20" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="137" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">Swap</text>
+        </g>
+        
+
+        <g>
+          
+          <path d="M12 5 A7 7 0 1 1 12 19 A7 7 0 1 1 12 5 M5 12 H19" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="227" y="52" text-anchor="middle" fill="#64748B" font-family="Inter, sans-serif" font-size="10" font-weight="500">DApps</text>
+        </g>
+        
+
+        <g>
+          <rect x="295" y="10" width="44" height="28" rx="14" fill="#00F5A0" fill-opacity="0.12"/>
+          <path d="M12 7 A5 5 0 1 1 12 17 A5 5 0 1 1 12 7" stroke="#00F5A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="317" y="52" text-anchor="middle" fill="#00F5A0" font-family="Inter, sans-serif" font-size="10" font-weight="700">Settings</text>
+        </g>
+        
+</g>
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 13-DApp-Connect -->
+    <!-- ============================================== -->
+    <g id="13-DApp-Connect" transform="translate(40, 2340)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">13 · DAPP CONNECT REQUEST</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+  <!-- DApp Domain Header Card -->
+  <g transform="translate(20, 24)">
+    <rect width="335" height="84" rx="16" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+    <!-- Uniswap Logo Badge -->
+    <rect x="16" y="18" width="48" height="48" rx="14" fill="#FF007A" fill-opacity="0.15" stroke="#FF007A" stroke-opacity="0.3"/>
+    <circle cx="40" cy="42" r="14" fill="#FF007A"/>
+    <text x="40" y="47" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="900">🦄</text>
+
+    <text x="76" y="40" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="16" font-weight="800">Uniswap Interface</text>
+    <text x="76" y="58" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">https://app.uniswap.org</text>
+
+    <!-- Verified Badge -->
+    <rect x="246" y="28" width="73" height="24" rx="12" fill="#00E599" fill-opacity="0.12" stroke="#00E599" stroke-opacity="0.3"/>
+    <text x="282" y="44" text-anchor="middle" fill="#00E599" font-family="Inter, sans-serif" font-size="11" font-weight="700">VERIFIED</text>
+  </g>
+
+  <text x="187" y="136" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="800">Connect to this site?</text>
+  <text x="187" y="156" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Uniswap wants to connect to your wallet</text>
+
+  <!-- Permissions Card -->
+  <g transform="translate(20, 178)">
+    <text x="0" y="0" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">REQUESTED PERMISSIONS</text>
+    <rect y="10" width="335" height="124" rx="14" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+
+    <g transform="translate(16, 36)">
+      <circle cx="8" cy="8" r="7" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M5 8 L7 10 L11 6" stroke="#00E599" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <text x="24" y="12" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="500">See your public address and balance</text>
+    </g>
+
+    <g transform="translate(16, 68)">
+      <circle cx="8" cy="8" r="7" fill="#00E599" fill-opacity="0.15"/>
+      <path d="M5 8 L7 10 L11 6" stroke="#00E599" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <text x="24" y="12" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="500">Request approvals for transactions</text>
+    </g>
+
+    <g transform="translate(16, 100)">
+      <circle cx="8" cy="8" r="7" fill="#EF4444" fill-opacity="0.15"/>
+      <path d="M5 5 L11 11 M11 5 L5 11" stroke="#FF5252" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="24" y="12" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Cannot transfer funds without signature</text>
+    </g>
+  </g>
+
+  <!-- Connect Account Picker Card -->
+  <g transform="translate(20, 332)">
+    <text x="0" y="0" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">CONNECTING ACCOUNT</text>
+    <rect y="10" width="335" height="58" rx="12" fill="#141E32" stroke="#6366F1" stroke-width="1.2"/>
+    <circle cx="28" cy="39" r="14" fill="#6366F1"/>
+    <text x="28" y="44" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="800">1</text>
+    <text x="54" y="34" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">Account 1 (0x887F...ff1a)</text>
+    <text x="54" y="50" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="600">$28,495.80 (Ethereum)</text>
+    <!-- Switch link -->
+    <text x="320" y="42" text-anchor="end" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="700">Change</text>
+  </g>
+
+  <!-- Dual CTAs: Cancel / Connect -->
+  <g transform="translate(20, 560)">
+    <!-- Cancel -->
+    <rect width="160" height="48" rx="14" fill="#141A28" stroke="#253248" stroke-width="1.2"/>
+    <text x="80" y="29" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Cancel</text>
+    <!-- Connect -->
+    <g transform="translate(175, 0)" filter="url(#btnGlowIndigo)">
+      <rect width="160" height="48" rx="14" fill="url(#indigoBtn)"/>
+      <rect width="160" height="48" rx="14" stroke="#A5B4FC" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="80" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="800">Connect Site</text>
+    </g>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 14-DApp-SignTx -->
+    <!-- ============================================== -->
+    <g id="14-DApp-SignTx" transform="translate(463, 2340)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">14 · CONTRACT TX WITH SIMULATION</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+  <!-- DApp Origin Tag -->
+  <g transform="translate(20, 18)">
+    <rect width="335" height="36" rx="10" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+    <circle cx="20" cy="18" r="4" fill="#00E599"/>
+    <text x="32" y="22" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="700">app.uniswap.org</text>
+    <text x="320" y="22" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="500">Contract Interaction</text>
+  </g>
+
+  <text x="20" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="800">Confirm Transaction</text>
+  <text x="20" y="96" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Sign and broadcast smart contract execution</text>
+
+  <!-- Pre-Execution Dry Run Simulation Badge (Key Commercial Feature) -->
+  <g transform="translate(20, 114)">
+    <rect width="335" height="46" rx="12" fill="#064E3B" fill-opacity="0.3" stroke="#00E599" stroke-opacity="0.5" stroke-width="1.2"/>
+    <circle cx="20" cy="23" r="9" fill="#00E599" fill-opacity="0.2"/>
+    <path d="M16 23 L19 26 L24 20" stroke="#00E599" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <text x="36" y="22" fill="#A7F3D0" font-family="Inter, sans-serif" font-size="12" font-weight="700">Simulation Success (Dry Run: No Risk)</text>
+    <text x="36" y="36" fill="#6EE7B7" font-family="Inter, sans-serif" font-size="10" font-weight="500">State change verified: In: +5,168.42 USDT | Out: -1.50 ETH</text>
+  </g>
+
+  <!-- Contract Execution Details -->
+  <g transform="translate(20, 174)">
+    <rect width="335" height="176" rx="16" fill="#101522" stroke="#253248" stroke-width="1.2"/>
+
+    <g transform="translate(16, 24)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Action</text>
+      <text x="303" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">exactInputSingle (Swap)</text>
+    </g>
+
+    <g transform="translate(16, 54)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Interact Contract</text>
+      <text x="303" text-anchor="end" fill="#818CF8" font-family="Inter, sans-serif" font-size="12" font-weight="600">UniversalRouter (0x3fc...8842)</text>
+    </g>
+
+    <g transform="translate(16, 84)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Spend Amount</text>
+      <text x="303" text-anchor="end" fill="#FF5252" font-family="Inter, sans-serif" font-size="12" font-weight="700">-1.50 ETH ($5,175.30)</text>
+    </g>
+
+    <g transform="translate(16, 114)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Receive Amount</text>
+      <text x="303" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">+5,168.42 USDT</text>
+    </g>
+
+    <g transform="translate(16, 144)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Max Network Fee (Gas)</text>
+      <text x="303" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="600">0.0018 ETH (~$6.20)</text>
+    </g>
+  </g>
+
+  <!-- Security Audit Callout -->
+  <g transform="translate(20, 364)">
+    <rect width="335" height="42" rx="12" fill="#121726" stroke="#253248" stroke-width="1"/>
+    <circle cx="20" cy="21" r="9" fill="#00E599" fill-opacity="0.15"/>
+    <path d="M16 21 L19 24 L24 18" stroke="#00E599" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <text x="36" y="25" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="11" font-weight="600">FISTSHIELD: Verified Router · High Liquidity Score</text>
+  </g>
+
+  <!-- Dual CTAs: Reject / Confirm & Sign -->
+  <g transform="translate(20, 560)">
+    <rect width="160" height="48" rx="14" fill="#141A28" stroke="#253248" stroke-width="1.2"/>
+    <text x="80" y="29" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Reject</text>
+
+    <g transform="translate(175, 0)" filter="url(#btnGlowGreen)">
+      <rect width="160" height="48" rx="14" fill="url(#primaryGreenBtn)"/>
+      <rect width="160" height="48" rx="14" stroke="#A7F3D0" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="80" y="29" text-anchor="middle" fill="#042F2E" font-family="Inter, sans-serif" font-size="14" font-weight="800">Confirm &amp; Sign</text>
+    </g>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 15-DApp-SignMessage -->
+    <!-- ============================================== -->
+    <g id="15-DApp-SignMessage" transform="translate(886, 2340)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">15 · EIP-712 TYPED DATA SIGNATURE</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+  <!-- DApp Origin Tag -->
+  <g transform="translate(20, 18)">
+    <rect width="335" height="36" rx="10" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+    <circle cx="20" cy="18" r="4" fill="#00E599"/>
+    <text x="32" y="22" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="700">app.uniswap.org</text>
+    <text x="320" y="22" text-anchor="end" fill="#818CF8" font-family="Inter, sans-serif" font-size="11" font-weight="700">EIP-712 Permit2</text>
+  </g>
+
+  <text x="20" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="800">Signature Request</text>
+  <text x="20" y="96" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Signing this message does NOT cost any gas fee.</text>
+
+  <!-- EIP-712 Structured Data Tree Viewer -->
+  <g transform="translate(20, 114)">
+    <rect width="335" height="236" rx="14" fill="#0A0E18" stroke="#253248" stroke-width="1.2"/>
+    <rect width="335" height="30" rx="14" fill="#141A28"/>
+    <text x="14" y="20" fill="#818CF8" font-family="Courier, monospace" font-size="11" font-weight="700">Permit2 Signature (JSON-RPC)</text>
+
+    <g transform="translate(14, 46)" font-family="Courier, monospace" font-size="11" fill="#E2E8F0">
+      <text y="0" fill="#64748B">[DOMAIN]</text>
+      <text y="16" fill="#CBD5E1">name: "Permit2"</text>
+      <text y="32" fill="#CBD5E1">chainId: 1 (Ethereum)</text>
+      <text y="48" fill="#CBD5E1">verifyingContract: 0x000000000022...</text>
+
+      <text y="74" fill="#64748B">[MESSAGE DETAILS]</text>
+      <text y="90" fill="#00E599">token: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE... (USDC)</text>
+      <text y="106" fill="#CBD5E1">amount: 1500000000 (1,500.00 USDC)</text>
+      <text y="122" fill="#CBD5E1">spender: UniversalRouter (0x3fC...)</text>
+      <text y="138" fill="#CBD5E1">expiration: 1728198400 (In 24 hours)</text>
+      <text y="154" fill="#CBD5E1">nonce: 42</text>
+    </g>
+  </g>
+
+  <!-- Safe Permit2 Notice -->
+  <g transform="translate(20, 364)">
+    <rect width="335" height="42" rx="12" fill="#064E3B" fill-opacity="0.25" stroke="#00E599" stroke-opacity="0.4" stroke-width="1"/>
+    <circle cx="20" cy="21" r="9" fill="#00E599" fill-opacity="0.2"/>
+    <path d="M16 21 L19 24 L24 18" stroke="#00E599" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <text x="36" y="25" fill="#A7F3D0" font-family="Inter, sans-serif" font-size="11" font-weight="600">Safe Permit2 Signature: Auto-expires in 24 hrs.</text>
+  </g>
+
+  <!-- Dual CTAs: Reject / Sign Message -->
+  <g transform="translate(20, 560)">
+    <rect width="160" height="48" rx="14" fill="#141A28" stroke="#253248" stroke-width="1.2"/>
+    <text x="80" y="29" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Reject</text>
+
+    <g transform="translate(175, 0)" filter="url(#btnGlowIndigo)">
+      <rect width="160" height="48" rx="14" fill="url(#indigoBtn)"/>
+      <rect width="160" height="48" rx="14" stroke="#A5B4FC" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="80" y="29" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="14" font-weight="800">Sign Message</text>
+    </g>
+  </g>
+
+</g>
+
+    <!-- ============================================== -->
+    <!-- Frame: 16-DApp-Approval -->
+    <!-- ============================================== -->
+    <g id="16-DApp-Approval" transform="translate(1309, 2340)">
+      <!-- Title Label above Frame in Figma -->
+      <text x="4" y="-14" fill="#94A3B8" font-family="Inter, -apple-system, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">16 · TOKEN SPENDING CAP APPROVAL</text>
+      <!-- Base Phone Canvas (375 x 640 Extension Standard) -->
+      <rect width="375" height="640" rx="24" fill="url(#bgDark)"/>
+      <rect width="375" height="640" rx="24" stroke="url(#frameBorder)" stroke-width="1.5"/>
+      <!-- Inner Specular Highlight Arc -->
+      <rect x="1" y="1" width="373" height="40" rx="23" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    
+
+  <!-- DApp Origin Tag -->
+  <g transform="translate(20, 18)">
+    <rect width="335" height="36" rx="10" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+    <circle cx="20" cy="18" r="4" fill="#00E599"/>
+    <text x="32" y="22" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="12" font-weight="700">app.uniswap.org</text>
+    <text x="320" y="22" text-anchor="end" fill="#F59E0B" font-family="Inter, sans-serif" font-size="11" font-weight="700">Token Approval</text>
+  </g>
+
+  <text x="20" y="76" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="800">Approve USDT Spending</text>
+  <text x="20" y="96" fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Spender: Uniswap UniversalRouter</text>
+
+  <!-- Spending Cap Selector Options -->
+  <g transform="translate(20, 114)">
+    <text x="0" y="0" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="700" letter-spacing="0.4">SPENDING CAP LIMIT</text>
+
+    <!-- Option 1: Exact Amount (Selected) -->
+    <g transform="translate(0, 10)">
+      <rect width="335" height="64" rx="14" fill="#141E32" stroke="#00F5A0" stroke-width="1.5"/>
+      <circle cx="24" cy="32" r="9" fill="#00E599"/>
+      <circle cx="24" cy="32" r="4" fill="#042F2E"/>
+      <text x="44" y="26" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="700">Exact Transaction Amount (Recommended)</text>
+      <text x="44" y="46" fill="#00E599" font-family="Inter, sans-serif" font-size="13" font-weight="800">1,500.00 USDT</text>
+      <text x="320" y="46" text-anchor="end" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11" font-weight="500">Safest</text>
+    </g>
+
+    <!-- Option 2: Unlimited (Warning) -->
+    <g transform="translate(0, 84)">
+      <rect width="335" height="64" rx="14" fill="#101522" stroke="#253248" stroke-width="1"/>
+      <circle cx="24" cy="32" r="9" stroke="#94A3B8" stroke-width="1.5" fill="none"/>
+      <text x="44" y="26" fill="#CBD5E1" font-family="Inter, sans-serif" font-size="13" font-weight="600">Unlimited Approval</text>
+      <text x="44" y="46" fill="#64748B" font-family="Inter, sans-serif" font-size="11" font-weight="500">Allows future swaps without approving again</text>
+    </g>
+  </g>
+
+  <!-- Gas & Spender Card -->
+  <g transform="translate(20, 280)">
+    <rect width="335" height="88" rx="14" fill="#101522" stroke="#202A3D" stroke-width="1"/>
+    <g transform="translate(16, 26)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Approval Gas Fee</text>
+      <text x="303" text-anchor="end" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">~$1.25 (Standard)</text>
+    </g>
+    <g transform="translate(16, 56)">
+      <text fill="#94A3B8" font-family="Inter, sans-serif" font-size="12" font-weight="500">Risk Level</text>
+      <text x="303" text-anchor="end" fill="#00E599" font-family="Inter, sans-serif" font-size="12" font-weight="700">LOW (Official Uniswap Contract)</text>
+    </g>
+  </g>
+
+  <!-- Security Audit Callout -->
+  <g transform="translate(20, 384)">
+    <rect width="335" height="42" rx="12" fill="#064E3B" fill-opacity="0.25" stroke="#00E599" stroke-opacity="0.4" stroke-width="1"/>
+    <circle cx="20" cy="21" r="9" fill="#00E599" fill-opacity="0.2"/>
+    <path d="M16 21 L19 24 L24 18" stroke="#00E599" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <text x="36" y="25" fill="#A7F3D0" font-family="Inter, sans-serif" font-size="11" font-weight="600">Contract Audit Verified: Zero Malicious Functions</text>
+  </g>
+
+  <!-- Dual CTAs: Reject / Approve USDT -->
+  <g transform="translate(20, 560)">
+    <rect width="160" height="48" rx="14" fill="#141A28" stroke="#253248" stroke-width="1.2"/>
+    <text x="80" y="29" text-anchor="middle" fill="#94A3B8" font-family="Inter, sans-serif" font-size="14" font-weight="700">Reject</text>
+
+    <g transform="translate(175, 0)" filter="url(#btnGlowGreen)">
+      <rect width="160" height="48" rx="14" fill="url(#primaryGreenBtn)"/>
+      <rect width="160" height="48" rx="14" stroke="#A7F3D0" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="80" y="29" text-anchor="middle" fill="#042F2E" font-family="Inter, sans-serif" font-size="14" font-weight="800">Approve USDT</text>
+    </g>
+  </g>
+
+</g>
+</svg>

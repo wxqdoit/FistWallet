@@ -18,6 +18,7 @@ export { BraavosAdapter, createBraavosAdapter } from './adapters/braavos';
 export { RazorAdapter, createRazorAdapter } from './adapters/razor';
 export { FistWalletAdapter, createFistWalletAdapter } from "./adapters/fistwallet";
 export { WalletConnectAdapter, createWalletConnectAdapter } from "./adapters/walletconnect";
+export { LedgerAdapter, createLedgerAdapter, isHardwareWalletSupported } from "./adapters/ledger";
 export { rememberConnectedWallet, getRememberedWallet, clearRememberedWallet, eagerConnect, } from './utils/reconnect';
 export { parseRpcError, } from './utils/errors';
 //# sourceMappingURL=index.js.map

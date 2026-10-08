@@ -79,3 +79,33 @@
 ### 7.4 wallet-kit & wallet-example（dApp 接入层与联调工具）
 - [x] **`useSwitchChain` 与 `useSignTypedData` 便捷 Hooks**：提供开箱即用的链切换与 EIP-712 签名 React Hooks
 - [x] **EIP-712 验签与账户推导联调卡片**：在 `wallet-example` 中演示签名并实时恢复验证签名者地址
+
+---
+
+## 8. 第三阶段：生态极致性能与高阶扩展清单 (Phase 3 Enterprise Hardening)
+
+### 8.1 打包体积与极致分包 (Chunk Splitting & Bundle Optimization)
+- [x] **`wallet-extension` 极速分包**：基于 Vite manualChunks 将 React、Radix UI、Phosphor 图标、Crypto 与 TanStack Query 进行原子分包，将扩展主包从 805 kB 骤降至 201 kB，彻底消除 Vite chunk 尺寸超限告警。
+- [x] **`wallet-example` 依赖分包**：为参考 dApp 增加原子 manualChunks 优化，构建产物体积缩减至 350 kB 且首屏加载速度大幅提升。
+
+### 8.2 硬件钱包原生支持 (Hardware Wallet Integration)
+- [x] **`wallet-apdater` Ledger 适配器**：新增 `LedgerAdapter`，原生探测 WebHID / WebUSB 支持并支持 EVM、Solana 与 Bitcoin 硬件派生。
+- [x] **`wallet-extension` 硬件钱包连接面板**：新增 `/connect-hardware` 路由与配对界面，支持将 Ledger/Trezor 硬件钱包一键配对并纳管为独立 Hardware 账户。
+
+### 8.3 账户抽象（AA - ERC-4337 & EIP-7702）端到端闭环
+- [x] **`wallet-chain-interaction` Bundler & Paymaster 封装**：实现 `estimateUserOperationGas`、`sendUserOperation`、`getUserOperationReceipt` 与 `sponsorUserOperation`。
+- [x] **`wallet-kit` 专用 Hook (`useAccountAbstraction`)**：为 Web3 前端开发者提供便捷的智能合约账户 UserOp 构建、代付与广播能力。
+- [x] **`wallet-example` 账户抽象联调卡片**：提供可视化的 UserOperation 构建、Paymaster 赞助代付、Bundler 广播与 EIP-7702 授权签名演示。
+
+### 8.4 浏览器插件弹窗首屏秒开与运行时韧性 (Extension Popup Initialization & Polyfills)
+- [x] **Polyfill 独立前置注入**：提取 `polyfills.ts` 并在 `index.html` 顶层前置引入，注入 `globalThis.Buffer`、`globalThis.global` 与 `process.env`，彻底根除跨链 SDK 模块顶层执行时抛出 `ReferenceError: Buffer is not defined` 阻断 React 挂载的问题。
+- [x] **多链 SDK 动态懒加载 (Lazy Dynamic Splitting)**：重构 `wallet-extension/src/services/rpc.ts`，将 6.6MB 的非 EVM 多链交互提供者移至按需 `await import('wallet-chain-interaction')`，将首屏主弹窗 Bundle 体积降至 187 kB，弹窗界面毫秒级秒开。
+- [x] **状态初始化看门狗机制 (Watchdog Timeout)**：在 `fetchUnlockStatus` 与 `App.tsx` 中建立 2~2.5 秒看门狗保护机制，防止 Background 通信异常时前端一直停留在 `.boot-loader` 旋转动画。
+
+### 8.5 品牌视觉 2.0 与高质感 SVG Logo 系统 (Brand Identity 2.0 & High-End SVG Vector System)
+- [x] **赛博晶体铁拳与金库护盾徽章 (`fistwallet-icon.svg`)**：融合“铁拳（自持主权）、金库护盾、发光私钥晶核、多链骨节”四大意象，打造 3D 钛金切面与顶级多级渐变质感。
+- [x] **全场景品牌矢量套件**：交付透明徽标 (`fistwallet-icon.svg`)、圆角应用大图标 (`fistwallet-app-icon.svg`)、暗黑横版字标 (`fistwallet-logo-full.svg`) 与白银模式横版标 (`fistwallet-logo-full-light.svg`)。
+- [x] **跨尺寸超清像素适配**：生成浏览器插件 16px、48px、128px 高清防锯齿图标，在工具栏与扩展列表极清呈现。
+- [x] **React 原生组件与应用集成**：封装 `<FistWalletLogo />`，并集成至扩展欢迎页 (`Welcome.tsx`)、解锁页 (`Unlock.tsx`) 及参考 dApp (`wallet-example`)。
+- [x] **交互式品牌展示台 Artifact (`fistwallet-logo-showcase.html`)**：提供实时深色/霓虹/深蓝/浅色主题切换、跨尺寸渲染检测与 SVG 源码一键导出。
+

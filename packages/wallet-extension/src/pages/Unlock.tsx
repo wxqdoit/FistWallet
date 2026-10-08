@@ -2,14 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { useSettingsStore } from '@store/settings';
-import {
-    Input,
-    GlassCard,
-    MotionButton,
-} from '@/ui';
-import { LockIcon, ShieldCheckIcon, EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
+import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
 import { t } from '@utils/i18n';
 import { motion } from 'framer-motion';
+import { OkxFistLogo } from '@/components/OkxFistLogo';
 
 export default function Unlock() {
     const navigate = useNavigate();
@@ -22,6 +18,7 @@ export default function Unlock() {
 
     const handleUnlock = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!password || isUnlocking) return;
         setError('');
         setIsUnlocking(true);
 
@@ -42,78 +39,96 @@ export default function Unlock() {
         }
     };
 
+    const handleForgotPassword = () => {
+        if (confirm(t(language, 'forgotPasswordRestoreHint'))) {
+            navigate('/create-password?mode=import');
+        }
+    };
+
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-background via-card/50 to-background text-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="h-full w-full flex flex-col justify-between px-6 pt-12 pb-8 bg-[#070A12] text-white selection:bg-indigo-500/30 select-none relative"
         >
-            {/* Ambient Background Glow */}
-            <div className="absolute top-1/4 w-48 h-48 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
+            {/* Top Brand Section: OKX-Style Pixel Modular F-Fist Logo + Fist Core Headline (No Subtitle) */}
+            <div className="flex flex-col items-center text-center relative z-10 pt-1">
+                <div className="mb-4 flex items-center justify-center">
+                    <OkxFistLogo size={84} mode="f" colorScheme="indigo" glow={false} />
+                </div>
 
-            {/* Logo & Lock Badge */}
-            <div className="text-center mb-8 relative">
-                <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 border border-primary/30 flex items-center justify-center text-primary shadow-xl glow-primary mb-3"
-                >
-                    <LockIcon size={32} weight="duotone" />
-                </motion.div>
-                <h1 className="text-xl font-extrabold tracking-tight text-foreground">
-                    FistWallet
+                {/* Fist Headline: Direct meaning of Fist (No Subtitle) */}
+                <h1 className="text-[26px] font-black tracking-tight text-white leading-tight">
+                    {t(language, 'holdYourAssetsTight')}
                 </h1>
-                <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1">
-                    <ShieldCheckIcon size={14} className="text-success" />
-                    <span>Decentralized Multi-Chain Vault</span>
-                </p>
             </div>
 
-            {/* Form */}
-            <GlassCard className="w-full p-5 border-border/70 glow-card space-y-4">
-                <form onSubmit={handleUnlock} className="space-y-4">
-                    <div className="space-y-1.5">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
-                            <span>Password</span>
-                        </div>
-                        <div className="relative">
-                            <Input
-                                type={showPassword ? 'text' : 'password'}
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                    setError('');
-                                }}
-                                placeholder="Enter wallet password"
-                                autoFocus
-                                className="pr-10 text-xs"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                {showPassword ? <EyeSlashIcon size={16} /> : <EyeIcon size={16} />}
-                            </button>
-                        </div>
+            {/* Middle: Standard Rectangular Card Input (NOT a pill!) in Natural Position */}
+            <div className="w-full relative z-10 mt-8">
+                <form onSubmit={handleUnlock} className="space-y-3">
+                    <div
+                        className={`relative flex items-center rounded-xl border transition-all h-12 px-4 bg-[#0A0D14] ${
+                            error
+                                ? 'border-rose-500/50 ring-1 ring-rose-500/20'
+                                : 'border-white/10 hover:border-white/20 focus-within:border-indigo-500/60 focus-within:ring-1 focus-within:ring-indigo-500/30 shadow-sm'
+                        }`}
+                    >
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setError('');
+                            }}
+                            placeholder={t(language, 'enterUnlockPasswordPlaceholder')}
+                            autoFocus
+                            className="w-full text-sm bg-transparent outline-none text-white placeholder:text-neutral-500 font-normal pr-8 tracking-wide"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors p-1 cursor-pointer flex items-center justify-center"
+                        >
+                            {showPassword ? <EyeSlashIcon size={18} /> : <EyeIcon size={18} />}
+                        </button>
                     </div>
 
                     {error && (
-                        <p className="text-xs text-destructive text-center font-medium bg-destructive/10 p-2 rounded-lg border border-destructive/20">
+                        <p className="text-xs text-rose-400 text-center font-medium py-0.5">
                             {error}
                         </p>
                     )}
-
-                    <MotionButton
-                        type="submit"
-                        disabled={!password || isUnlocking}
-                        className="w-full h-10 text-xs font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-md glow-primary"
-                    >
-                        {isUnlocking ? 'Unlocking Vault...' : t(language, 'unlock')}
-                    </MotionButton>
                 </form>
-            </GlassCard>
+            </div>
+
+            {/* Flexible Breathing Space to Balance Layout */}
+            <div className="flex-1 min-h-[44px]" />
+
+            {/* Bottom Actions: Capsule Pill Button & Forgot Password */}
+            <div className="w-full flex flex-col items-center space-y-3.5 relative z-10">
+                <button
+                    type="button"
+                    onClick={handleUnlock}
+                    disabled={!password || isUnlocking}
+                    className={`w-full h-12 rounded-full font-bold text-[14px] transition-all flex items-center justify-center ${
+                        password && !isUnlocking
+                            ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 active:opacity-85 cursor-pointer'
+                            : 'bg-[#14161E] text-white/30 border border-white/5 cursor-not-allowed'
+                    }`}
+                >
+                    {isUnlocking ? t(language, 'unlocking') : t(language, 'unlockWalletNow')}
+                </button>
+
+                <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-xs text-white/40 hover:text-white transition-colors py-1 cursor-pointer font-medium"
+                >
+                    {t(language, 'forgotPasswordHint')}
+                </button>
+            </div>
         </motion.div>
     );
 }

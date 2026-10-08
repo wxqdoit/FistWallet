@@ -9,6 +9,7 @@ import {
   OkxAdapter,
   UnisatAdapter,
   TronLinkAdapter,
+  LedgerAdapter,
   ChainType,
   AdapterError,
   ADAPTER_ERROR_CODES,
@@ -245,5 +246,40 @@ describe('wallet-apdater Suite', () => {
       expect(unauthorized.isUnauthorized).toBe(true);
     });
 
+    it('instantiates and connects LedgerAdapter', async () => {
+      const statuses: string[] = [];
+      const adapter = new LedgerAdapter({
+        onStatusChange: (status) => statuses.push(status),
+      });
+
+      expect(adapter.info.rdns).toBe('com.ledger');
+      expect(adapter.info.name).toBe('Ledger');
+      expect(adapter.supports).toContain(ChainType.EVM);
+      expect(adapter.supports).toContain(ChainType.SOL);
+      expect(adapter.supports).toContain(ChainType.BTC);
+
+      const evmAccount = await adapter.connect({ chainType: ChainType.EVM, chainId: 1 });
+      expect(evmAccount.address).toMatch(/^0x/);
+      expect(evmAccount.chainType).toBe(ChainType.EVM);
+      expect(statuses).toContain('waiting_device');
+      expect(statuses).toContain('connected');
+
+      const solAccount = await adapter.connect({ chainType: ChainType.SOL });
+      expect(solAccount.chainType).toBe(ChainType.SOL);
+
+      const btcAccount = await adapter.connect({ chainType: ChainType.BTC });
+      expect(btcAccount.chainType).toBe(ChainType.BTC);
+      expect(btcAccount.address).toMatch(/^bc1/);
+
+      const txResult = await adapter.sendTransaction({
+        chainType: ChainType.EVM,
+        transaction: { to: '0x123', value: '100' },
+      });
+      expect(txResult.hash).toBeDefined();
+
+      await adapter.disconnect();
+    });
+
   });
 });
+

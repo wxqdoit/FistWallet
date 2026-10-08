@@ -28,7 +28,7 @@ export function createWallet(params?: ICreateWallet): IWalletFields {
         ...params
     };
     const mnemonic = generateMnemonic(args.length);
-    const privateKey = getPrivateKeyByMnemonic(mnemonic, args.path);
+    const privateKey = getPrivateKeyByMnemonic(mnemonic, args.path, args.passphrase);
     const publicKey = bytesToHex(ed25519.getPublicKey(privateKey))
     const address = getAddressByPrivateKey(privateKey);
     return {
@@ -64,13 +64,14 @@ export function getAddressByPrivateKey(privateKey: string | Uint8Array): string 
  * Get private key from mnemonic
  * @param mnemonic Mnemonic phrase
  * @param hdPath Hierarchical deterministic derivation path
+ * @param passphrase Optional BIP-39 passphrase
  * @returns Private key in hex format
  */
-export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string) {
+export function getPrivateKeyByMnemonic(mnemonic: string, hdPath: string = APTOS_DERIVATION_PATH, passphrase?: string) {
     if (!validateMnemonic(mnemonic)) {
         throw new InvalidMnemonicError();
     }
-    const seed = mnemonicToSeedSync(mnemonic);
+    const seed = mnemonicToSeedSync(mnemonic, passphrase);
     const {key} = derivePath(hdPath, seed);
 
     return bytesToHex(key);

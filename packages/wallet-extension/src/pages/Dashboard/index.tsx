@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
 import { useSettingsStore } from '@store/settings';
@@ -12,9 +12,11 @@ import {
     AlertDialogTitle,
     AlertDialogDescription,
     AlertDialogFooter,
-    GlassCard,
     MotionButton,
     Skeleton,
+    Tabs,
+    TabsList,
+    TabsTrigger,
 } from '@/ui';
 import {
     ArrowsClockwiseIcon,
@@ -62,6 +64,15 @@ export default function Dashboard() {
             return [];
         }
     });
+
+    useEffect(() => {
+        try {
+            const stored = JSON.parse(localStorage.getItem('fist_nfts_' + currentNetwork.id) || '[]');
+            setCustomNfts(stored);
+        } catch {
+            setCustomNfts([]);
+        }
+    }, [currentNetwork.id]);
 
     const currentAddress = currentAccount?.addresses[currentNetwork.chainType] || '';
 
@@ -123,12 +134,11 @@ export default function Dashboard() {
 
     const handleRefreshAll = async () => {
         toast.promise(Promise.all([refetchNative(), refetchTokens()]), {
-            loading: 'Refreshing balances...',
-            success: 'Balances updated',
-            error: 'Failed to refresh balances',
+            loading: t(language, 'refreshBalancesLoading'),
+            success: t(language, 'refreshBalancesSuccess'),
+            error: t(language, 'refreshBalancesFailed'),
         });
     };
-
 
     const handleAddNftSubmit = () => {
         if (!newNftContract || !newNftId) return;
@@ -145,18 +155,18 @@ export default function Dashboard() {
         setNewNftContract('');
         setNewNftId('');
         setNewNftName('');
-        toast.success('NFT added to your gallery!');
+        toast.success(t(language, 'nftAddedToast'));
     };
 
     const handleAddTokenSubmit = async () => {
         if (!newTokenAddress) return;
         try {
             await addTokenMutation.mutateAsync(newTokenAddress);
-            toast.success('Custom token added to your asset list');
+            toast.success(t(language, 'customTokenAddedToast'));
             setIsAddTokenOpen(false);
             setNewTokenAddress('');
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to add token');
+            toast.error(err?.message || t(language, 'tokenDetectFailedToast'));
         }
     };
 
@@ -170,38 +180,36 @@ export default function Dashboard() {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="h-full flex flex-col bg-background text-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans select-none relative"
         >
             {/* Top Navigation Bar */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 backdrop-blur-md">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
                 {/* Account Selector Pill */}
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                <button
+                    type="button"
                     onClick={() => navigate('/wallets/manage')}
-                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-secondary/80 hover:bg-secondary border border-border/50 text-xs font-medium transition-colors"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#14161E] hover:bg-[#1A1D26] active:opacity-80 border border-white/10 text-xs font-semibold text-white transition-colors cursor-pointer"
                 >
-                    <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-[10px] text-white font-bold">
+                    <div className="w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center text-[10px] text-white font-bold">
                         {currentAccount.name.slice(0, 1).toUpperCase()}
                     </div>
-                    <span className="max-w-[80px] truncate">{currentAccount.name}</span>
-                    <CaretDownIcon size={12} className="text-muted-foreground" />
-                </motion.button>
+                    <span className="max-w-[85px] truncate">{currentAccount.name}</span>
+                    <CaretDownIcon size={12} className="text-neutral-400" />
+                </button>
 
                 {/* Network Pill Button */}
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                <button
+                    type="button"
                     onClick={() => navigate('/chains')}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-button text-xs font-medium text-foreground transition-all hover:border-primary/40"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#14161E] hover:bg-[#1A1D26] active:opacity-80 border border-white/10 text-xs font-semibold text-white transition-colors cursor-pointer"
                 >
                     <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
                     </span>
                     <NetworkIcon
                         chainType={currentNetwork.chainType}
@@ -209,84 +217,76 @@ export default function Dashboard() {
                         className="text-foreground"
                         size={14}
                     />
-                    <span className="max-w-[95px] truncate">{currentNetwork.name}</span>
-                    <CaretDownIcon size={12} className="text-muted-foreground" />
-                </motion.button>
+                    <span className="max-w-[90px] truncate">{currentNetwork.name}</span>
+                    <CaretDownIcon size={12} className="text-neutral-400" />
+                </button>
 
                 {/* Action Shortcuts */}
-                <div className="flex items-center gap-1">
-                    <motion.button
-                        whileHover={{ scale: 1.08 }}
-                        whileTap={{ scale: 0.92 }}
+                <div className="flex items-center gap-1.5">
+                    <button
+                        type="button"
                         onClick={handleRefreshAll}
-                        className="p-2 rounded-full hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
-                        title="Refresh Balances"
+                        className="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 text-neutral-400 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+                        title={t(language, 'refreshBalancesTooltip')}
                     >
-                        <ArrowsClockwiseIcon size={18} className={isRefetching ? 'animate-spin' : ''} />
-                    </motion.button>
-                    <motion.button
-                        whileHover={{ scale: 1.08 }}
-                        whileTap={{ scale: 0.92 }}
+                        <ArrowsClockwiseIcon size={16} className={isRefetching ? 'animate-spin text-primary' : ''} />
+                    </button>
+                    <button
+                        type="button"
                         onClick={() => navigate('/settings')}
-                        className="p-2 rounded-full hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
-                        title="Settings"
+                        className="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 text-neutral-400 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+                        title={t(language, 'settings')}
                     >
-                        <GearSixIcon size={18} />
-                    </motion.button>
+                        <GearSixIcon size={16} />
+                    </button>
                 </div>
             </div>
 
             {/* Main Scroll Content */}
             <div className="flex-1 overflow-y-auto scrollbar-thin px-4 py-3 space-y-4">
                 {/* Hero Asset Card */}
-                <GlassCard className="relative overflow-hidden glow-card border-border/60 bg-gradient-to-br from-card/90 via-card/70 to-card/50">
-                    {/* Background Ambient Glow */}
-                    <div className="absolute -top-12 -right-12 w-36 h-36 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
-
-                    {/* Address Chip */}
+                <div className="relative rounded-2xl border border-white/10 bg-[#14161E] p-5 shadow-sm">
+                    {/* Top Row: Address Chip & Balance Privacy Toggle */}
                     <div className="flex items-center justify-between">
-                        <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.97 }}
+                        <button
+                            type="button"
                             onClick={handleCopyAddress}
-                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/20 hover:bg-black/40 border border-white/10 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
+                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-mono text-white/80 hover:text-white transition-all cursor-pointer"
                         >
                             <span>{shortAddress}</span>
                             {copied ? (
-                                <CheckIcon size={13} className="text-success" />
+                                <CheckIcon size={13} className="text-emerald-400" />
                             ) : (
                                 <CopyIcon size={13} />
                             )}
-                        </motion.button>
+                        </button>
 
-                        {/* Balance Privacy Toggle */}
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
+                        <button
+                            type="button"
                             onClick={() => setHideBalance(!hideBalance)}
-                            className="p-1 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+                            className="p-1 rounded-full text-white/40 hover:text-white transition-colors cursor-pointer"
                         >
                             {hideBalance ? <EyeSlashIcon size={16} /> : <EyeIcon size={16} />}
-                        </motion.button>
+                        </button>
                     </div>
 
-                    {/* Total USD Balance */}
-                    <div className="mt-3">
-                        <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-                            Total Net Worth
+                    {/* Total Net Worth Balance */}
+                    <div className="mt-4">
+                        <span className="text-[11px] uppercase tracking-wider text-white/40 font-semibold">
+                            {t(language, 'totalAssetsUsd')}
                         </span>
-                        <div className="text-3xl font-extrabold tracking-tight mt-0.5 text-foreground flex items-baseline gap-2">
+                        <div className="text-3xl font-black tracking-tight mt-0.5 text-white flex items-baseline gap-2">
                             {isNativeLoading ? (
                                 <Skeleton className="h-9 w-36 mt-1" />
                             ) : hideBalance ? (
-                                <span className="font-mono text-2xl tracking-widest text-muted-foreground">••••••••</span>
+                                <span className="font-mono text-2xl tracking-widest text-white/30">••••••••</span>
                             ) : (
                                 <span>${totalUsd}</span>
                             )}
                         </div>
 
                         {/* Native Asset Quantity Subtitle */}
-                        <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <div className="mt-1 flex items-center gap-1.5 text-xs text-white/50">
                             {isNativeLoading ? (
                                 <Skeleton className="h-4 w-24" />
                             ) : hideBalance ? (
@@ -296,95 +296,80 @@ export default function Dashboard() {
                                     {nativeBalanceFormatted} {currentNetwork.nativeCurrency.symbol}
                                 </span>
                             )}
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 border border-white/10 uppercase font-mono">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10 uppercase font-mono text-white/60">
                                 {currentNetwork.name}
                             </span>
                         </div>
                     </div>
 
-                    {/* 4 Interactive Action Buttons */}
-                    <div className="grid grid-cols-4 gap-2 mt-5 pt-3 border-t border-white/5">
+                    {/* 4 OKX-Style Circular Quick Action Buttons */}
+                    <div className="grid grid-cols-4 gap-2 mt-5 pt-4 border-t border-white/5">
                         {[
                             {
                                 id: 'send',
                                 label: t(language, 'send'),
-                                icon: <ArrowUpRightIcon size={18} className="text-indigo-400" />,
+                                icon: <ArrowUpRightIcon size={20} className="text-indigo-400" />,
                                 onClick: () => navigate('/send'),
                             },
                             {
                                 id: 'receive',
                                 label: t(language, 'receive'),
-                                icon: <ArrowDownLeftIcon size={18} className="text-emerald-400" />,
+                                icon: <ArrowDownLeftIcon size={20} className="text-indigo-400" />,
                                 onClick: () => navigate('/receive'),
                             },
                             {
                                 id: 'swap',
                                 label: t(language, 'swap'),
-                                icon: <ArrowsLeftRightIcon size={18} className="text-purple-400" />,
+                                icon: <ArrowsLeftRightIcon size={20} className="text-indigo-400" />,
                                 onClick: () => navigate('/swap'),
                             },
                             {
                                 id: 'activity',
-                                label: 'History',
-                                icon: <ClockCounterClockwiseIcon size={18} className="text-sky-400" />,
+                                label: t(language, 'activityTab'),
+                                icon: <ClockCounterClockwiseIcon size={20} className="text-indigo-400" />,
                                 onClick: () => navigate('/activity'),
                             },
                         ].map((action) => (
-                            <motion.button
+                            <button
                                 key={action.id}
-                                whileHover={{ scale: 1.05, y: -2 }}
-                                whileTap={{ scale: 0.95 }}
+                                type="button"
                                 onClick={action.onClick}
-                                className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 hover:border-white/15 transition-all shadow-sm group"
+                                className="flex flex-col items-center justify-center p-1 rounded-xl transition-opacity active:opacity-75 cursor-pointer group"
                             >
-                                <div className="p-2 rounded-full bg-white/[0.06] group-hover:bg-white/[0.12] transition-colors mb-1.5">
+                                <div className="w-11 h-11 rounded-full bg-[#1F2330] group-hover:bg-[#252A3A] border border-white/10 group-hover:border-indigo-500/40 flex items-center justify-center transition-colors shadow-sm mb-1.5">
                                     {action.icon}
                                 </div>
-                                <span className="text-[11px] font-medium text-foreground/90">{action.label}</span>
-                            </motion.button>
-                        ))}
-                    </div>
-                </GlassCard>
-
-                {/* Asset Navigation Tabs */}
-                <div className="flex items-center justify-between border-b border-border/40 pb-1">
-                    <div className="flex items-center gap-4">
-                        {[
-                            { id: 'tokens', label: 'Tokens' },
-                            { id: 'nfts', label: 'NFTs' },
-                            { id: 'activity', label: 'Activity' },
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => {
-                                    if (tab.id === 'activity') navigate('/activity');
-                                    else setActiveTab('tokens');
-                                }}
-                                className={`relative py-1.5 text-xs font-semibold transition-colors ${
-                                    activeTab === tab.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                                }`}
-                            >
-                                {tab.label}
-                                {activeTab === tab.id && (
-                                    <motion.div
-                                        layoutId="activeTabIndicator"
-                                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
-                                    />
-                                )}
+                                <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">{action.label}</span>
                             </button>
                         ))}
                     </div>
+                </div>
+
+                {/* Segmented Asset Navigation Tabs */}
+                <div className="flex items-center justify-between pt-1">
+                    <Tabs
+                        value={activeTab}
+                        onValueChange={(val) => {
+                            if (val === 'activity') navigate('/activity');
+                            else setActiveTab(val as 'tokens' | 'nfts');
+                        }}
+                    >
+                        <TabsList className="h-8 bg-[#14161E] border border-white/10 p-0.5 rounded-xl">
+                            <TabsTrigger value="tokens" className="px-3 py-1 text-xs">{t(language, 'tokensTab')}</TabsTrigger>
+                            <TabsTrigger value="nfts" className="px-3 py-1 text-xs">{t(language, 'nftsTab')}</TabsTrigger>
+                            <TabsTrigger value="activity" className="px-3 py-1 text-xs">{t(language, 'activityTab')}</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
 
                     {currentNetwork.chainType === 'evm' && (
-                        <motion.button
-                            whileHover={{ scale: 1.04 }}
-                            whileTap={{ scale: 0.96 }}
+                        <button
+                            type="button"
                             onClick={() => activeTab === 'nfts' ? setIsAddNftOpen(true) : setIsAddTokenOpen(true)}
-                            className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 font-medium px-2 py-1 rounded-md hover:bg-primary/10 transition-colors"
+                            className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-medium px-2.5 py-1 rounded-full bg-[#14161E] border border-white/10 hover:border-white/20 transition-all cursor-pointer"
                         >
-                            <PlusIcon size={14} />
-                            <span>{activeTab === 'nfts' ? 'Import NFT' : t(language, 'addToken')}</span>
-                        </motion.button>
+                            <PlusIcon size={13} weight="bold" />
+                            <span>{activeTab === 'nfts' ? t(language, 'addNft') : t(language, 'addToken')}</span>
+                        </button>
                     )}
                 </div>
 
@@ -392,13 +377,12 @@ export default function Dashboard() {
                 {activeTab === 'tokens' ? (
                 <div className="space-y-2">
                     {/* Native Token Item */}
-                    <motion.div
-                        whileHover={{ scale: 1.01 }}
-                        className="flex items-center justify-between p-3.5 rounded-xl border border-border/50 bg-card/60 hover:bg-card/90 transition-all cursor-pointer"
+                    <div
+                        className="flex items-center justify-between p-3.5 rounded-2xl border border-white/5 hover:border-white/15 bg-[#14161E] hover:bg-[#1A1D26] active:opacity-85 transition-colors cursor-pointer shadow-sm"
                         onClick={() => navigate('/send')}
                     >
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-full bg-[#1F2330] border border-white/10 flex items-center justify-center">
                                 <NetworkIcon
                                     chainType={currentNetwork.chainType}
                                     iconKey={currentNetwork.icon}
@@ -407,50 +391,50 @@ export default function Dashboard() {
                                 />
                             </div>
                             <div>
-                                <p className="font-semibold text-sm leading-tight text-foreground">
+                                <p className="font-bold text-sm leading-tight text-white">
                                     {currentNetwork.nativeCurrency.symbol}
                                 </p>
-                                <p className="text-xs text-muted-foreground">{currentNetwork.nativeCurrency.name}</p>
+                                <p className="text-xs text-neutral-400">{currentNetwork.nativeCurrency.name}</p>
                             </div>
                         </div>
                         <div className="text-right">
                             {isNativeLoading ? (
                                 <Skeleton className="h-4 w-20 ml-auto mb-1" />
                             ) : (
-                                <p className="font-semibold text-sm text-foreground">
+                                <p className="font-bold text-sm text-white">
                                     {hideBalance ? '••••' : nativeBalanceFormatted} {currentNetwork.nativeCurrency.symbol}
                                 </p>
                             )}
-                            <p className="text-[11px] text-muted-foreground font-mono">
+                            <p className="text-[11px] text-neutral-400 font-mono">
                                 {hideBalance ? '••••' : `$${(parseFloat(nativeBalanceFormatted || '0') * usdRate).toFixed(2)}`}
                             </p>
                         </div>
-                    </motion.div>
+                    </div>
 
                     {/* Custom Tokens Items */}
                     <AnimatePresence>
                         {customTokens.map((tok) => (
                             <motion.div
                                 key={tok.address}
-                                initial={{ opacity: 0, y: 4 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -4 }}
-                                whileHover={{ scale: 1.01 }}
-                                className="flex items-center justify-between p-3.5 rounded-xl border border-border/40 bg-card/40 hover:bg-card/80 transition-all cursor-pointer"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.15 }}
+                                className="flex items-center justify-between p-3.5 rounded-2xl border border-white/5 hover:border-white/15 bg-[#14161E] hover:bg-[#1A1E2C] active:opacity-85 transition-colors cursor-pointer shadow-sm"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center font-bold text-xs uppercase">
+                                    <div className="w-10 h-10 rounded-full bg-[#1F2330] text-white border border-white/10 flex items-center justify-center font-bold text-xs uppercase">
                                         {tok.symbol.slice(0, 3)}
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-sm leading-tight text-foreground">{tok.symbol}</p>
-                                        <p className="text-[10px] text-muted-foreground font-mono">
+                                        <p className="font-bold text-sm leading-tight text-white">{tok.symbol}</p>
+                                        <p className="text-[10px] text-neutral-400 font-mono">
                                             {tok.address.slice(0, 6)}...{tok.address.slice(-4)}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-semibold text-sm text-foreground">
+                                    <p className="font-bold text-sm text-white">
                                         {hideBalance ? '••••' : tok.formatted} {tok.symbol}
                                     </p>
                                 </div>
@@ -462,34 +446,33 @@ export default function Dashboard() {
                 /* NFT Collectibles Gallery */
                 <div className="space-y-3">
                     {customNfts.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground bg-card/20 rounded-2xl border border-dashed border-border/60 p-6">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-2">
+                        <div className="flex flex-col items-center justify-center py-12 text-center text-white/50 bg-[#14161E] rounded-2xl border border-white/5 p-6">
+                            <div className="w-12 h-12 rounded-full bg-[#1F2330] text-white/80 border border-white/10 flex items-center justify-center mb-2">
                                 <SparkleIcon size={24} />
                             </div>
-                            <p className="text-xs font-semibold text-foreground">No Collectibles Found</p>
-                            <p className="text-[11px] text-muted-foreground mt-0.5 max-w-[200px]">
-                                Import your favorite digital collectibles on {currentNetwork.name}.
+                            <p className="text-xs font-semibold text-white">{t(language, 'noNftsYet')}</p>
+                            <p className="text-[11px] text-white/40 mt-0.5 max-w-[200px]">
+                                {t(language, 'importNftDesc', { network: currentNetwork.name })}
                             </p>
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setIsAddNftOpen(true)}
-                                className="mt-3 text-xs gap-1 border-primary/40 text-primary hover:bg-primary/10"
+                                className="mt-3 text-xs gap-1 border-white/10 bg-[#1F2330] hover:bg-[#252A3A] text-white"
                             >
                                 <PlusIcon size={13} />
-                                <span>Import NFT</span>
+                                <span>{t(language, 'importNftAction')}</span>
                             </Button>
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-2.5">
                             {customNfts.map((nft) => (
-                                <motion.div
+                                <div
                                     key={nft.id}
-                                    whileHover={{ scale: 1.02, y: -2 }}
-                                    className="rounded-xl border border-border/60 bg-card/60 p-2.5 flex flex-col space-y-2 overflow-hidden hover:border-primary/40 transition-colors shadow-sm"
+                                    className="rounded-xl border border-border/60 bg-card/60 p-2.5 flex flex-col space-y-2 overflow-hidden hover:border-indigo-500/40 active:opacity-85 transition-colors shadow-sm cursor-pointer"
                                 >
-                                    <div className="w-full aspect-square rounded-lg bg-gradient-to-tr from-indigo-500/20 via-purple-500/30 to-pink-500/20 border border-white/5 flex items-center justify-center relative overflow-hidden">
-                                        <SparkleIcon size={32} className="text-primary/70 animate-pulse" />
+                                    <div className="w-full aspect-square rounded-lg bg-[#1F2330] border border-white/10 flex items-center justify-center relative overflow-hidden">
+                                        <SparkleIcon size={32} className="text-indigo-400/70 animate-pulse" />
                                         <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded text-[9px] font-mono bg-black/60 text-white font-semibold">
                                             #{nft.tokenId}
                                         </span>
@@ -500,7 +483,7 @@ export default function Dashboard() {
                                             {nft.contract.slice(0, 6)}...{nft.contract.slice(-4)}
                                         </p>
                                     </div>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
                     )}
@@ -514,15 +497,15 @@ export default function Dashboard() {
                     <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2 text-base font-semibold">
                             <SparkleIcon size={18} className="text-primary" />
-                            Import Collectible (NFT)
+                            {t(language, 'importCollectibleNft')}
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-xs text-muted-foreground">
-                            Enter the ERC-721 or ERC-1155 contract address and token ID on {currentNetwork.name}.
+                            {t(language, 'importCollectibleDesc', { network: currentNetwork.name })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="py-2 space-y-2.5">
                         <div>
-                            <Label className="text-xs font-medium">Contract Address</Label>
+                            <Label className="text-xs font-medium">{t(language, 'contractAddress')}</Label>
                             <Input
                                 value={newNftContract}
                                 onChange={(e) => setNewNftContract(e.target.value)}
@@ -532,7 +515,7 @@ export default function Dashboard() {
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                             <div>
-                                <Label className="text-xs font-medium">Token ID</Label>
+                                <Label className="text-xs font-medium">{t(language, 'tokenId')}</Label>
                                 <Input
                                     value={newNftId}
                                     onChange={(e) => setNewNftId(e.target.value)}
@@ -541,7 +524,7 @@ export default function Dashboard() {
                                 />
                             </div>
                             <div>
-                                <Label className="text-xs font-medium">Name (Optional)</Label>
+                                <Label className="text-xs font-medium">{t(language, 'nameOptional')}</Label>
                                 <Input
                                     value={newNftName}
                                     onChange={(e) => setNewNftName(e.target.value)}
@@ -557,14 +540,14 @@ export default function Dashboard() {
                             onClick={() => setIsAddNftOpen(false)}
                             className="flex-1"
                         >
-                            Cancel
+                            {t(language, 'cancel')}
                         </Button>
                         <MotionButton
                             onClick={handleAddNftSubmit}
                             disabled={!newNftContract || !newNftId}
                             className="flex-1"
                         >
-                            Import
+                            {t(language, 'importNftAction')}
                         </MotionButton>
                     </AlertDialogFooter>
                 </AlertDialogContent>
@@ -576,14 +559,14 @@ export default function Dashboard() {
                     <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2 text-base font-semibold">
                             <SparkleIcon size={18} className="text-primary" />
-                            Add Custom Token
+                            {t(language, 'addCustomTokenModalTitle')}
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-xs text-muted-foreground">
-                            Enter the ERC-20 contract address on {currentNetwork.name}. FistWallet will query the decimals and balance automatically.
+                            {t(language, 'addCustomTokenModalDesc', { network: currentNetwork.name })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="py-2 space-y-2">
-                        <Label className="text-xs font-medium">Contract Address</Label>
+                        <Label className="text-xs font-medium">{t(language, 'contractAddress')}</Label>
                         <Input
                             value={newTokenAddress}
                             onChange={(e) => setNewTokenAddress(e.target.value)}
@@ -597,14 +580,14 @@ export default function Dashboard() {
                             onClick={() => setIsAddTokenOpen(false)}
                             className="flex-1"
                         >
-                            Cancel
+                            {t(language, 'cancel')}
                         </Button>
                         <MotionButton
                             onClick={handleAddTokenSubmit}
                             disabled={!newTokenAddress || addTokenMutation.isPending}
                             className="flex-1"
                         >
-                            {addTokenMutation.isPending ? 'Detecting...' : 'Add Asset'}
+                            {addTokenMutation.isPending ? t(language, 'detectingToken') : t(language, 'addAsset')}
                         </MotionButton>
                     </AlertDialogFooter>
                 </AlertDialogContent>

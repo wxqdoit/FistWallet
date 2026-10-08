@@ -13,6 +13,7 @@ import { createUnisatAdapter } from '../adapters/unisat';
 import { createBraavosAdapter } from '../adapters/braavos';
 import { createRazorAdapter } from '../adapters/razor';
 import { createWalletConnectAdapter } from '../adapters/walletconnect';
+import { createLedgerAdapter } from '../adapters/ledger';
 import { getEip6963Providers, subscribeEip6963Providers } from '../discovery/eip6963';
 export const defaultAdapterFactories = [
     { rdns: 'io.fistwallet', create: createFistWalletAdapter },
@@ -30,6 +31,7 @@ export const defaultAdapterFactories = [
     { rdns: 'wallet.braavos', create: createBraavosAdapter },
     { rdns: 'wallet.razor', create: createRazorAdapter },
     { rdns: 'org.walletconnect', create: createWalletConnectAdapter },
+    { rdns: 'com.ledger', create: () => createLedgerAdapter() },
 ];
 export function createAdapterRegistry(factories = defaultAdapterFactories) {
     let adapters = [];

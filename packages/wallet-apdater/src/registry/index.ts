@@ -14,6 +14,7 @@ import { createUnisatAdapter } from '@/adapters/unisat';
 import { createBraavosAdapter } from '@/adapters/braavos';
 import { createRazorAdapter } from '@/adapters/razor';
 import { createWalletConnectAdapter } from '@/adapters/walletconnect';
+import { createLedgerAdapter } from '@/adapters/ledger';
 import type { WalletAdapter } from '@/core/types';
 import { getEip6963Providers, subscribeEip6963Providers } from '@/discovery/eip6963';
 
@@ -45,6 +46,7 @@ export const defaultAdapterFactories: AdapterFactory[] = [
     { rdns: 'wallet.braavos', create: createBraavosAdapter },
     { rdns: 'wallet.razor', create: createRazorAdapter },
     { rdns: 'org.walletconnect', create: createWalletConnectAdapter },
+    { rdns: 'com.ledger', create: () => createLedgerAdapter() },
 ];
 
 export function createAdapterRegistry(

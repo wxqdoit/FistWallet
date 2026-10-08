@@ -13,3 +13,4 @@ export { useSignTypedData } from './hooks/useSignTypedData';
 export { useSignMessage } from './hooks/useSignMessage';
 export { useChain } from './hooks/useChain';
 export { useAutoReconnect } from './hooks/useAutoReconnect';
+export { useAccountAbstraction } from './hooks/useAccountAbstraction';

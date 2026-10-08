@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSettingsStore } from "@store/settings";
-import { Button, Card, CardContent, Input, Label } from "@/ui";
-import { ArrowLeftIcon, PlusIcon, TrashIcon, UserIcon, CopyIcon } from "@phosphor-icons/react";
+import { ArrowLeftIcon, PlusIcon, TrashIcon, UserIcon, CopyIcon, BookBookmarkIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
-import { t } from "@utils/i18n";
 import { getStorage, setStorage } from "@/core/storage";
+import { motion, AnimatePresence } from "framer-motion";
+import { useSettingsStore } from "@store/settings";
+import { t } from "@utils/i18n";
 
 interface Contact {
     id: string;
@@ -32,7 +32,7 @@ export default function Contacts() {
 
     const handleSave = async () => {
         if (!name.trim() || !address.trim()) {
-            toast.error("Please enter both contact name and address");
+            toast.error(t(language, 'enterContactNameAndAddress'));
             return;
         }
 
@@ -48,125 +48,151 @@ export default function Contacts() {
         setName("");
         setAddress("");
         setIsAdding(false);
-        toast.success("Contact saved successfully");
+        toast.success(t(language, 'contactSavedToast'));
     };
 
     const handleDelete = async (id: string) => {
         const updated = contacts.filter(c => c.id !== id);
         setContacts(updated);
         await setStorage(CONTACTS_KEY, updated);
-        toast.success("Contact removed");
+        toast.success(t(language, 'contactDeletedToast'));
     };
 
     const copyAddr = (addr: string) => {
         navigator.clipboard.writeText(addr);
-        toast.success("Address copied");
+        toast.success(t(language, 'addressCopiedToClipboard'));
     };
 
     return (
-        <div className="h-full flex flex-col bg-background">
-            {/* Header */}
-            <div className="p-4 flex items-center justify-between border-b border-border/40">
-                <Button
-                    variant="ghost"
-                    size="sm"
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans"
+        >
+            {/* Unified Sticky Header */}
+            <div className="px-4 py-3.5 flex items-center justify-between border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
+                <button
+                    type="button"
                     onClick={() => navigate(-1)}
-                    className="px-2 text-muted-foreground hover:text-foreground"
+                    className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 hover:border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors"
                 >
-                    <ArrowLeftIcon size={16} />
-                    <span className="ml-1">{t(language, "back")}</span>
-                </Button>
-                <h2 className="text-base font-semibold">Address Book</h2>
-                <Button
-                    variant="ghost"
-                    size="sm"
+                    <ArrowLeftIcon size={16} weight="bold" />
+                </button>
+                <div className="flex items-center gap-1.5">
+                    <BookBookmarkIcon size={18} className="text-indigo-400" />
+                    <h1 className="text-sm font-semibold tracking-tight text-white">{t(language, 'addressBookTitle')}</h1>
+                </div>
+                <button
+                    type="button"
                     onClick={() => setIsAdding(!isAdding)}
-                    className="px-2 text-primary hover:text-primary/80"
+                    className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
+                        isAdding
+                            ? 'bg-indigo-600 border-indigo-500 text-white'
+                            : 'bg-white/[0.04] border-white/10 hover:border-white/20 text-white/70 hover:text-white'
+                    }`}
                 >
-                    <PlusIcon size={18} />
-                </Button>
+                    <PlusIcon size={16} weight="bold" />
+                </button>
             </div>
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin">
-                {isAdding && (
-                    <Card className="border-primary/40 bg-muted/30 mb-4">
-                        <CardContent className="p-4 space-y-3">
-                            <h3 className="text-sm font-semibold">Add New Contact</h3>
-                            <div>
-                                <Label className="text-xs mb-1 block">Contact Name</Label>
-                                <Input
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    placeholder="e.g. Alice / My Cold Wallet"
-                                    className="h-8 text-sm"
-                                />
+                <AnimatePresence>
+                    {isAdding && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="p-4 rounded-2xl bg-[#14161E] border border-indigo-500/40 space-y-3 shadow-lg">
+                                <h3 className="text-xs font-semibold text-white">{t(language, 'addNewContact')}</h3>
+                                <div>
+                                    <label className="text-[11px] text-white/50 mb-1 block">{t(language, 'contactNameLabel')}</label>
+                                    <input
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder={t(language, 'contactNamePlaceholder')}
+                                        className="w-full h-11 px-3.5 rounded-xl bg-[#0A0D14] border border-white/10 text-white placeholder:text-neutral-500 text-xs focus:outline-none focus:border-indigo-500/50 transition-colors"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[11px] text-white/50 mb-1 block">{t(language, 'walletAddressLabel')}</label>
+                                    <input
+                                        value={address}
+                                        onChange={(e) => setAddress(e.target.value)}
+                                        placeholder={t(language, 'walletAddressPlaceholder')}
+                                        className="w-full h-11 px-3.5 rounded-xl bg-[#0A0D14] border border-white/10 text-white placeholder:text-neutral-500 text-xs font-mono focus:outline-none focus:border-indigo-500/50 transition-colors"
+                                    />
+                                </div>
+                                <div className="flex gap-2 pt-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsAdding(false)}
+                                        className="flex-1 h-10 rounded-full bg-[#1F2330] hover:bg-[#252A3A] border border-white/10 text-white text-xs font-semibold"
+                                    >
+                                        {t(language, 'cancel')}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleSave}
+                                        className="flex-1 h-10 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors"
+                                    >
+                                        {t(language, 'saveContact')}
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <Label className="text-xs mb-1 block">Wallet Address</Label>
-                                <Input
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    placeholder="0x... or bc1... or solana address"
-                                    className="h-8 text-sm font-mono"
-                                />
-                            </div>
-                            <div className="flex gap-2 pt-1">
-                                <Button size="sm" onClick={handleSave} className="flex-1">
-                                    Save Contact
-                                </Button>
-                                <Button size="sm" variant="secondary" onClick={() => setIsAdding(false)}>
-                                    Cancel
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {contacts.length === 0 && !isAdding ? (
-                    <div className="text-center py-16 text-muted-foreground">
-                        <UserIcon size={36} className="mx-auto mb-2 opacity-50" />
-                        <p className="text-sm font-medium">No saved contacts</p>
-                        <p className="text-xs mt-1">Add trusted addresses to quickly send tokens.</p>
+                    <div className="text-center py-20 text-white/50 space-y-3">
+                        <div className="w-14 h-14 mx-auto rounded-full bg-[#14161E] border border-white/5 flex items-center justify-center text-white/30">
+                            <UserIcon size={32} />
+                        </div>
+                        <p className="text-sm font-semibold text-white/70">{t(language, 'noContactsYet')}</p>
+                        <p className="text-xs text-white/40 max-w-[240px] mx-auto leading-relaxed">
+                            {t(language, 'noContactsDesc')}
+                        </p>
                     </div>
                 ) : (
                     contacts.map((contact) => (
-                        <Card key={contact.id} className="bg-muted/20 border-border/50">
-                            <CardContent className="p-3 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-xs font-bold">
-                                        {contact.name[0]?.toUpperCase()}
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium">{contact.name}</p>
-                                        <p className="text-xs text-muted-foreground font-mono">
-                                            {contact.address.slice(0, 6)}...{contact.address.slice(-4)}
-                                        </p>
-                                    </div>
+                        <div key={contact.id} className="p-3.5 rounded-2xl bg-[#14161E] border border-white/5 hover:border-white/15 transition-all flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-bold text-sm flex items-center justify-center">
+                                    {contact.name[0]?.toUpperCase()}
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
-                                        onClick={() => copyAddr(contact.address)}
-                                    >
-                                        <CopyIcon size={14} />
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-7 w-7 text-destructive hover:bg-destructive/10"
-                                        onClick={() => handleDelete(contact.id)}
-                                    >
-                                        <TrashIcon size={14} />
-                                    </Button>
+                                <div>
+                                    <p className="text-sm font-semibold text-white">{contact.name}</p>
+                                    <p className="text-xs text-white/40 font-mono mt-0.5">
+                                        {contact.address.slice(0, 6)}...{contact.address.slice(-4)}
+                                    </p>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <button
+                                    type="button"
+                                    className="w-8 h-8 rounded-full bg-white/[0.04] text-white/60 hover:text-white flex items-center justify-center transition-colors"
+                                    onClick={() => copyAddr(contact.address)}
+                                >
+                                    <CopyIcon size={14} />
+                                </button>
+                                <button
+                                    type="button"
+                                    className="w-8 h-8 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 flex items-center justify-center transition-colors"
+                                    onClick={() => handleDelete(contact.id)}
+                                >
+                                    <TrashIcon size={14} />
+                                </button>
+                            </div>
+                        </div>
                     ))
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 }
+

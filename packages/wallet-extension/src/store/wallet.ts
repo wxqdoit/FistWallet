@@ -46,6 +46,7 @@ interface WalletState {
     switchAccount: (accountId: string) => void;
     switchNetwork: (networkId: string) => void;
     addAccount: () => Promise<void>;
+    addHardwareWallet: (wallet: Wallet) => Promise<void>;
 }
 
 export const useWalletStore = create<WalletState>((set, get) => {
@@ -65,10 +66,12 @@ export const useWalletStore = create<WalletState>((set, get) => {
 
     const fetchUnlockStatus = async (): Promise<{ isUnlocked: boolean; expiresAt: number | null }> => {
         try {
-            const response = await browser.runtime.sendMessage({
+            const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+            const msgPromise = browser.runtime.sendMessage({
                 type: MessageType.GET_UNLOCK_STATUS,
                 payload: null,
             });
+            const response: any = await Promise.race([msgPromise, timeoutPromise]);
             const data = response?.success
                 ? (response.data as { isUnlocked?: boolean; expiresAt?: number | null })
                 : null;
@@ -405,6 +408,31 @@ export const useWalletStore = create<WalletState>((set, get) => {
                 });
             } catch (error) {
                 console.error('Failed to add wallet from private key:', error);
+                throw error;
+            }
+        },
+
+        addHardwareWallet: async (newWallet: Wallet) => {
+            try {
+                const wallets = [...get().wallets, newWallet];
+                const { currentAccount, currentNetwork, currentWalletId } = resolveWalletState(
+                    wallets,
+                    newWallet.id
+                );
+
+                await persistWalletSelection(wallets, currentWalletId);
+                await setStorage('currentNetwork', currentNetwork.id);
+
+                set({
+                    isInitialized: true,
+                    wallets,
+                    wallet: newWallet,
+                    currentWalletId,
+                    currentAccount,
+                    currentNetwork,
+                });
+            } catch (error) {
+                console.error('Failed to add hardware wallet:', error);
                 throw error;
             }
         },

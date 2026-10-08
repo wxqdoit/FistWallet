@@ -58,15 +58,35 @@ export class SolanaProvider extends ChainProvider {
      * Convert private key string to Keypair
      */
     private getKeypair(privateKey: string): Keypair {
+        let clean = privateKey.trim();
+        if (clean.startsWith('0x') || clean.startsWith('0X')) {
+            clean = clean.slice(2);
+        }
+
+        // Handle hex encoded private key
+        if (/^[0-9a-fA-F]{64}$/.test(clean)) {
+            const seed = Buffer.from(clean, 'hex');
+            return Keypair.fromSeed(seed);
+        }
+        if (/^[0-9a-fA-F]{128}$/.test(clean)) {
+            const secret = Buffer.from(clean, 'hex');
+            return Keypair.fromSecretKey(secret);
+        }
+
         // Handle base58 encoded private key (64 bytes: 32 secret + 32 public)
-        const decoded = base58.decode(privateKey);
-        if (decoded.length === 64) {
-            return Keypair.fromSecretKey(decoded);
+        try {
+            const decoded = base58.decode(clean);
+            if (decoded.length === 64) {
+                return Keypair.fromSecretKey(decoded);
+            }
+            // Handle 32-byte secret key
+            if (decoded.length === 32) {
+                return Keypair.fromSeed(decoded);
+            }
+        } catch {
+            // fall through to error
         }
-        // Handle 32-byte secret key
-        if (decoded.length === 32) {
-            return Keypair.fromSeed(decoded);
-        }
+
         throw new ChainError(
             ChainErrorCode.INVALID_TRANSACTION,
             'Invalid Solana private key format'

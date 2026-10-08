@@ -23,12 +23,44 @@ export default defineConfig({
             '@assets': path.resolve(__dirname, './src/assets'),
         },
     },
+    define: {
+        'global': 'globalThis',
+        'process.env': {},
+    },
     build: {
         rollupOptions: {
             input: {
                 popup: 'index.html',
             },
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('buffer') || id.includes('base64-js') || id.includes('ieee754')) {
+                            return 'vendor-buffer';
+                        }
+                        if (id.includes('@phosphor-icons')) {
+                            return 'vendor-icons';
+                        }
+                        if (id.includes('@radix-ui') || id.includes('framer-motion') || id.includes('sonner')) {
+                            return 'vendor-ui';
+                        }
+                        if (id.includes('@tanstack/react-query')) {
+                            return 'vendor-query';
+                        }
+                        if (id.includes('react-dom')) {
+                            return 'vendor-react-dom';
+                        }
+                        if (id.includes('react-router') || id.includes('react')) {
+                            return 'vendor-react';
+                        }
+                        if (id.includes('@noble') || id.includes('@scure') || id.includes('bip39')) {
+                            return 'vendor-crypto';
+                        }
+                    }
+                },
+            },
         },
+        chunkSizeWarningLimit: 2500,
     },
     server: {
         port: 5173,

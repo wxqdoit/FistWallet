@@ -1,24 +1,19 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
-import {
-    Button,
-    Input,
-    GlassCard,
-    MotionButton,
-} from '@/ui';
+import { useSettingsStore } from '@store/settings';
+import { t } from '@utils/i18n';
 import {
     ArrowLeftIcon,
     ArrowsDownUpIcon,
     CheckCircleIcon,
     SparkleIcon,
-    InfoIcon,
-    CaretDownIcon,
+    SlidersHorizontalIcon,
 } from '@phosphor-icons/react';
 import { NetworkIcon } from '@/components/NetworkIcon';
-import { useNativeBalanceQuery } from '@/services/queries';
+import { useNativeBalanceQuery, useCustomTokensQuery } from '@/services/queries';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface SwapToken {
     symbol: string;
@@ -55,139 +50,195 @@ const TOKEN_PAIRS: Record<string, SwapToken[]> = {
 export default function Swap() {
     const navigate = useNavigate();
     const { currentAccount, currentNetwork } = useWalletStore();
+    const { language } = useSettingsStore();
 
     const [fromAmount, setFromAmount] = useState('');
     const [slippage, setSlippage] = useState('0.5');
     const [selectedTokenIdx, setSelectedTokenIdx] = useState(0);
     const [isSwapping, setIsSwapping] = useState(false);
     const [swapSuccess, setSwapSuccess] = useState(false);
-    const [flipCount, setFlipCount] = useState(0);
+    const [isReversed, setIsReversed] = useState(false);
+    const [showSlippageModal, setShowSlippageModal] = useState(false);
 
     const currentAddress = currentAccount?.addresses[currentNetwork.chainType] || '';
     const { data: balanceData } = useNativeBalanceQuery(currentNetwork, currentAddress);
+    const { data: customTokens = [] } = useCustomTokensQuery(currentNetwork, currentAddress);
     const balanceFormatted = balanceData?.formatted || '0.00';
 
     const availableTokens = TOKEN_PAIRS[currentNetwork.id] || TOKEN_PAIRS.default;
     const currentTargetToken = availableTokens[selectedTokenIdx] || availableTokens[0];
 
+    const tokenItem = customTokens.find(
+        (t) => t.symbol.toUpperCase() === currentTargetToken.symbol.toUpperCase()
+    );
+    const paySymbol = isReversed ? currentTargetToken.symbol : currentNetwork.nativeCurrency.symbol;
+    const payBalance = isReversed ? (tokenItem?.formatted || '0.00') : balanceFormatted;
+    const receiveSymbol = isReversed ? currentNetwork.nativeCurrency.symbol : currentTargetToken.symbol;
+
     const toAmount = useMemo(() => {
         const val = parseFloat(fromAmount);
         if (isNaN(val) || val <= 0) return '';
-        const est = val * currentTargetToken.ratePerNative;
-        return est.toFixed(4);
-    }, [fromAmount, currentTargetToken.ratePerNative]);
+        if (isReversed) {
+            const est = val / currentTargetToken.ratePerNative;
+            return est.toFixed(6);
+        } else {
+            const est = val * currentTargetToken.ratePerNative;
+            return est.toFixed(4);
+        }
+    }, [fromAmount, currentTargetToken.ratePerNative, isReversed]);
 
     const handleFlip = () => {
-        setFlipCount((prev) => prev + 1);
-        toast.info('Reversing swap direction');
+        setIsReversed((prev) => !prev);
+        setFromAmount('');
+        toast.info(t(language, 'swapDirectionSwitched'));
+    };
+
+    const handleMax = () => {
+        const cleanBalance = parseFloat(payBalance) || 0;
+        if (cleanBalance <= 0) return;
+        const maxVal = isReversed
+            ? cleanBalance.toString()
+            : Math.max(0, cleanBalance - 0.005).toFixed(4);
+        setFromAmount(maxVal);
     };
 
     const handleExecuteSwap = async () => {
         const val = parseFloat(fromAmount);
         if (isNaN(val) || val <= 0) return;
         setIsSwapping(true);
-        const toastId = toast.loading('Finding best route and broadcasting swap...');
+        const toastId = toast.loading(t(language, 'findingBestRoute'));
 
         try {
-            await new Promise((r) => setTimeout(r, 1800));
+            await new Promise((r) => setTimeout(r, 1600));
             setIsSwapping(false);
             setSwapSuccess(true);
-            toast.success(`Successfully swapped ${fromAmount} ${currentNetwork.nativeCurrency.symbol} for ${toAmount} ${currentTargetToken.symbol}!`, {
-                id: toastId,
-            });
+            toast.success(
+                t(language, 'swapSuccessToast', {
+                    fromAmount,
+                    fromSymbol: paySymbol,
+                    toAmount,
+                    toSymbol: receiveSymbol,
+                }),
+                {
+                    id: toastId,
+                }
+            );
 
             setTimeout(() => {
                 navigate('/');
-            }, 1800);
+            }, 1500);
         } catch {
             setIsSwapping(false);
-            toast.error('Swap failed. Please try again.', { id: toastId });
+            toast.error(t(language, 'swapFailedToast'), { id: toastId });
         }
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="h-full flex flex-col bg-background text-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans"
         >
-            {/* Header */}
-            <div className="p-4 flex items-center justify-between border-b border-border/40 backdrop-blur-md">
-                <Button
-                    variant="ghost"
-                    size="sm"
+            {/* Unified Sticky Header */}
+            <div className="px-4 py-3.5 flex items-center justify-between border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
+                <button
+                    type="button"
                     onClick={() => navigate(-1)}
-                    className="px-2 text-muted-foreground hover:text-foreground gap-1"
+                    className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 hover:border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors"
                 >
-                    <ArrowLeftIcon size={16} />
-                    <span>Back</span>
-                </Button>
-                <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <SparkleIcon size={16} className="text-purple-400" />
-                    <span>FistSwap DEX</span>
+                    <ArrowLeftIcon size={16} weight="bold" />
+                </button>
+                <div className="flex items-center gap-1.5">
+                    <SparkleIcon size={16} className="text-indigo-400" weight="fill" />
+                    <h1 className="text-sm font-semibold tracking-tight text-white">{t(language, 'instantSwapTitle')}</h1>
                 </div>
-                <div className="w-12" />
+                <button
+                    type="button"
+                    onClick={() => setShowSlippageModal(!showSlippageModal)}
+                    className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
+                        showSlippageModal
+                            ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-400'
+                            : 'bg-white/[0.04] border-white/10 hover:border-white/20 text-white/70 hover:text-white'
+                    }`}
+                >
+                    <SlidersHorizontalIcon size={15} />
+                </button>
             </div>
 
-            {/* Content */}
-            <div className="flex-1 p-4 space-y-3 overflow-y-auto scrollbar-thin">
+            {/* Scrollable Content */}
+            <div className="flex-1 p-4 space-y-2.5 overflow-y-auto scrollbar-thin">
                 {/* Pay Card */}
-                <GlassCard className="p-3.5 space-y-2 border-border/70">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>You Pay</span>
-                        <span>
-                            Balance: {balanceFormatted} {currentNetwork.nativeCurrency.symbol}
-                        </span>
+                <div className="p-4 rounded-2xl bg-[#14161E] border border-white/10 shadow-sm space-y-2.5 focus-within:border-indigo-500/40 transition-colors">
+                    <div className="flex items-center justify-between text-xs text-white/50">
+                        <span className="font-medium">{t(language, 'payAmountLabel')}</span>
+                        <div className="flex items-center gap-2">
+                            <span>{t(language, 'balanceText', { balance: payBalance, symbol: paySymbol })}</span>
+                            <button
+                                type="button"
+                                onClick={handleMax}
+                                className="text-[11px] font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                            >
+                                {t(language, 'maxSendableLabel')}
+                            </button>
+                        </div>
                     </div>
+
                     <div className="flex items-center justify-between gap-3">
-                        <Input
+                        <input
                             type="number"
                             value={fromAmount}
                             onChange={(e) => setFromAmount(e.target.value)}
                             placeholder="0.00"
-                            className="text-xl font-bold bg-transparent border-none p-0 focus-visible:ring-0 shadow-none h-auto"
+                            className="w-full text-2xl font-bold bg-transparent text-white placeholder:text-neutral-600 focus:outline-none font-mono"
                         />
-                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 shrink-0">
-                            <NetworkIcon
-                                chainType={currentNetwork.chainType}
-                                iconKey={currentNetwork.icon}
-                                size={18}
-                            />
-                            <span className="font-bold text-xs">{currentNetwork.nativeCurrency.symbol}</span>
-                        </div>
-                    </div>
-                </GlassCard>
 
-                {/* Flip Divider Button */}
+                        {isReversed ? (
+                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
+                                <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px]">
+                                    {currentTargetToken.symbol.slice(0, 1)}
+                                </div>
+                                <span className="font-bold text-xs">{currentTargetToken.symbol}</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
+                                <NetworkIcon
+                                    chainType={currentNetwork.chainType}
+                                    iconKey={currentNetwork.icon}
+                                    size={18}
+                                />
+                                <span className="font-bold text-xs">{currentNetwork.nativeCurrency.symbol}</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Flip Button Divider */}
                 <div className="relative flex justify-center my-[-10px] z-10">
-                    <motion.button
-                        whileHover={{ scale: 1.12 }}
-                        whileTap={{ scale: 0.88 }}
-                        animate={{ rotate: flipCount * 180 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    <button
+                        type="button"
                         onClick={handleFlip}
-                        className="p-2.5 rounded-full bg-secondary border border-border/80 shadow-md text-primary hover:text-primary/80 transition-colors"
+                        className="w-9 h-9 rounded-full bg-[#1F2330] hover:bg-[#252A3A] active:opacity-80 border border-white/10 hover:border-indigo-500/50 shadow-lg text-indigo-400 hover:text-indigo-300 flex items-center justify-center transition-colors cursor-pointer"
                     >
-                        <ArrowsDownUpIcon size={16} />
-                    </motion.button>
+                        <ArrowsDownUpIcon size={16} weight="bold" />
+                    </button>
                 </div>
 
                 {/* Receive Card */}
-                <GlassCard className="p-3.5 space-y-2 border-border/70">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>You Receive (Estimated)</span>
-                        <div className="flex items-center gap-1">
+                <div className="p-4 rounded-2xl bg-[#14161E] border border-white/10 shadow-sm space-y-2.5">
+                    <div className="flex items-center justify-between text-xs text-white/50">
+                        <span className="font-medium">{t(language, 'receiveAmountLabel')}</span>
+                        <div className="flex items-center gap-1.5">
                             {availableTokens.map((t, idx) => (
                                 <button
                                     key={t.symbol}
                                     type="button"
                                     onClick={() => setSelectedTokenIdx(idx)}
-                                    className={`text-[10px] px-1.5 py-0.5 rounded transition-colors ${
+                                    className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium transition-all ${
                                         selectedTokenIdx === idx
-                                            ? 'bg-primary text-primary-foreground font-bold'
-                                            : 'text-muted-foreground hover:text-foreground'
+                                            ? 'bg-indigo-600 text-white font-bold shadow-sm'
+                                            : 'bg-[#1F2330] text-white/60 hover:text-white border border-white/5'
                                     }`}
                                 >
                                     {t.symbol}
@@ -195,87 +246,118 @@ export default function Swap() {
                             ))}
                         </div>
                     </div>
-                    <div className="flex items-center justify-between gap-3">
-                        <span className="text-xl font-bold text-foreground">
-                            {toAmount || '0.00'}
-                        </span>
-                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 shrink-0 text-primary">
-                            <span className="font-bold text-xs">{currentTargetToken.symbol}</span>
-                            <CaretDownIcon size={12} />
-                        </div>
-                    </div>
-                </GlassCard>
 
-                {/* Slippage Settings */}
-                <div className="pt-2">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
-                        <span className="flex items-center gap-1">
-                            <InfoIcon size={13} />
-                            Slippage Tolerance
-                        </span>
-                        <span className="font-semibold text-foreground">{slippage}%</span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2">
-                        {['0.1', '0.5', '1.0', '2.0'].map((val) => (
-                            <button
-                                key={val}
-                                type="button"
-                                onClick={() => setSlippage(val)}
-                                className={`py-1 rounded-lg text-xs font-medium transition-all ${
-                                    slippage === val
-                                        ? 'bg-primary text-primary-foreground font-bold shadow-sm'
-                                        : 'bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground'
-                                }`}
-                            >
-                                {val}%
-                            </button>
-                        ))}
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="text-2xl font-bold text-white font-mono">
+                            {toAmount || '0.00'}
+                        </div>
+
+                        {isReversed ? (
+                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
+                                <NetworkIcon
+                                    chainType={currentNetwork.chainType}
+                                    iconKey={currentNetwork.icon}
+                                    size={18}
+                                />
+                                <span className="font-bold text-xs">{currentNetwork.nativeCurrency.symbol}</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
+                                <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px]">
+                                    {currentTargetToken.symbol.slice(0, 1)}
+                                </div>
+                                <span className="font-bold text-xs">{currentTargetToken.symbol}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Rate Info Breakdown */}
-                {fromAmount && (
-                    <GlassCard className="p-3 text-xs space-y-1.5 text-muted-foreground">
-                        <div className="flex justify-between">
-                            <span>Exchange Rate</span>
-                            <span className="font-mono text-foreground">
-                                1 {currentNetwork.nativeCurrency.symbol} ≈ {currentTargetToken.ratePerNative} {currentTargetToken.symbol}
+                {/* Slippage Dropdown Panel */}
+                <AnimatePresence>
+                    {showSlippageModal && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="p-3.5 rounded-2xl bg-[#14161E] border border-white/10 space-y-2">
+                                <div className="flex items-center justify-between text-xs text-white/60">
+                                    <span>{t(language, 'slippageTolerance')}</span>
+                                    <span className="font-semibold text-indigo-400">{slippage}%</span>
+                                </div>
+                                <div className="grid grid-cols-4 gap-2">
+                                    {['0.1', '0.5', '1.0', '2.0'].map((val) => (
+                                        <button
+                                            key={val}
+                                            type="button"
+                                            onClick={() => setSlippage(val)}
+                                            className={`py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                                                slippage === val
+                                                    ? 'bg-indigo-600 text-white shadow-sm'
+                                                    : 'bg-[#1F2330] text-white/60 hover:text-white border border-white/5'
+                                            }`}
+                                        >
+                                            {val}%
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Rate Info Breakdown Card */}
+                {fromAmount && parseFloat(fromAmount) > 0 && (
+                    <div className="p-3.5 rounded-2xl bg-[#14161E] border border-white/5 text-xs space-y-2 text-white/60">
+                        <div className="flex justify-between items-center">
+                            <span>{t(language, 'swapRateLabel')}</span>
+                            <span className="font-mono text-white/90">
+                                {isReversed
+                                    ? `1 ${currentTargetToken.symbol} ≈ ${(1 / currentTargetToken.ratePerNative).toFixed(6)} ${currentNetwork.nativeCurrency.symbol}`
+                                    : `1 ${currentNetwork.nativeCurrency.symbol} ≈ ${currentTargetToken.ratePerNative} ${currentTargetToken.symbol}`}
                             </span>
                         </div>
-                        <div className="flex justify-between">
-                            <span>Network Routing</span>
-                            <span className="text-success font-medium">OKX DEX Aggregator</span>
+                        <div className="flex justify-between items-center">
+                            <span>{t(language, 'smartAggregatorRoute')}</span>
+                            <span className="text-indigo-400 font-medium">{t(language, 'fistAggregatorRoute')}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <span>Price Impact</span>
-                            <span className="text-success font-medium">&lt; 0.05%</span>
+                        <div className="flex justify-between items-center">
+                            <span>{t(language, 'estimatedSlippage')}</span>
+                            <span className="text-emerald-400 font-medium">&lt; 0.05%</span>
                         </div>
-                    </GlassCard>
+                        <div className="flex justify-between items-center">
+                            <span>{t(language, 'estimatedNetworkFee')}</span>
+                            <span className="font-mono text-white/80">~0.0008 {currentNetwork.nativeCurrency.symbol}</span>
+                        </div>
+                    </div>
                 )}
             </div>
 
-            {/* Bottom Swap Action */}
-            <div className="p-4 border-t border-border/40 backdrop-blur-md">
-                <MotionButton
+            {/* Bottom Capsule Action */}
+            <div className="p-4 border-t border-white/5 bg-[#070A12]/90 backdrop-blur-md">
+                <button
+                    type="button"
                     onClick={handleExecuteSwap}
                     disabled={!fromAmount || parseFloat(fromAmount) <= 0 || isSwapping}
-                    className="w-full h-11 text-sm font-semibold gap-2 bg-gradient-to-r from-purple-500 via-indigo-600 to-pink-500 hover:opacity-90 glow-primary"
+                    className="w-full h-12 rounded-full font-bold text-[15px] bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 active:opacity-85 transition-opacity disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
                 >
                     {isSwapping ? (
-                        <span>Executing Swap...</span>
+                        <span>{t(language, 'executingSwap')}</span>
                     ) : swapSuccess ? (
                         <>
-                            <CheckCircleIcon size={18} className="text-white" />
-                            <span>Swap Complete!</span>
+                            <CheckCircleIcon size={20} weight="fill" className="text-white" />
+                            <span>{t(language, 'swapSuccess')}</span>
                         </>
                     ) : (
                         <>
-                            <SparkleIcon size={18} />
-                            <span>Swap Now</span>
+                            <SparkleIcon size={18} weight="fill" className="text-white" />
+                            <span>{t(language, 'swapNow')}</span>
                         </>
                     )}
-                </MotionButton>
+                </button>
             </div>
         </motion.div>
     );
 }
+

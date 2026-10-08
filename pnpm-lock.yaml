@@ -299,6 +299,9 @@ importers:
       uuid:
         specifier: ^13.0.0
         version: 13.0.0
+      wallet-chain-interaction:
+        specifier: workspace:*
+        version: link:../wallet-chain-interaction
       wallet-core:
         specifier: workspace:*
         version: link:../wallet-core

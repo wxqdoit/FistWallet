@@ -1,6 +1,13 @@
 import { Network, ChainType } from "../types";
 import { EVM, BTC, Solana, Tron, Aptos, Sui, Ton, Near, Filecoin } from "wallet-core";
 
+function encodeERC20Transfer(to: string, amountRaw: string): string {
+    const cleanTo = to.startsWith("0x") ? to.slice(2) : to;
+    const toHex = cleanTo.padStart(64, "0").toLowerCase();
+    const amountHex = BigInt(amountRaw).toString(16).padStart(64, "0");
+    return "0xa9059cbb" + toHex + amountHex;
+}
+
 /**
  * Validates whether an address is valid for the given chain type
  */
@@ -380,8 +387,52 @@ export async function sendNativeTransfer(
     to: string,
     amount: string
 ): Promise<string> {
+    if (network.chainType === ChainType.SOLANA) {
+        const { SolanaProvider } = await import('wallet-chain-interaction');
+        const provider = new SolanaProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const decimals = network.nativeCurrency?.decimals ?? 9;
+        const lamports = Math.round(parseFloat(amount) * (10 ** decimals)).toString();
+        const res = await provider.sendTransaction(privateKey, { to, value: lamports });
+        return res.hash;
+    }
+
+    if (network.chainType === ChainType.TRON) {
+        const { TronProvider } = await import('wallet-chain-interaction');
+        const provider = new TronProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const decimals = network.nativeCurrency?.decimals ?? 6;
+        const sun = Math.round(parseFloat(amount) * (10 ** decimals)).toString();
+        const res = await provider.sendTransaction(privateKey, { to, value: sun });
+        return res.hash;
+    }
+
+    if (network.chainType === ChainType.SUI) {
+        const { SuiProvider } = await import('wallet-chain-interaction');
+        const provider = new SuiProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const decimals = network.nativeCurrency?.decimals ?? 9;
+        const mist = Math.round(parseFloat(amount) * (10 ** decimals)).toString();
+        const res = await provider.sendTransaction(privateKey, { to, value: mist });
+        return res.hash;
+    }
+
+    if (network.chainType === ChainType.APTOS) {
+        const { AptosProvider } = await import('wallet-chain-interaction');
+        const provider = new AptosProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const decimals = network.nativeCurrency?.decimals ?? 8;
+        const octas = Math.round(parseFloat(amount) * (10 ** decimals)).toString();
+        const res = await provider.sendTransaction(privateKey, { to, value: octas });
+        return res.hash;
+    }
+
+    if (network.chainType === ChainType.NEAR) {
+        const { NearProvider } = await import('wallet-chain-interaction');
+        const provider = new NearProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const yocto = (BigInt(Math.round(parseFloat(amount) * 1e6)) * 10n ** 18n).toString();
+        const res = await provider.sendTransaction(privateKey, { to, value: yocto });
+        return res.hash;
+    }
+
     if (network.chainType !== ChainType.EVM) {
-        throw new Error(`Sending native transfers on ${network.chainType} will be available in the upcoming release.`);
+        throw new Error(`Sending native transfers on ${network.chainType} is not supported.`);
     }
 
     const rpcUrls = getCandidateRpcUrls(network);
@@ -508,6 +559,144 @@ export async function sendNativeTransfer(
 }
 
 /**
+ * Send token transfer (ERC-20, SPL, TRC-20, Sui Coin)
+ */
+export async function sendTokenTransfer(
+    network: Network,
+    privateKey: string,
+    to: string,
+    tokenAddress: string,
+    amount: string,
+    tokenDecimals: number = 18
+): Promise<string> {
+    if (network.chainType === ChainType.EVM) {
+        const parts = amount.split(".");
+        let rawUnits = BigInt(parts[0] || "0") * 10n ** BigInt(tokenDecimals);
+        if (parts[1]) {
+            const fractionPadded = parts[1].padEnd(tokenDecimals, "0").slice(0, tokenDecimals);
+            rawUnits += BigInt(fractionPadded);
+        }
+        const calldata = encodeERC20Transfer(to, rawUnits.toString());
+        const rpcUrls = getCandidateRpcUrls(network);
+        if (rpcUrls.length === 0) throw new Error("No RPC endpoints configured for " + network.name);
+
+        const fromAddress = EVM.getAddressByPrivateKey(privateKey);
+        const formattedFrom = fromAddress.startsWith("0x") ? fromAddress : `0x${fromAddress}`;
+
+        let nonce: number | null = null;
+        let gasPriceHex: string | null = null;
+        let activeRpcUrl: string = rpcUrls[0];
+        for (const rpcUrl of rpcUrls) {
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 5000);
+                const [nonceRes, gasPriceRes] = await Promise.all([
+                    fetch(rpcUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            id: 1,
+                            method: "eth_getTransactionCount",
+                            params: [formattedFrom, "pending"],
+                        }),
+                        signal: controller.signal,
+                    }),
+                    fetch(rpcUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            id: 2,
+                            method: "eth_gasPrice",
+                            params: [],
+                        }),
+                        signal: controller.signal,
+                    }),
+                ]);
+                clearTimeout(timeout);
+                if (nonceRes.ok && gasPriceRes.ok) {
+                    const nJson = await nonceRes.json();
+                    const gJson = await gasPriceRes.json();
+                    if (nJson.result && gJson.result) {
+                        nonce = parseInt(nJson.result, 16);
+                        gasPriceHex = gJson.result;
+                        activeRpcUrl = rpcUrl;
+                        break;
+                    }
+                }
+            } catch {
+                continue;
+            }
+        }
+        if (nonce === null || !gasPriceHex) throw new Error("Failed to prepare token transaction");
+
+        const tx = {
+            to: tokenAddress.startsWith("0x") ? tokenAddress : `0x${tokenAddress}`,
+            value: "0x0",
+            data: calldata,
+            gasLimit: "0x186a0", // 100000 gas limit for ERC20 transfer
+            gasPrice: gasPriceHex,
+            nonce,
+            chainId: Number(network.chainId) || 1,
+            type: 0,
+        };
+        const signedTxHex = EVM.signTransaction(privateKey, tx);
+        const broadcastRes = await fetch(activeRpcUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                jsonrpc: "2.0",
+                id: 3,
+                method: "eth_sendRawTransaction",
+                params: [signedTxHex],
+            }),
+        });
+        const bJson = await broadcastRes.json();
+        if (bJson.error) throw new Error(bJson.error.message || "Failed to broadcast token transfer");
+        return bJson.result;
+    }
+
+    if (network.chainType === ChainType.SOLANA) {
+        const { SolanaProvider } = await import('wallet-chain-interaction');
+        const provider = new SolanaProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const rawAmount = Math.round(parseFloat(amount) * (10 ** tokenDecimals)).toString();
+        const res = await provider.sendTokenTransfer(privateKey, {
+            to,
+            tokenAddress,
+            amount: rawAmount,
+        });
+        return res.hash;
+    }
+
+    if (network.chainType === ChainType.TRON) {
+        const { TronProvider } = await import('wallet-chain-interaction');
+        const provider = new TronProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const rawAmount = Math.round(parseFloat(amount) * (10 ** tokenDecimals)).toString();
+        const res = await provider.sendTokenTransfer(privateKey, {
+            to,
+            tokenAddress,
+            amount: rawAmount,
+        });
+        return res.hash;
+    }
+
+    if (network.chainType === ChainType.SUI) {
+        const { SuiProvider } = await import('wallet-chain-interaction');
+        const provider = new SuiProvider({ rpcUrl: network.rpcUrl, chainId: network.chainId });
+        const rawAmount = Math.round(parseFloat(amount) * (10 ** tokenDecimals)).toString();
+        const res = await provider.sendTokenTransfer(privateKey, {
+            to,
+            tokenAddress,
+            amount: rawAmount,
+        });
+        return res.hash;
+    }
+
+    throw new Error(`Token transfers are not supported on ${network.chainType}`);
+}
+
+/**
  * Query ERC-20 token balance on an EVM network
  */
 export async function fetchTokenBalance(
@@ -613,7 +802,12 @@ export async function fetchTokenMetadata(
                 if (hex.length >= 128) {
                     const len = parseInt(hex.slice(64, 128), 16);
                     const strHex = hex.slice(128, 128 + len * 2);
-                    symbol = Buffer.from(strHex, "hex").toString("utf8").replace(/\0/g, "");
+                    let cleanStr = "";
+                    for (let i = 0; i < strHex.length; i += 2) {
+                        const code = parseInt(strHex.substr(i, 2), 16);
+                        if (code > 0) cleanStr += String.fromCharCode(code);
+                    }
+                    symbol = cleanStr.trim() || "TOKEN";
                 }
             }
 

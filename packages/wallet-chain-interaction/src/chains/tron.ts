@@ -3,9 +3,7 @@
  * Uses TronWeb for TRON blockchain interactions
  */
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const TronWeb = require('tronweb');
+import { TronWeb } from 'tronweb';
 import { ChainProvider } from '../provider/base';
 import {
     ChainConfig,
@@ -77,7 +75,7 @@ export class TronProvider extends ChainProvider {
 
     constructor(config: ChainConfig) {
         super(config);
-        this.tronWeb = new TronWeb.TronWeb({
+        this.tronWeb = new TronWeb({
             fullHost: config.rpcUrl,
         });
     }

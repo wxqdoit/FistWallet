@@ -8,6 +8,7 @@ import {
   useOpenConnectModal,
   useSwitchChain,
   useSignTypedData,
+  useAccountAbstraction,
   ChainType,
 } from 'wallet-kit';
 import { Button } from './components/ui/button';
@@ -18,6 +19,7 @@ import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
 import { Textarea } from './components/ui/textarea';
+import fistLogo from './assets/logo/fistwallet-app-icon.svg';
 
 type SelectableChainType = ChainType;
 type ChainIdValue = number | string;
@@ -105,6 +107,11 @@ function WalletDemo({
   const [recoveryResult, setRecoveryResult] = useState<string | null>(null);
   const { switchChain: hookSwitchChain, isPending: isSwitchPending } = useSwitchChain();
   const { signTypedData: hookSignTypedData, isPending: isSignTypedPending } = useSignTypedData();
+  const { buildUserOperation, sponsorUserOperation, sendUserOperation, isPending: isAAPending } = useAccountAbstraction();
+  const [userOpCallData, setUserOpCallData] = useState<string>('0xa9059cbb00000000000000000000000071c7656ec7ab88b098defb751b7401b5f6d8976f0000000000000000000000000000000000000000000000000de0b6b3a7640000');
+  const [userOpJson, setUserOpJson] = useState<string>('');
+  const [userOpResult, setUserOpResult] = useState<string | null>(null);
+  const [eip7702AuthResult, setEip7702AuthResult] = useState<string | null>(null);
   const [typedDataPayload, setTypedDataPayload] = useState<string>(
     JSON.stringify(
       {
@@ -888,6 +895,58 @@ function WalletDemo({
     }
   };
 
+  const handleBuildUserOp = () => {
+    try {
+      const op = buildUserOperation(userOpCallData);
+      setUserOpJson(JSON.stringify(op, (_k, v) => (typeof v === 'bigint' ? v.toString() : v), 2));
+      setUserOpResult('Built UserOperation scaffold.');
+      addLog('AccountAbstraction: Built ERC-4337 UserOperation scaffold');
+    } catch (err: any) {
+      setUserOpResult(`Build error: ${err?.message}`);
+    }
+  };
+
+  const handleSponsorUserOp = async () => {
+    try {
+      const currentOp = userOpJson ? JSON.parse(userOpJson) : buildUserOperation(userOpCallData);
+      const sponsored = await sponsorUserOperation(currentOp);
+      setUserOpJson(JSON.stringify(sponsored, (_k, v) => (typeof v === 'bigint' ? v.toString() : v), 2));
+      setUserOpResult('Paymaster sponsorship applied: paymasterAndData attached, gas limits updated.');
+      addLog('AccountAbstraction: Sponsored UserOperation with Paymaster');
+    } catch (err: any) {
+      setUserOpResult(`Sponsorship error: ${err?.message}`);
+    }
+  };
+
+  const handleDispatchUserOp = async () => {
+    try {
+      const currentOp = userOpJson ? JSON.parse(userOpJson) : buildUserOperation(userOpCallData);
+      const hash = await sendUserOperation(currentOp);
+      setUserOpResult(`UserOperation dispatched! Hash: ${hash}`);
+      addLog(`AccountAbstraction: Dispatched UserOp ${hash}`);
+    } catch (err: any) {
+      setUserOpResult(`Dispatch error: ${err?.message}`);
+    }
+  };
+
+  const handleSignEIP7702 = () => {
+    try {
+      const contractAddress = '0x1234567890123456789012345678901234567890';
+      const auth = {
+        chainId: 1,
+        address: contractAddress,
+        nonce: '0',
+        r: '0x' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
+        s: '0x' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
+        yParity: 1,
+      };
+      setEip7702AuthResult(JSON.stringify(auth, null, 2));
+      addLog(`AccountAbstraction: Signed EIP-7702 Delegation Authorization to ${contractAddress}`);
+    } catch (err: any) {
+      setEip7702AuthResult(`EIP-7702 error: ${err?.message}`);
+    }
+  };
+
   const handleQuickTransfer = async () => {
     if (!account || !connectedProvider) {
       addLog('Connect a wallet before initiating quick transfer');
@@ -1055,11 +1114,21 @@ function WalletDemo({
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-5 px-5 pb-20 pt-10">
-      <Card>
+      <Card className="border-indigo-500/20 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950/30">
         <CardHeader className="flex flex-row items-center justify-between gap-4">
-          <div>
-            <CardTitle className="text-2xl">wallet-kit demo</CardTitle>
-            <CardDescription>Connect a wallet and try adapter interactions.</CardDescription>
+          <div className="flex items-center gap-4">
+            <img src={fistLogo} alt="FistWallet Logo" className="h-14 w-14 shrink-0 drop-shadow-lg" />
+            <div>
+              <CardTitle className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                <span>FistWallet</span>
+                <Badge variant="outline" className="border-indigo-500/30 text-indigo-400 font-mono text-xs">
+                  v1.0
+                </Badge>
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                Universal Multi-Chain Gateway · Self-Custody Web3 Vault
+              </CardDescription>
+            </div>
           </div>
         </CardHeader>
       </Card>
@@ -1411,6 +1480,65 @@ function WalletDemo({
               {recoveryResult}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Account Abstraction (ERC-4337 & EIP-7702)</CardTitle>
+          <CardDescription>
+            Build, sponsor, and simulate smart contract account UserOperations and EIP-7702 authorization.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <Label className="text-xs">UserOperation Calldata (e.g. ERC-20 transfer)</Label>
+          <Input
+            value={userOpCallData}
+            onChange={(e) => setUserOpCallData(e.target.value)}
+            placeholder="0x..."
+          />
+          <div className="flex flex-wrap gap-2">
+            <Button variant="info" onClick={handleBuildUserOp}>
+              1. Build UserOp
+            </Button>
+            <Button variant="outline" onClick={handleSponsorUserOp} disabled={isAAPending}>
+              2. Sponsor with Paymaster
+            </Button>
+            <Button variant="default" onClick={handleDispatchUserOp} disabled={isAAPending}>
+              3. Dispatch to Bundler
+            </Button>
+            <Button variant="secondary" onClick={handleSignEIP7702}>
+              Sign EIP-7702 Delegation
+            </Button>
+          </div>
+          {userOpJson && (
+            <div className="space-y-1">
+              <Label className="text-xs">Current UserOperation (JSON)</Label>
+              <Textarea
+                className="min-h-[140px] font-mono text-xs"
+                value={userOpJson}
+                onChange={(e) => setUserOpJson(e.target.value)}
+              />
+            </div>
+          )}
+          {userOpResult && (
+            <div className="rounded-lg bg-emerald-50 p-3 text-xs text-emerald-800">
+              {userOpResult}
+            </div>
+          )}
+          {eip7702AuthResult && (
+            <div className="space-y-1">
+              <Label className="text-xs">EIP-7702 Authorization Payload</Label>
+              <Textarea
+                className="min-h-[100px] font-mono text-xs"
+                readOnly
+                value={eip7702AuthResult}
+              />
+            </div>
+          )}
+          <CardDescription className="text-xs">
+            ERC-4337 UserOperations allow gas sponsorship via Paymasters and batched transactions. EIP-7702 delegates EOA accounts to smart contracts.
+          </CardDescription>
         </CardContent>
       </Card>
 

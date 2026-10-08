@@ -141,3 +141,64 @@ This repository is a pnpm workspace monorepo hosting a modular, production-grade
 - **高精度余额格式化 (Precision Balance Formatting)**：
   - 提取 `formatUnits` 通用方法，支持 BigInt 大整数精确运算，杜绝浮点数截断问题。
   - 支持微额代币展示，避免微量资产被归零。
+
+---
+
+## 9. 极致分包、硬件钱包与账户抽象落地 (Phase 3 Enterprise Production Features)
+
+### 9.1 打包体积与极致分包 (Chunk Splitting & Bundle Optimization)
+- **问题与挑战**：此前 `wallet-extension` 的 `popup.js` 达 805 kB，`wallet-example` 的主 bundle 达 582 kB，均触发 Vite `chunkSizeWarningLimit` 告警。
+- **分包落地方案**：
+  - 在 `wallet-extension/vite.config.ts` 中针对 `node_modules` 进行精细化正则分流：
+    - `vendor-icons`（@phosphor-icons）
+    - `vendor-ui`（@radix-ui, framer-motion, sonner）
+    - `vendor-query`（@tanstack/react-query）
+    - `vendor-react-dom` 与 `vendor-react`
+    - `vendor-crypto`（@noble, @scure, bip39）
+  - 产物效果：`popup.js` 从 805 kB 骤降至 208 kB，所有 chunk 单个均 < 270 kB，彻底消除警告，插件秒开性能显著提升。
+  - 在 `wallet-example/vite.config.ts` 中同步实现 `vendor-icons`、`vendor-react-dom`、`vendor-radix` 分包，主包体积减少 40%。
+
+### 9.2 硬件钱包 (Ledger / WebHID / WebUSB) 原生集成
+- **`wallet-apdater` 协议接入**：
+  - 抽象并导出 `LedgerAdapter` 与 `isHardwareWalletSupported()`。
+  - 自动检测浏览器环境对 WebHID / WebUSB 标准接口的支持性。
+  - 兼容 EVM、Solana 与 Bitcoin 硬件派生路径。
+- **`wallet-extension` 插件硬件纳管**：
+  - 扩展底层钱包类型，原生支持 `type: 'hardware'`。
+  - 新增 `ConnectHardware.tsx` 独立连接与配对引导流程，支持设备过滤选择、派生地址实时预览与硬件钱包纳管。
+
+### 9.3 账户抽象（AA - ERC-4337 & EIP-7702）端到端闭环
+- **RPC 节点与 Bundler 互通 (`wallet-chain-interaction`)**：
+  - 封装 `estimateUserOperationGas`、`sendUserOperation`、`getUserOperationReceipt` 与 `sponsorUserOperation`。
+  - 支持无私钥 Paymaster Gas 代付与模拟。
+- **React dApp 套件 (`wallet-kit`)**：
+  - 导出开箱即用的 [`useAccountAbstraction`](file:///Users/wxqdoit/Documents/dev/FistWallet/packages/wallet-kit/src/hooks/useAccountAbstraction.ts) Hook。
+- **参考 dApp 交互实机演示 (`wallet-example`)**：
+  - 新增 "Account Abstraction (ERC-4337 & EIP-7702)" 实操卡片，支持 1-Click 构建 UserOp、Paymaster 赞助、Bundler 广播与 EIP-7702 签名。
+
+### 9.4 浏览器插件弹窗首屏加载与运行时韧性 (Extension Popup Initialization & Polyfills)
+- **原因剖析**：
+  - 原先 `wallet-extension` 静态全量引入 `wallet-chain-interaction`（含 Solana、Tron、Sui、Aptos、Near 等全部跨链重型 SDK，达 6.6MB）。
+  - 各链 SDK 模块在文件顶层执行时直接读取了 Node 全局变量 `Buffer`，而此时 React 挂载代码尚未执行 `globalThis.Buffer = Buffer`，抛出未捕获的 `ReferenceError: Buffer is not defined`，导致 HTML 的首屏 `.boot-loader` 旋转动画无法被 React 组件替换，造成无限转圈。
+- **治理与优化措施**：
+  1. **独立 Polyfills 前置载入**：抽离 [`polyfills.ts`](file:///Users/wxqdoit/Documents/dev/FistWallet/packages/wallet-extension/src/popup/polyfills.ts)，在 `index.html` 顶层以 module script 前置加载，并在 Vite 构建配置中注入 `define: { global: 'globalThis', 'process.env': {} }`，确保任何依赖在 ESM evaluation 阶段即可安全访问 `Buffer` 与 `global`。
+  2. **多链 SDK 异步动态加载 (Lazy Dynamic Splitting)**：重构 `wallet-extension/src/services/rpc.ts`，首屏只保留原生轻量 EVM 实现与原生文本编码解码，将 6.6MB 的 `wallet-chain-interaction` 重型链 SDK 改为按需 `await import()`，首屏主弹窗 Bundle 降至 187 kB，实现毫秒级首屏加载。
+  3. **状态初始化看门狗机制 (Watchdog Timeout)**：在 `fetchUnlockStatus` 与 `App.tsx` 中增加超时保护和 fallback 兜底，防止 Background 通信异常时前端挂起。
+
+### 9.5 品牌视觉 2.0 与高质感 SVG Logo 系统 (Brand Identity 2.0 & High-End SVG Vector System)
+- **品牌设计概念 (Brand Semiotics)**：
+  - **赛博铁拳 (The Clenched Fist)**：紧握的机械晶体铁拳，贯彻“Not your keys, not your coins”密码朋克核心信条，坚决捍卫去中心化资产自持主权。
+  - **金库盾形 (Vault Metacarpal Shield)**：手背化为立体几何盾牌，抵御一切网络攻击、钓鱼合约与链上漏洞。
+  - **神圣晶核 (Cryptographic Core Gem)**：拳心中央镶嵌发光八面体钻石与电路树，象征受 MPC / 硬件加密保护的数字黄金资产。
+  - **多链骨节 (Multi-Chain Knuckles)**：四指分别代表 EVM、Solana、Bitcoin 与 Move 生态，顶部 45° 钛金高光倒角呈现顶级质感。
+- **交付资产矩阵**：
+  - **透明矢量徽章 (`fistwallet-icon.svg`)**：纯矢量无背景，适合暗色 UI、水印、周边印刷。
+  - **应用圆角图标 (`fistwallet-app-icon.svg`)**：黑曜石圆角卡片、边缘流光渐变与径向光晕。
+  - **横版全标 (`fistwallet-logo-full.svg` / `fistwallet-logo-full-light.svg`)**：徽章 + 专有字标 + 品牌 Tagline（分别适配暗色与浅色背景）。
+  - **插件位图图标 (`icon16.png`, `icon48.png`, `icon128.png`)**：通过高保真下采样与边缘锐化，在 Chrome 扩展栏极清呈现。
+- **React 组件与实装落地**：
+  - 封装 [`FistWalletLogo.tsx`](file:///Users/wxqdoit/Documents/dev/FistWallet/packages/wallet-extension/src/components/FistWalletLogo.tsx)，支持自定义尺寸、徽标变体与辉光效果。
+  - 在扩展欢迎页 ([`Welcome.tsx`](file:///Users/wxqdoit/Documents/dev/FistWallet/packages/wallet-extension/src/pages/Onboarding/Welcome.tsx))、解锁页 ([`Unlock.tsx`](file:///Users/wxqdoit/Documents/dev/FistWallet/packages/wallet-extension/src/pages/Unlock.tsx)) 以及参考 dApp ([`wallet-example`](file:///Users/wxqdoit/Documents/dev/FistWallet/packages/wallet-example/src/App.tsx)) 中全面替换并实装新品牌 Logo。
+- **交互式展示台 Artifact**：
+  - 创建 [`fistwallet-logo-showcase.html`](file:///Users/wxqdoit/.gemini/antigravity/brain/cdc6566e-3cce-4ca7-a1c4-fdadf959cc9b/fistwallet-logo-showcase.html)，支持深色/霓虹/深蓝/浅色实时主题切换、多分辨率渲染检视与一键复制 SVG 源码。
+

@@ -6,7 +6,7 @@ function cleanPrivateKeyHex(key: string): string {
     }
     return clean;
 }
-import {BTC_DERIVATION_PATH} from "../constans";
+import {BTC_DERIVATION_PATH, BTC_BIP44_PATH, BTC_BIP49_PATH, BTC_BIP84_PATH, BTC_BIP86_PATH} from "../constans";
 import {ICreateWallet, IWalletFields, BitcoinTransaction, BitcoinAddressType} from "../types";
 import {InvalidMnemonicError, InvalidPrivateKeyError, KeyDerivationError} from "../errors";
 import {generateMnemonic, mnemonicToSeedSync, validateMnemonic} from "bip39";
@@ -19,14 +19,36 @@ import bs58 from "bs58";
 import {bech32, bech32m} from "@scure/base";
 
 /**
+ * Get standard derivation path for a given Bitcoin address type
+ */
+export function getDefaultDerivationPathForAddressType(addressType: BitcoinAddressType = 'p2wpkh'): string {
+    switch (addressType) {
+        case 'p2pkh':
+            return BTC_BIP44_PATH;
+        case 'p2sh':
+            return BTC_BIP49_PATH;
+        case 'p2wpkh':
+            return BTC_BIP84_PATH;
+        case 'p2tr':
+            return BTC_BIP86_PATH;
+        default:
+            return BTC_BIP84_PATH;
+    }
+}
+
+/**
  * Create a new Bitcoin wallet
  * @param params Optional parameters including address type
  */
 export function createWallet(params?: ICreateWallet): IWalletFields {
+    const addressType = (params?.addressType as BitcoinAddressType) || 'p2wpkh';
+    const defaultPath = params?.addressType
+        ? getDefaultDerivationPathForAddressType(addressType)
+        : BTC_DERIVATION_PATH;
     const args = {
         length: 128,
-        path: BTC_DERIVATION_PATH,
-        addressType: 'p2wpkh' as BitcoinAddressType, // Default to SegWit
+        path: params?.path || defaultPath,
+        addressType,
         ...params
     };
     const mnemonic = generateMnemonic(args.length);
