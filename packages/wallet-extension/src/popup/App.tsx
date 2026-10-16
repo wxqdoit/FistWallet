@@ -99,10 +99,10 @@ function App() {
             >
                 <div
                     className={cn(
-                        'bg-[#070A12] overflow-hidden',
+                        'bg-[#070A12] overflow-hidden flex flex-col w-full h-full',
                         isExtensionPopup
-                            ? 'w-full h-full rounded-none border-0'
-                            : 'w-[375px] h-[600px] rounded-2xl border border-white/10 shadow-2xl'
+                            ? 'rounded-none border-0'
+                            : 'max-w-[375px] max-h-[600px] rounded-2xl border border-white/10 shadow-2xl'
                     )}
                 >
                     <Routes>

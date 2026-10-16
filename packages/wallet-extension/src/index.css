@@ -69,7 +69,7 @@
   }
 
   #root {
-    @apply w-full h-full min-h-screen;
+    @apply w-full h-full;
   }
 }
 

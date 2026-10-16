@@ -5,7 +5,6 @@ import { useWalletStore } from '@store/wallet';
 import { useSettingsStore } from '@store/settings';
 import { ArrowLeftIcon, EyeIcon, EyeSlashIcon, LockKeyIcon } from '@phosphor-icons/react';
 import { t } from '@utils/i18n';
-import { motion } from 'framer-motion';
 
 export default function ChangePassword() {
     const navigate = useNavigate();
@@ -51,13 +50,7 @@ export default function ChangePassword() {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans"
-        >
+        <div className="h-full w-full flex flex-col justify-between bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans select-none relative">
             {/* Unified Sticky Header */}
             <div className="px-4 py-3.5 flex items-center justify-between border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
                 <button
@@ -161,7 +154,7 @@ export default function ChangePassword() {
                     {isSaving ? t(language, 'saving') : t(language, 'saveNewPassword')}
                 </button>
             </div>
-        </motion.div>
+        </div>
     );
 }
 

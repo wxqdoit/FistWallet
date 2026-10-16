@@ -1,363 +1,312 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
-import { useSettingsStore } from '@store/settings';
-import { t } from '@utils/i18n';
 import {
     ArrowLeftIcon,
-    ArrowsDownUpIcon,
-    CheckCircleIcon,
-    SparkleIcon,
     SlidersHorizontalIcon,
+    ArrowsDownUpIcon,
+    CaretDownIcon,
+    ShieldCheckIcon,
+    XIcon,
 } from '@phosphor-icons/react';
-import { NetworkIcon } from '@/components/NetworkIcon';
-import { useNativeBalanceQuery, useCustomTokensQuery } from '@/services/queries';
+import { useNativeBalanceQuery } from '@/services/queries';
+import { CryptoIcon } from '@/components/CryptoIcon';
+import { BottomDock } from '@/components/BottomDock';
+import { TokenSelectorModal, DEFAULT_TOKENS, type TokenItem } from '@/components/TokenSelectorModal';
 import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
-
-interface SwapToken {
-    symbol: string;
-    name: string;
-    ratePerNative: number;
-}
-
-const TOKEN_PAIRS: Record<string, SwapToken[]> = {
-    ethereum: [
-        { symbol: 'USDT', name: 'Tether USD', ratePerNative: 2650.5 },
-        { symbol: 'USDC', name: 'USD Coin', ratePerNative: 2650.0 },
-        { symbol: 'DAI', name: 'Dai Stablecoin', ratePerNative: 2649.8 },
-    ],
-    polygon: [
-        { symbol: 'USDT', name: 'Tether USD (PoS)', ratePerNative: 0.41 },
-        { symbol: 'USDC', name: 'USD Coin (PoS)', ratePerNative: 0.41 },
-        { symbol: 'WETH', name: 'Wrapped Ether', ratePerNative: 0.00015 },
-    ],
-    bsc: [
-        { symbol: 'USDT', name: 'Tether USD', ratePerNative: 585.0 },
-        { symbol: 'USDC', name: 'USD Coin', ratePerNative: 584.8 },
-        { symbol: 'BUSD', name: 'Binance USD', ratePerNative: 585.2 },
-    ],
-    solana: [
-        { symbol: 'USDC', name: 'USD Coin (SPL)', ratePerNative: 155.0 },
-        { symbol: 'USDT', name: 'Tether USD (SPL)', ratePerNative: 154.9 },
-    ],
-    default: [
-        { symbol: 'USDT', name: 'Tether USD', ratePerNative: 1.0 },
-        { symbol: 'USDC', name: 'USD Coin', ratePerNative: 1.0 },
-    ],
-};
 
 export default function Swap() {
     const navigate = useNavigate();
     const { currentAccount, currentNetwork } = useWalletStore();
-    const { language } = useSettingsStore();
 
-    const [fromAmount, setFromAmount] = useState('');
+    const [payToken, setPayToken] = useState<TokenItem>(DEFAULT_TOKENS[0]); // ETH
+    const [receiveToken, setReceiveToken] = useState<TokenItem>(DEFAULT_TOKENS[1]); // USDT
+    const [fromAmount, setFromAmount] = useState('1.5');
     const [slippage, setSlippage] = useState('0.5');
-    const [selectedTokenIdx, setSelectedTokenIdx] = useState(0);
     const [isSwapping, setIsSwapping] = useState(false);
-    const [swapSuccess, setSwapSuccess] = useState(false);
-    const [isReversed, setIsReversed] = useState(false);
     const [showSlippageModal, setShowSlippageModal] = useState(false);
+    const [isPaySelectorOpen, setIsPaySelectorOpen] = useState(false);
+    const [isReceiveSelectorOpen, setIsReceiveSelectorOpen] = useState(false);
 
     const currentAddress = currentAccount?.addresses[currentNetwork.chainType] || '';
     const { data: balanceData } = useNativeBalanceQuery(currentNetwork, currentAddress);
-    const { data: customTokens = [] } = useCustomTokensQuery(currentNetwork, currentAddress);
-    const balanceFormatted = balanceData?.formatted || '0.00';
+    const nativeBalanceFormatted = balanceData?.formatted || '4.25';
 
-    const availableTokens = TOKEN_PAIRS[currentNetwork.id] || TOKEN_PAIRS.default;
-    const currentTargetToken = availableTokens[selectedTokenIdx] || availableTokens[0];
+    const payBalance = payToken.symbol === currentNetwork.nativeCurrency.symbol ? nativeBalanceFormatted : payToken.balance;
+    const numFrom = parseFloat(fromAmount) || 0;
 
-    const tokenItem = customTokens.find(
-        (t) => t.symbol.toUpperCase() === currentTargetToken.symbol.toUpperCase()
-    );
-    const paySymbol = isReversed ? currentTargetToken.symbol : currentNetwork.nativeCurrency.symbol;
-    const payBalance = isReversed ? (tokenItem?.formatted || '0.00') : balanceFormatted;
-    const receiveSymbol = isReversed ? currentNetwork.nativeCurrency.symbol : currentTargetToken.symbol;
+    // Derived Rate
+    const exchangeRate = useMemo(() => {
+        if (!receiveToken.price || receiveToken.price <= 0) return 1;
+        return payToken.price / receiveToken.price;
+    }, [payToken.price, receiveToken.price]);
 
     const toAmount = useMemo(() => {
-        const val = parseFloat(fromAmount);
-        if (isNaN(val) || val <= 0) return '';
-        if (isReversed) {
-            const est = val / currentTargetToken.ratePerNative;
-            return est.toFixed(6);
-        } else {
-            const est = val * currentTargetToken.ratePerNative;
-            return est.toFixed(4);
-        }
-    }, [fromAmount, currentTargetToken.ratePerNative, isReversed]);
+        if (numFrom <= 0) return '0.00';
+        const calc = numFrom * exchangeRate * 0.9985; // 0.15% fee
+        if (calc >= 100) return calc.toFixed(2);
+        if (calc >= 1) return calc.toFixed(4);
+        return calc.toFixed(6);
+    }, [numFrom, exchangeRate]);
+
+    const payUsd = (numFrom * payToken.price).toFixed(2);
+    const receiveUsd = (parseFloat(toAmount || '0') * receiveToken.price).toFixed(2);
 
     const handleFlip = () => {
-        setIsReversed((prev) => !prev);
-        setFromAmount('');
-        toast.info(t(language, 'swapDirectionSwitched'));
+        const temp = payToken;
+        setPayToken(receiveToken);
+        setReceiveToken(temp);
     };
 
-    const handleMax = () => {
-        const cleanBalance = parseFloat(payBalance) || 0;
-        if (cleanBalance <= 0) return;
-        const maxVal = isReversed
-            ? cleanBalance.toString()
-            : Math.max(0, cleanBalance - 0.005).toFixed(4);
-        setFromAmount(maxVal);
+    const handleSetPercentage = (pct: number) => {
+        const balNum = parseFloat(payBalance) || 0;
+        setFromAmount((balNum * pct).toFixed(4));
     };
 
     const handleExecuteSwap = async () => {
-        const val = parseFloat(fromAmount);
-        if (isNaN(val) || val <= 0) return;
+        if (numFrom <= 0) return;
         setIsSwapping(true);
-        const toastId = toast.loading(t(language, 'findingBestRoute'));
+        const toastId = toast.loading('Routing through FistAggregator...');
 
         try {
-            await new Promise((r) => setTimeout(r, 1600));
-            setIsSwapping(false);
-            setSwapSuccess(true);
+            await new Promise((resolve) => setTimeout(resolve, 1400));
             toast.success(
-                t(language, 'swapSuccessToast', {
-                    fromAmount,
-                    fromSymbol: paySymbol,
-                    toAmount,
-                    toSymbol: receiveSymbol,
-                }),
-                {
-                    id: toastId,
-                }
+                `Swapped ${fromAmount} ${payToken.symbol} for ${toAmount} ${receiveToken.symbol}!`,
+                { id: toastId }
             );
-
-            setTimeout(() => {
-                navigate('/');
-            }, 1500);
+            navigate('/activity');
         } catch {
+            toast.error('Swap execution failed', { id: toastId });
+        } finally {
             setIsSwapping(false);
-            toast.error(t(language, 'swapFailedToast'), { id: toastId });
         }
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans"
-        >
-            {/* Unified Sticky Header */}
-            <div className="px-4 py-3.5 flex items-center justify-between border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
+        <div className="h-full w-full flex flex-col justify-between bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans select-none relative">
+            {/* Header */}
+            <div className="h-[52px] px-3.5 flex items-center justify-between border-b border-[#1D263B] bg-[#0A0E18]/90 backdrop-blur-md sticky top-0 z-20">
                 <button
                     type="button"
                     onClick={() => navigate(-1)}
-                    className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 hover:border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors"
+                    className="w-8 h-8 rounded-full bg-[#131826] hover:bg-[#1C2538] border border-[#253147] text-[#CBD5E1] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 >
-                    <ArrowLeftIcon size={16} weight="bold" />
+                    <ArrowLeftIcon size={16} />
                 </button>
-                <div className="flex items-center gap-1.5">
-                    <SparkleIcon size={16} className="text-indigo-400" weight="fill" />
-                    <h1 className="text-sm font-semibold tracking-tight text-white">{t(language, 'instantSwapTitle')}</h1>
+
+                <div className="text-center">
+                    <h1 className="text-sm font-bold text-white tracking-tight">Token Swap</h1>
+                    <p className="text-[10px] text-[#64748B] font-mono">FistAggregator Engine</p>
                 </div>
+
                 <button
                     type="button"
-                    onClick={() => setShowSlippageModal(!showSlippageModal)}
-                    className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
-                        showSlippageModal
-                            ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-400'
-                            : 'bg-white/[0.04] border-white/10 hover:border-white/20 text-white/70 hover:text-white'
-                    }`}
+                    onClick={() => setShowSlippageModal(true)}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#131826] hover:bg-[#1C2538] border border-[#253147] text-xs font-bold text-[#E2E8F0] cursor-pointer"
                 >
-                    <SlidersHorizontalIcon size={15} />
+                    <span>{slippage}%</span>
+                    <SlidersHorizontalIcon size={13} className="text-[#94A3B8]" />
                 </button>
             </div>
 
-            {/* Scrollable Content */}
-            <div className="flex-1 p-4 space-y-2.5 overflow-y-auto scrollbar-thin">
-                {/* Pay Card */}
-                <div className="p-4 rounded-2xl bg-[#14161E] border border-white/10 shadow-sm space-y-2.5 focus-within:border-indigo-500/40 transition-colors">
-                    <div className="flex items-center justify-between text-xs text-white/50">
-                        <span className="font-medium">{t(language, 'payAmountLabel')}</span>
-                        <div className="flex items-center gap-2">
-                            <span>{t(language, 'balanceText', { balance: payBalance, symbol: paySymbol })}</span>
+            {/* Main Form Body */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 scrollbar-thin">
+                {/* Dual Cards Container */}
+                <div className="relative space-y-2">
+                    {/* Pay Card */}
+                    <div className="rounded-2xl border border-[#253248] bg-[#101522] p-3.5 space-y-2 shadow-sm">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-[#94A3B8]">
+                            <span>YOU PAY</span>
+                            <div className="flex items-center gap-1">
+                                <span>Balance: {payBalance}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => handleSetPercentage(1.0)}
+                                    className="text-[#818CF8] hover:text-white transition-colors cursor-pointer ml-1 font-bold"
+                                >
+                                    MAX
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <input
+                                type="text"
+                                value={fromAmount}
+                                onChange={(e) => setFromAmount(e.target.value)}
+                                placeholder="0.0"
+                                className="w-1/2 bg-transparent text-2xl font-extrabold text-white outline-none font-mono"
+                            />
                             <button
                                 type="button"
-                                onClick={handleMax}
-                                className="text-[11px] font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                                onClick={() => setIsPaySelectorOpen(true)}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#161C2C] hover:bg-[#1F273A] border border-[#2C374E] hover:border-white/20 transition-all cursor-pointer shadow-xs group"
                             >
-                                {t(language, 'maxSendableLabel')}
+                                <CryptoIcon symbol={payToken.symbol} size={22} />
+                                <span className="text-xs font-bold text-white">{payToken.symbol}</span>
+                                <CaretDownIcon size={12} className="text-[#94A3B8] group-hover:text-white" />
                             </button>
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs text-[#64748B]">
+                            <span className="font-mono">≈ ${payUsd} USD</span>
+                            {/* Fast percentage pills */}
+                            <div className="flex items-center gap-1">
+                                {[0.25, 0.5, 0.75].map((pct) => (
+                                    <button
+                                        key={pct}
+                                        type="button"
+                                        onClick={() => handleSetPercentage(pct)}
+                                        className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#141A28] hover:bg-[#1C2538] text-[#818CF8]"
+                                    >
+                                        {pct * 100}%
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between gap-3">
-                        <input
-                            type="number"
-                            value={fromAmount}
-                            onChange={(e) => setFromAmount(e.target.value)}
-                            placeholder="0.00"
-                            className="w-full text-2xl font-bold bg-transparent text-white placeholder:text-neutral-600 focus:outline-none font-mono"
-                        />
+                    {/* Centered Floating Reversal Button */}
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                        <button
+                            type="button"
+                            onClick={handleFlip}
+                            className="w-10 h-10 rounded-full bg-[#131928] hover:bg-[#1A2234] border-2 border-[#00F5A0] shadow-[0_0_12px_rgba(0,245,160,0.3)] text-[#00E599] flex items-center justify-center transition-all active:scale-90 cursor-pointer"
+                        >
+                            <ArrowsDownUpIcon size={18} weight="bold" />
+                        </button>
+                    </div>
 
-                        {isReversed ? (
-                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
-                                <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px]">
-                                    {currentTargetToken.symbol.slice(0, 1)}
-                                </div>
-                                <span className="font-bold text-xs">{currentTargetToken.symbol}</span>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
-                                <NetworkIcon
-                                    chainType={currentNetwork.chainType}
-                                    iconKey={currentNetwork.icon}
-                                    size={18}
-                                />
-                                <span className="font-bold text-xs">{currentNetwork.nativeCurrency.symbol}</span>
-                            </div>
-                        )}
+                    {/* Receive Card */}
+                    <div className="rounded-2xl border border-[#253248] bg-[#101522] p-3.5 space-y-2 shadow-sm">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-[#94A3B8]">
+                            <span>YOU RECEIVE (ESTIMATED)</span>
+                            <span>Balance: {receiveToken.balance}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <span className="text-2xl font-extrabold text-[#00E599] font-mono">
+                                {toAmount}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => setIsReceiveSelectorOpen(true)}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#161C2C] hover:bg-[#1F273A] border border-[#2C374E] hover:border-white/20 transition-all cursor-pointer shadow-xs group"
+                            >
+                                <CryptoIcon symbol={receiveToken.symbol} size={22} />
+                                <span className="text-xs font-bold text-white">{receiveToken.symbol}</span>
+                                <CaretDownIcon size={12} className="text-[#94A3B8] group-hover:text-white" />
+                            </button>
+                        </div>
+
+                        <p className="text-xs text-[#64748B] font-mono">
+                            ≈ ${receiveUsd} (-0.15% routing)
+                        </p>
                     </div>
                 </div>
 
-                {/* Flip Button Divider */}
-                <div className="relative flex justify-center my-[-10px] z-10">
-                    <button
-                        type="button"
-                        onClick={handleFlip}
-                        className="w-9 h-9 rounded-full bg-[#1F2330] hover:bg-[#252A3A] active:opacity-80 border border-white/10 hover:border-indigo-500/50 shadow-lg text-indigo-400 hover:text-indigo-300 flex items-center justify-center transition-colors cursor-pointer"
-                    >
-                        <ArrowsDownUpIcon size={16} weight="bold" />
-                    </button>
+                {/* Routing Details Card */}
+                <div className="p-3.5 rounded-xl border border-[#253248] bg-[#101522] space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center">
+                        <span className="text-[#94A3B8]">Best Route</span>
+                        <span className="font-bold text-[#00E599] flex items-center gap-1">
+                            <ShieldCheckIcon size={14} weight="bold" />
+                            <span>FistAggregator (Uniswap v3 80% + Curve 20%)</span>
+                        </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <span className="text-[#94A3B8]">Exchange Rate</span>
+                        <span className="font-mono text-white">
+                            1 {payToken.symbol} ≈ {exchangeRate >= 10 ? exchangeRate.toFixed(2) : exchangeRate.toFixed(4)} {receiveToken.symbol}
+                        </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <span className="text-[#94A3B8]">Minimum Received</span>
+                        <span className="font-mono text-white">
+                            {(parseFloat(toAmount) * (1 - parseFloat(slippage) / 100)).toFixed(4)} {receiveToken.symbol}
+                        </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <span className="text-[#94A3B8]">Est. Network Gas Fee</span>
+                        <span className="font-mono text-[#00E599]">~$2.45 (16 Gwei)</span>
+                    </div>
                 </div>
 
-                {/* Receive Card */}
-                <div className="p-4 rounded-2xl bg-[#14161E] border border-white/10 shadow-sm space-y-2.5">
-                    <div className="flex items-center justify-between text-xs text-white/50">
-                        <span className="font-medium">{t(language, 'receiveAmountLabel')}</span>
-                        <div className="flex items-center gap-1.5">
-                            {availableTokens.map((t, idx) => (
+                {/* Swap CTA Button */}
+                <button
+                    type="button"
+                    onClick={handleExecuteSwap}
+                    disabled={isSwapping || numFrom <= 0}
+                    className="w-full h-12 rounded-2xl font-extrabold text-sm bg-gradient-to-r from-[#00F5A0] to-[#00C47F] hover:from-[#00E599] hover:to-[#00B374] disabled:opacity-40 disabled:pointer-events-none text-[#042F2E] shadow-[0_8px_20px_rgba(0,245,160,0.3)] border border-[#A7F3D0]/40 transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
+                >
+                    {isSwapping ? 'Swapping on Mempool...' : `Swap ${payToken.symbol} for ${receiveToken.symbol}`}
+                </button>
+            </div>
+
+            {/* Bottom Dock */}
+            <BottomDock activeTab="swap" />
+
+            {/* Pay Token Selector Modal */}
+            <TokenSelectorModal
+                open={isPaySelectorOpen}
+                onClose={() => setIsPaySelectorOpen(false)}
+                onSelect={(token) => setPayToken(token)}
+                selectedSymbol={payToken.symbol}
+                title="Select Token to Pay"
+            />
+
+            {/* Receive Token Selector Modal */}
+            <TokenSelectorModal
+                open={isReceiveSelectorOpen}
+                onClose={() => setIsReceiveSelectorOpen(false)}
+                onSelect={(token) => setReceiveToken(token)}
+                selectedSymbol={receiveToken.symbol}
+                title="Select Token to Receive"
+            />
+
+            {/* Slippage Settings Modal */}
+            {showSlippageModal && (
+                <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 p-4 select-none">
+                    <div className="w-full max-w-xs bg-[#121726] border border-[#2B364C] rounded-2xl p-4 space-y-3.5 text-white shadow-2xl">
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-sm font-bold text-white">Slippage Tolerance</h3>
+                            <button
+                                type="button"
+                                onClick={() => setShowSlippageModal(false)}
+                                className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-[#94A3B8] hover:text-white"
+                            >
+                                <XIcon size={12} weight="bold" />
+                            </button>
+                        </div>
+                        <p className="text-xs text-[#94A3B8]">
+                            Your transaction will revert if the price changes unfavorably by more than this percentage.
+                        </p>
+
+                        <div className="grid grid-cols-3 gap-2">
+                            {['0.1', '0.5', '1.0'].map((val) => (
                                 <button
-                                    key={t.symbol}
+                                    key={val}
                                     type="button"
-                                    onClick={() => setSelectedTokenIdx(idx)}
-                                    className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium transition-all ${
-                                        selectedTokenIdx === idx
-                                            ? 'bg-indigo-600 text-white font-bold shadow-sm'
-                                            : 'bg-[#1F2330] text-white/60 hover:text-white border border-white/5'
+                                    onClick={() => {
+                                        setSlippage(val);
+                                        setShowSlippageModal(false);
+                                    }}
+                                    className={`py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                                        slippage === val
+                                            ? 'bg-[#00E599]/20 border-[#00E599] text-[#00E599]'
+                                            : 'bg-[#182030] border-[#253248] text-[#94A3B8] hover:text-white'
                                     }`}
                                 >
-                                    {t.symbol}
+                                    {val}%
                                 </button>
                             ))}
                         </div>
                     </div>
-
-                    <div className="flex items-center justify-between gap-3">
-                        <div className="text-2xl font-bold text-white font-mono">
-                            {toAmount || '0.00'}
-                        </div>
-
-                        {isReversed ? (
-                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
-                                <NetworkIcon
-                                    chainType={currentNetwork.chainType}
-                                    iconKey={currentNetwork.icon}
-                                    size={18}
-                                />
-                                <span className="font-bold text-xs">{currentNetwork.nativeCurrency.symbol}</span>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1F2330] border border-white/10 shrink-0 text-white">
-                                <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px]">
-                                    {currentTargetToken.symbol.slice(0, 1)}
-                                </div>
-                                <span className="font-bold text-xs">{currentTargetToken.symbol}</span>
-                            </div>
-                        )}
-                    </div>
                 </div>
-
-                {/* Slippage Dropdown Panel */}
-                <AnimatePresence>
-                    {showSlippageModal && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden"
-                        >
-                            <div className="p-3.5 rounded-2xl bg-[#14161E] border border-white/10 space-y-2">
-                                <div className="flex items-center justify-between text-xs text-white/60">
-                                    <span>{t(language, 'slippageTolerance')}</span>
-                                    <span className="font-semibold text-indigo-400">{slippage}%</span>
-                                </div>
-                                <div className="grid grid-cols-4 gap-2">
-                                    {['0.1', '0.5', '1.0', '2.0'].map((val) => (
-                                        <button
-                                            key={val}
-                                            type="button"
-                                            onClick={() => setSlippage(val)}
-                                            className={`py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                                                slippage === val
-                                                    ? 'bg-indigo-600 text-white shadow-sm'
-                                                    : 'bg-[#1F2330] text-white/60 hover:text-white border border-white/5'
-                                            }`}
-                                        >
-                                            {val}%
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                {/* Rate Info Breakdown Card */}
-                {fromAmount && parseFloat(fromAmount) > 0 && (
-                    <div className="p-3.5 rounded-2xl bg-[#14161E] border border-white/5 text-xs space-y-2 text-white/60">
-                        <div className="flex justify-between items-center">
-                            <span>{t(language, 'swapRateLabel')}</span>
-                            <span className="font-mono text-white/90">
-                                {isReversed
-                                    ? `1 ${currentTargetToken.symbol} ≈ ${(1 / currentTargetToken.ratePerNative).toFixed(6)} ${currentNetwork.nativeCurrency.symbol}`
-                                    : `1 ${currentNetwork.nativeCurrency.symbol} ≈ ${currentTargetToken.ratePerNative} ${currentTargetToken.symbol}`}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span>{t(language, 'smartAggregatorRoute')}</span>
-                            <span className="text-indigo-400 font-medium">{t(language, 'fistAggregatorRoute')}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span>{t(language, 'estimatedSlippage')}</span>
-                            <span className="text-emerald-400 font-medium">&lt; 0.05%</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span>{t(language, 'estimatedNetworkFee')}</span>
-                            <span className="font-mono text-white/80">~0.0008 {currentNetwork.nativeCurrency.symbol}</span>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Bottom Capsule Action */}
-            <div className="p-4 border-t border-white/5 bg-[#070A12]/90 backdrop-blur-md">
-                <button
-                    type="button"
-                    onClick={handleExecuteSwap}
-                    disabled={!fromAmount || parseFloat(fromAmount) <= 0 || isSwapping}
-                    className="w-full h-12 rounded-full font-bold text-[15px] bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 active:opacity-85 transition-opacity disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
-                >
-                    {isSwapping ? (
-                        <span>{t(language, 'executingSwap')}</span>
-                    ) : swapSuccess ? (
-                        <>
-                            <CheckCircleIcon size={20} weight="fill" className="text-white" />
-                            <span>{t(language, 'swapSuccess')}</span>
-                        </>
-                    ) : (
-                        <>
-                            <SparkleIcon size={18} weight="fill" className="text-white" />
-                            <span>{t(language, 'swapNow')}</span>
-                        </>
-                    )}
-                </button>
-            </div>
-        </motion.div>
+            )}
+        </div>
     );
 }
-

@@ -1,3 +1,4 @@
+import { BottomDock } from "@/components/BottomDock";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWalletStore } from '@store/wallet';
@@ -36,7 +37,6 @@ import {
     createNextAccount
 } from '@core/wallet';
 import { addCustomNetwork } from '@core/networks';
-import { motion } from 'framer-motion';
 
 export default function Settings() {
     const navigate = useNavigate();
@@ -165,13 +165,7 @@ export default function Settings() {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="h-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans"
-        >
+        <div className="h-full w-full flex flex-col bg-[#070A12] text-white selection:bg-indigo-500/30 font-sans">
             {/* Unified Sticky Header */}
             <div className="px-4 py-3.5 flex items-center justify-between border-b border-white/5 bg-[#070A12]/90 backdrop-blur-md sticky top-0 z-20">
                 <button
@@ -365,18 +359,21 @@ export default function Settings() {
             </div>
 
             {/* Bottom Lock Button */}
-            <div className="p-4 border-t border-white/5 bg-[#070A12]/90 backdrop-blur-md">
+            <div className="p-3 border-t border-white/5 bg-[#070A12]/90 backdrop-blur-md">
                 <Button
                     type="button"
                     variant="secondary"
                     size="pill"
                     onClick={handleLock}
-                    className="w-full text-white/90 hover:text-white"
+                    className="w-full text-white/90 hover:text-white h-9 text-xs"
                 >
-                    <LockIcon size={16} weight="bold" className="text-indigo-400" />
+                    <LockIcon size={14} weight="bold" className="text-indigo-400" />
                     <span>{t(language, 'lockWalletAction')}</span>
                 </Button>
             </div>
+
+            {/* Bottom Navigation Dock */}
+            <BottomDock activeTab="settings" />
 
             {/* Export Secret Dialog Modal */}
             {exportModalType && (
@@ -590,7 +587,7 @@ export default function Settings() {
                     </div>
                 </div>
             )}
-        </motion.div>
+        </div>
     );
 }
 
